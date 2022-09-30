@@ -108,25 +108,26 @@ const resultsList = {
         this.fanPerspective = perspective;
     },
 
-    setLineBgColor(away, home){
-        //check who won the match and store the name of the winner in a variable
-        let winner = (home.isWinner ? home.team : away.team);
-        //check if that winner name matches the fan's perspective and return a
-        //string that represents the propper result
-        return (winner === this.fanPerspective ? 'win' : 'loss')
-    },
+    generateMatchResultString({awayTeam, homeTeam}){
+      //substring with Team names
+      const teamsSubstring = `${awayTeam.team} @ ${homeTeam.team} | `
 
-    generateTeamsSubstring(away, home){
-        return `${away.team} @ ${home.team} | `
-    },
+      //if the home team is the winner, the <b> tag will be around the homePoints
+      //else, the <b> tag will be around the awayPoints
+      const scoreSubstring = (homeTeam.isWinner ?
+        `${awayTeam.points} - <b>${homeTeam.points}</b>` :
+         `$<b>${awayTeam.points}</b> - ${homeTeam.points}`
+      )
 
-    generateScoreSubstring(away, home){
-        //if the home team is the winner, the <b> tag will be around the homePoints
-        //else, the <b> tag will be around the awayPoints
-        return (home.isWinner ?
-            `${away.points} - <b>${home.points}</b>` :
-            `$<b>${away.points}</b> - ${home.points}`
-          )
+      return teamsSubstring + scoreSubstring;
+    },
+  
+    setLineBgColor({awayTeam, homeTeam}){
+      //check who won the match and store the name of the winner in a variable
+      let winner = (homeTeam.isWinner ? homeTeam.team : awayTeam.team);
+      //check if that winner name matches the fan's perspective and return a
+      //string that represents the name of the class that must be applied
+      return (winner === this.fanPerspective ? 'win' : 'loss')
     },
 
     generateResultsList(){
@@ -134,29 +135,23 @@ const resultsList = {
         const newUl = document.createElement('ul');
     
         //loop through all objects in the results array from this object's results property
-        const results = this.results;
-        for(match of results){
-            //store informations about away team in variables
-            const away = {...match.awayTeam};
-            //store informations about home team in variables
-            const home = {...match.homeTeam};
-          
-            //create the empty li element
-            const newLi = document.createElement('li');
+        for(match of this.results){        
+          //create the empty li element
+          const newLi = document.createElement('li');
     
-            //create a string that have the text to be inserted in the list item
-            const insert = this.generateTeamsSubstring(away, home) + this.generateScoreSubstring(away, home);
-            //apply the propper bg colors to the list element 
-            newLi.classList.add(this.setLineBgColor(away, home));
-            //insert the text using innerHTML because we have a <b> tag in the string
-            newLi.innerHTML = insert;
-            //append this new list item as child of the ul element
-            
-            newUl.appendChild(newLi); 
-          };
+          //insert the string returned from the generateMatchResultString method
+          //using innerHTML because we have a <b> tag in the returned string
+          newLi.innerHTML = this.generateMatchResultString(match);
           
-          //insert the ul to the document
-          document.body.querySelector('#resultsList').appendChild(newUl);
+          //apply the propper bg colors to the list element 
+          newLi.classList.add(this.setLineBgColor(match));
+          
+          //append this new list item as child of the ul element
+          newUl.appendChild(newLi); 
+        };
+          
+        //return the newUl element containing all match results added as list items
+        return newUl;
     }
 }
 
@@ -174,7 +169,8 @@ btn.addEventListener("click", function() {
     //populate res properties according to the warriorsGames array and the team selected in the form
     res.populateProperties(warriorsGames, team);
     //generate the list with the results
-    res.generateResultsList();
+    const list = res.generateResultsList();
+    document.body.querySelector('#resultsList').appendChild(list);
 })
 
 
