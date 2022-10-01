@@ -156,7 +156,7 @@ const resultsList = {
 }
 
 //decided to change the exercise a bit and only load the list after chosing the team in a form
-const form = document.body.querySelector('#teamSelection');
+/*const form = document.body.querySelector('#teamSelection');
 form.addEventListener("submit", function(e) {
   //prevent the default form behavior to continue on the same page after submission
   e.preventDefault();
@@ -175,7 +175,28 @@ form.addEventListener("submit", function(e) {
   const list = res.generateResultsList();
   //append list to the page
   document.body.querySelector('#resultsList').appendChild(list);
-})
+}) */
+
+
+const displayList = () => {
+  //if there is a list currently loaded, remove that before creating a new one
+  const existingList = document.body.querySelector('#resultsList ul');
+  if(existingList) {existingList.remove();}
+
+  //save the current team in the selection dropdown to a variable
+  const team = document.querySelector('#teams').value;
+  //create an object res based on the resultsList
+  const res = resultsList;
+  //populate res properties according to the warriorsGames array and the team selected in the form
+  res.populateProperties(warriorsGames, team);
+  //generate the list with the results
+  const list = res.generateResultsList();
+  //append list to the page
+  document.body.querySelector('#resultsList').appendChild(list);
+}
+
+window.addEventListener('load', displayList);
+teamSelection.addEventListener("input", displayList);
 
 
 
