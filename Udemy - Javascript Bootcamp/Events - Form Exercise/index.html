@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Credit Card Form Exercise</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+  <div id="content">
+    <div id="card-front" class="block">
+        <label for="cardNumber"></label>
+        <div id="card-rep-name">
+            <p>Card Holder</p>
+            <label for="cardName">Full Name</label>
+        </div>
+        <div id="card-rep-expdate">
+            <p>Expires</p>
+            <label for="cardMonth">MM</label>
+            <label for="cardYear">YY</label>
+        </div>
+    </div>
+    <div id="card-back" class="block">
+        <div id="card-rep-name">
+            <p>CVV</p>
+            <label for="cvv"></label>
+        </div>
+    </div>
+    <div id="card-form" class="block">
+        <form id="cardInfo">
+            <label for="cardType">Card Type</label>
+            <select id="cardType" name="Card Type"></select>
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" disabled>
+            <label for="cardName">Card Holder</label>
+            <input type="text" id="cardName" disabled>
+            <label for="cardMonth">Expiry date</label>
+            <select id="cardMonth" name="Month" disabled></select>
+            <select id="cardYear" name="Year" disabled></select>
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" disabled>
+    </div>
+  </div>
+  <section id="resultsList">
+     
+    </form>
+    
+  </section>
+  <script src="card.js"></script>
+</body>
+
+</html>
