@@ -1,35 +1,40 @@
 Create a page to simulate a credit card form.
 
 Page must have a form to receive the following input from user:
-- card number: 16 digits length and only numbers;
+- card type: select from visa, mastercard and amex;
+- card number: only numbers (15 digits for AMEX and 16 for other types);
 - cardholder name: string that is always displayed in upper case and
 doesn't accept special characters or numbers;
 - expiry date: select month and select year;
-- CVV: 3 digits and only numbers.
+- CVV: only numbers (4 digits for AMEX and 3 for other types).
 
 Page must exibith a card-like rectangle, where the card number,
 cardholder name, expiry date and cvv number that are displayed are
 in sync with what the user is typing in the form below.
 
 Rectangle representing the card must flip to display its front or back,
-depending on the input that has focus at the moment.
+depending on the input that has focus at the moment. Only cvv for not-AMEX
+card are displayed at the back.
 
 Data being typed in the inputs should be displayed with no mask, and
 the representation of this data in the card-like rectangle must be
 as the following:
 
-- card number must display the eight digits in the middle of the card
-number as #### ####, and only display the first four and last four
-digits with no mask;
-- cardholder name: displayed in upper case, just as in the form input;
+- card type selection must change the card logo in the top-right corner;
+- card number must be displayed with a mask in some digits, depeding on
+the card type (AMEX displaying first four and last five digits and masking
+the other six, other types displaying first four and last four digits and
+masking the other eight);
+- cardholder name must be displayed in upper case, just as in the form input;
 - expiry date: date in format MM/YY;
-- CVV: display typed data masked with dots.
+- CVV: display typed data masked with * (AMEX in the front and other types
+in the back of the card).
 
 Submit button will only be available once all data is typed, following
 the these rules:
-- card number must have 16 digits
-- CVV must have 3 digits
-- card cannot be expired
+- card number and cvv must have all digits typed
+- card name cannot be empty 
+- expiry date selected and card cannot be expired
 
 Clicking submit will display a "order confirmed" without loading
 a new page.
