@@ -108,7 +108,7 @@ cardTypeInput.addEventListener('input', (e) =>{
     //clear formData object whenever a new selection for this input is made
     resetObj(formData);
     //populate cardType in formData object
-    let selectedType = cardTypeInput.value;
+    let selectedType = e.target.value;
     formData['cardType'] = selectedType;
 
     //make sure all inputs are enabled and 
@@ -129,6 +129,7 @@ cardTypeInput.addEventListener('input', (e) =>{
     displayCardName();
     displayCardMonth();
     displayCardYear();
+    displayCardCvv();
 
     //Card logo, card number and cvv input format based on card type
     logo.setAttribute('src', `img/${selectedType}.png`);
@@ -165,7 +166,8 @@ cardNameInput.addEventListener('input', (e) => {
     //change to uppercase when typing
     e.target.value = e.target.value.toUpperCase();
     //populate cardName in formData object
-    formData['cardName'] = e.target.value.trim(); 
+    formData['cardName'] = e.target.value.trim();
+
     //change name in card representation
     displayCardName(); 
 });
@@ -179,7 +181,7 @@ const displayCardName = () => {
 //---------- EXIPIRY DATE INPUTS----------
 //year selection input
 cardYearInput.addEventListener('input', (e) => {
-    let selectedYear = cardYearInput.value;
+    let selectedYear = e.target.value;
     //runs when selected year equals the current year
     if(parseInt(selectedYear) === NOW.getFullYear()){
         //check selected month and force new selection if already passed in the current year
@@ -209,7 +211,7 @@ cardYearInput.addEventListener('input', (e) => {
 
 //month selection input
 cardMonthInput.addEventListener('input', (e) => {
-    let selectedMonth = cardMonthInput.value;
+    let selectedMonth = e.target.value;
 
     //populate cardMonth in formData object
     formData['cardMonth'] = selectedMonth;
@@ -240,5 +242,17 @@ cvvInput.addEventListener('keydown', (e) => {
 
 cvvInput.addEventListener('input', (e) =>{
     //populate cvv in formData object
-    formData['cvv'] = e.target.value;  
+    formData['cvv'] = e.target.value;
+    //change cvv in card representation
+    displayCardCvv();
 });
+
+//change cvv in card representation
+const displayCardCvv = () => {
+    let cvvPlacement = document.querySelector(`.cvv-${cardTypeInput.value}`);
+    let maskedCvv = '';
+    for(char of cvvInput.value){
+        maskedCvv += '*'
+    }
+    cvvPlacement.innerText = maskedCvv; 
+}
