@@ -1,55 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Credit Card Form Exercise</title>
+    <link rel="stylesheet" href="app.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Credit Card Form Exercise</title>
-  <link rel="stylesheet" href="app.css">
-</head>
+  <body>
+    <div id="card-wrapper">
+      <div id="card-front">
+        <div id="top-content" class="flex">
+          <div id="top-left" class="full-card-width flex">
+            <img
+              src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/chip.png"
+            />
+          </div>
+          <div id="top-right" class="flex">
+            <img id="type-logo" />
+          </div>
+        </div>
 
-<body>
-  <div id="content">
-    <div id="card-front" class="block">
-        <label for="cardNumber"></label>
-        <div id="card-rep-name">
-            <p>Card Holder</p>
-            <label for="cardName">Full Name</label>
+        <div id="middle-content" class="flex">
+          <div id="card-number" class="full-card-width flex">
+            1234 45677890 192
+          </div>
+          <div id="cvv-amex" class="flex">1234</div>
         </div>
-        <div id="card-rep-expdate">
-            <p>Expires</p>
-            <label for="cardMonth">MM</label>
-            <label for="cardYear">YY</label>
-        </div>
-    </div>
-    <div id="card-back" class="block">
-        <div id="card-rep-name">
-            <p>CVV</p>
-            <label for="cvv"></label>
-        </div>
-    </div>
-    <div id="card-form" class="block">
-        <form id="cardInfo">
-            <label for="cardType">Card Type</label>
-            <select id="cardType" name="Card Type"></select>
-            <label for="cardNumber">Card Number</label>
-            <input type="text" id="cardNumber" disabled>
-            <label for="cardName">Card Holder</label>
-            <input type="text" id="cardName" disabled>
-            <label for="cardMonth">Expiry date</label>
-            <select id="cardMonth" name="Month" disabled></select>
-            <select id="cardYear" name="Year" disabled></select>
-            <label for="cvv">CVV</label>
-            <input type="text" id="cvv" disabled>
-    </div>
-  </div>
-  <section id="resultsList">
-     
-    </form>
-    
-  </section>
-  <script src="card.js"></script>
-</body>
 
+        <div id="bottom-content" class="flex">
+          <div id="card-name-content">
+            <label class="card-label-title">Card Holder</label>
+            <div id="card-name" class="card-item">Full Name</div>
+          </div>
+          <div id="card-date-content" class="align-right">
+            <label class="card-label-title">Expires</label>
+            <div id="card-date" class="card-item">MM/YY</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="card-back" hidden>
+        <div id="card-magnetic-band"></div>
+        <div id="card-cvv">
+          <label for="card-cvv">
+            <div class="card-label-title">CVV</div>
+            <div id="cvv-other" class="card-item"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="card-form">
+      <div class="form-line">
+        <select id="card-type-input" name="Card Type"></select>
+      </div>
+      <div class="form-line">
+        <label for="card-number-input" class="flex">Card Number</label>
+        <input
+          type="text"
+          id="card-number-input"
+          class="full-form-width"
+          disabled
+        />
+      </div>
+      <div class="form-line">
+        <label for="card-name-input" class="flex">Card Holder</label>
+        <input
+          type="text"
+          id="card-name-input"
+          class="full-form-width"
+          maxlength="22"
+          disabled
+        />
+      </div>
+      <div class="form-line flex">
+        <div id="date-input" class="full-form-width">
+          <label class="flex">Expiry date</label>
+          <select id="card-month-input" name="Month" disabled></select>
+          <select id="card-year-input" name="Year" disabled></select>
+        </div>
+        <div id="cvv-number">
+          <label for="cvv-input" class="flex">CVV</label>
+          <input type="text" id="cvv-input" disabled />
+        </div>
+      </div>
+    </div>
+
+    <script src="card.js"></script>
+  </body>
 </html>

@@ -16,7 +16,7 @@ function resetObj(obj){
       }
 }
 
-//clear disabled from months
+//clear disabled state from months
 function resetMonthsSelection(select){
     for(i=1; i<= 12; i++)
         select[i].disabled = false;
@@ -75,13 +75,17 @@ function populateSelection(arr, select){
 //---------- FORM DATA ----------
 const formData = {};
 
-//---------- INPUTS IN THE PAGE ----------
-const cardTypeInput = document.querySelector('#cardType');
-const cardNumberInput = document.querySelector('#cardNumber');
-const cardNameInput = document.querySelector('#cardName');
-const cardMonthInput = document.querySelector('#cardMonth');
-const cardYearInput = document.querySelector('#cardYear');
-const cvvInput = document.querySelector('#cvv');
+//---------- SELECT ELEMENTS IN THE PAGE ----------
+//form inputs
+const cardTypeInput = document.querySelector('#card-type-input');
+const cardNumberInput = document.querySelector('#card-number-input');
+const cardNameInput = document.querySelector('#card-name-input');
+const cardMonthInput = document.querySelector('#card-month-input');
+const cardYearInput = document.querySelector('#card-year-input');
+const cvvInput = document.querySelector('#cvv-input');
+
+//card representation elements
+const logo = document.querySelector('#type-logo')
 
 //---------- DROP DOWN SELECTIONS ----------
 //populating credit card types drop down
@@ -121,13 +125,15 @@ cardTypeInput.addEventListener('input', (e) =>{
     cvvInput.removeAttribute('disabled')
     cvvInput.value = ''
 
-    //Card number and cvv input format based on card type
+    //Card logo, card number and cvv input format based on card type
+    logo.setAttribute('src', `img/${selectedType}.png`);
+
     if(selectedType === 'amex'){
         cardNumberInput.setAttribute('maxlength', '15');
-        cvv.setAttribute('maxlength', '4');
+        cvvInput.setAttribute('maxlength', '4');
     }else {
         cardNumberInput.setAttribute('maxlength', '16');
-        cvv.setAttribute('maxlength', '3');
+        cvvInput.setAttribute('maxlength', '3');
     }
 });
 
@@ -135,11 +141,13 @@ cardTypeInput.addEventListener('input', (e) =>{
 //only register numeric inputs
 cardNumberInput.addEventListener('keydown', (e) => {
     if(!isNumericInput(e) && !isModifierKey(e)) e.preventDefault();
-    });
+});
 
-//populate cardNumber in formData object
 cardNumberInput.addEventListener('input', (e) =>{
+    //populate cardNumber in formData object
     formData['cardNumber'] = e.target.value;  
+
+
 });
 
 //---------- CREDIT CARD NAME INPUT ----------
