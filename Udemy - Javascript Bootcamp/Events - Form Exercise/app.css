@@ -32,10 +32,6 @@ img{
     height: 45px;
 }
 
-#chip{
-    background: url('https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/chip.png')
-}
-
 #card-number{
     font-size: x-large;
     font-weight: bold;

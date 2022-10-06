@@ -10,14 +10,14 @@ function removeSpaces(str){
 };
 
 //function to reset an object deleting all its properties and methods
-function resetObj(obj){
+const resetObj = (obj) => {
     for (const key in obj) {
         delete obj[key];
       }
 }
 
 //clear disabled state from months
-function resetMonthsSelection(select){
+const resetMonthsSelection = (select) => {
     for(i=1; i<= 12; i++)
         select[i].disabled = false;
 };
@@ -85,7 +85,7 @@ const cardYearInput = document.querySelector('#card-year-input');
 const cvvInput = document.querySelector('#cvv-input');
 
 //card representation elements
-const logo = document.querySelector('#type-logo')
+const logo = document.querySelector('#type-logo');
 
 //---------- DROP DOWN SELECTIONS ----------
 //populating credit card types drop down
@@ -101,7 +101,7 @@ for(i=0; i<10; i++){
     option.value = currYear + i;
     option.innerText = currYear + i;
     cardYearInput.appendChild(option);
-};
+}
 
 //---------- CREDIT CARD TYPE INPUT ----------
 cardTypeInput.addEventListener('input', (e) =>{
@@ -121,9 +121,14 @@ cardTypeInput.addEventListener('input', (e) =>{
     cardMonthInput.value = 'month';
     resetMonthsSelection(cardMonthInput);
     cardYearInput.removeAttribute('disabled');
-    cardYearInput.value = 'year'
-    cvvInput.removeAttribute('disabled')
-    cvvInput.value = ''
+    cardYearInput.value = 'year';
+    cvvInput.removeAttribute('disabled');
+    cvvInput.value = '';
+
+    //make sure card representation reflects the form reset
+    displayCardName();
+    displayCardMonth();
+    displayCardYear();
 
     //Card logo, card number and cvv input format based on card type
     logo.setAttribute('src', `img/${selectedType}.png`);
@@ -156,11 +161,20 @@ cardNameInput.addEventListener('keypress', (e) => {
     if(!isNameValidInput(e) && !isModifierKey(e)) e.preventDefault();
 });
 
-//populate cardName in formData object
-cardNameInput.addEventListener('input', (e) =>{
+cardNameInput.addEventListener('input', (e) => {
+    //change to uppercase when typing
     e.target.value = e.target.value.toUpperCase();
-    formData['cardName'] = e.target.value;  
+    //populate cardName in formData object
+    formData['cardName'] = e.target.value.trim(); 
+    //change name in card representation
+    displayCardName(); 
 });
+
+//change name in card representation
+const displayCardName = () => {
+    let name = document.querySelector('#card-name');
+    name.innerText = !cardNameInput.value ? 'Full Name' : cardNameInput.value;
+} 
 
 //---------- EXIPIRY DATE INPUTS----------
 //year selection input
@@ -170,7 +184,10 @@ cardYearInput.addEventListener('input', (e) => {
     if(parseInt(selectedYear) === NOW.getFullYear()){
         //check selected month and force new selection if already passed in the current year
         if(parseInt(cardMonthInput.selectedIndex) <= NOW.getMonth()){
-            cardMonthInput.value = 'month'
+            cardMonthInput.value = 'month';
+            //change month in card representation
+            displayCardMonth();
+            //remove cardMonth from formData object
             if (formData['cardMonth']) delete formData['cardMonth']
         }    
         //disable all month options that already passed in the current year
@@ -183,16 +200,37 @@ cardYearInput.addEventListener('input', (e) => {
         //remove disabled state from a possible previous selection of the current year for this input
         resetMonthsSelection(cardMonthInput);
     }
+
     //populate cardYear in formData object
     formData['cardYear'] = selectedYear;
+    //change year in card representation
+    displayCardYear();
 });
 
 //month selection input
 cardMonthInput.addEventListener('input', (e) => {
-    //populate cardMonth in formData object
     let selectedMonth = cardMonthInput.value;
+
+    //populate cardMonth in formData object
     formData['cardMonth'] = selectedMonth;
+    //change month in card representation
+    displayCardMonth();
+
 });
+
+//change year in card representation
+const displayCardYear = () => {
+    let year = document.querySelector('#card-date-year');
+    year.innerText = (cardYearInput.value === 'year') ? 'YY' : `${cardYearInput.value.slice(2)}`;
+} 
+
+//change month in card representation
+const displayCardMonth = () => {
+    let month = document.querySelector('#card-date-month');
+    //make sure it's always two digits
+    let monthString = ('0' + cardMonthInput.selectedIndex).slice(-2);
+    month.innerText = (cardMonthInput.value === 'month') ? 'MM/' : `${monthString}/`;
+}
 
 //---------- CVV INPUT ----------
 //only register numeric inputs
@@ -200,7 +238,7 @@ cvvInput.addEventListener('keydown', (e) => {
     if(!isNumericInput(e) && !isModifierKey(e)) e.preventDefault();
 });
 
-//populate cvv in formData object
 cvvInput.addEventListener('input', (e) =>{
+    //populate cvv in formData object
     formData['cvv'] = e.target.value;  
 });
