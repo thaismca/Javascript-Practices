@@ -87,6 +87,10 @@ const cvvInput = document.querySelector('#cvv-input');
 //card representation elements
 const logo = document.querySelector('#type-logo');
 
+//card front and back
+const cardFront = document.querySelector('#card-front');
+const cardBack = document.querySelector('#card-back');
+
 //---------- DROP DOWN SELECTIONS ----------
 //populating credit card types drop down
 populateSelection(CREDITCARD_TYPES, cardTypeInput);
@@ -129,7 +133,7 @@ cardTypeInput.addEventListener('input', (e) =>{
     displayCardName();
     displayCardMonth();
     displayCardYear();
-    displayCardCvv();
+    resetAllCvvDisplay();
 
     //Card logo, card number and cvv input format based on card type
     logo.setAttribute('src', `img/${selectedType}.png`);
@@ -175,7 +179,7 @@ cardNameInput.addEventListener('input', (e) => {
 //change name in card representation
 const displayCardName = () => {
     let name = document.querySelector('#card-name');
-    name.innerText = !cardNameInput.value ? 'Full Name' : cardNameInput.value;
+    name.innerText = !cardNameInput.value ? 'FULL NAME' : cardNameInput.value;
 } 
 
 //---------- EXIPIRY DATE INPUTS----------
@@ -247,6 +251,18 @@ cvvInput.addEventListener('input', (e) =>{
     displayCardCvv();
 });
 
+cvvInput.addEventListener('focus', (e) => {
+    if(cardTypeInput.value !== 'amex'){
+        cardFront.setAttribute('hidden', '');
+        cardBack.removeAttribute('hidden');
+    }
+});
+
+cvvInput.addEventListener('blur', (e) => {
+    cardFront.removeAttribute('hidden');
+    cardBack.setAttribute('hidden', '');
+});
+
 //change cvv in card representation
 const displayCardCvv = () => {
     let cvvPlacement = document.querySelector(`.cvv-${cardTypeInput.value}`);
@@ -256,3 +272,13 @@ const displayCardCvv = () => {
     }
     cvvPlacement.innerText = maskedCvv; 
 }
+
+//reset cvv for when a new card type is selected
+const resetAllCvvDisplay = () => {
+    let cvv = document.querySelectorAll('.cvv');
+    for(el of cvv) {
+        el.innerText = '';
+    }
+    
+}
+

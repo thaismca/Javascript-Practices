@@ -6,44 +6,44 @@ body{
 #content{
     display: block;
 }
-
-#card-wrapper{
+/*card representation styles */
+#card-box{
     box-shadow: 1px 2px gray;
     margin: auto;
     border-radius: 10px;
-    width: 350px;
-    padding: 25px;
+    width: 385px;
+    min-height: 235px;
     background: rgba(255, 255, 255, 0.5) url('https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/2.jpeg');
     background-blend-mode: lighten;
     overflow: hidden;
 }
 
-.full-card-width{
-    width: 100%;
-    clear:both;
-    padding-bottom: 30px;
-}
-
-#top-content{
-    width: 100%;
-}
 
 img{
     height: 45px;
 }
 
-#card-number{
-    font-size: x-large;
-    font-weight: bold;
-    text-shadow: 2px 2px rgba(70, 67, 67, 0.3);
+.wrapper {
+    margin: 30px 25px;
 }
 
-#card-name-content{
+.full-width{
     width: 100%;
+    clear:both;
+}
+
+.bottom-space{
+    padding-bottom: 30px;
 }
 
 .flex{
     display:flex;
+}
+
+#card-number{
+    font-size: x-large;
+    font-weight: bold;
+    text-shadow: 1px 1px rgba(255, 254, 254, 0.301);
 }
 
 .card-label-title{
@@ -53,9 +53,27 @@ img{
 
 .card-item{
     font-weight: bold;
-    text-shadow: 2px 1px rgba(70, 67, 67, 0.3);
+    text-shadow: 1px 1px rgba(255, 254, 254, 0.301);
 }
 
+#card-magnetic-band{
+    height: 40px;
+    margin: 20px 0;
+    background-color:rgba(0, 0, 0, 0.7);
+}
+
+.cvv-item{
+    max-width: 335px;
+    text-align: right;
+    padding: 5px 15px 3px 0;
+}
+
+#signature-panel{
+    height: 50px;
+    background-color:rgba(255, 255, 255, 0.7);
+}
+
+/*card form styles */
 #card-form{
     margin: 10px auto;
     width: 380px;

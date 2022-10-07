@@ -9,34 +9,34 @@
   </head>
 
   <body>
-    <div id="card-wrapper">
-      <div id="card-front">
-        <div id="top-content" class="flex">
-          <div id="top-left" class="full-card-width flex">
+    <div id="card-box">
+      <div id="card-front" class="wrapper">
+        <div class="flex">
+          <div class="full-width bottom-space">
             <img
               src="https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/chip.png"
             />
           </div>
-          <div id="top-right" class="flex">
+          <div>
             <img id="type-logo" />
           </div>
         </div>
 
-        <div id="middle-content" class="flex">
-          <div id="card-number" class="full-card-width flex">
+        <div class="flex">
+          <div id="card-number" class="full-width bottom-space flex">
             1234 45677890 192
           </div>
-          <div class="cvv-amex flex"></div>
+          <div class="cvv cvv-amex flex"></div>
         </div>
 
-        <div id="bottom-content" class="flex">
-          <div id="card-name-content">
+        <div class="flex">
+          <div class="full-width">
             <label class="card-label-title">Card Holder</label>
-            <div id="card-name" class="card-item">Full Name</div>
+            <div id="card-name" class="card-item">FULL NAME</div>
           </div>
-          <div id="card-date-content" class="align-right">
+          <div>
             <label class="card-label-title">Expires</label>
-            <div id="card-date" class="card-item">
+            <div class="card-item">
               <span id="card-date-month">MM/</span
               ><span id="card-date-year">YY</span>
             </div>
@@ -46,11 +46,11 @@
 
       <div id="card-back" hidden>
         <div id="card-magnetic-band"></div>
-        <div id="card-cvv">
-          <label for="card-cvv">
-            <div class="card-label-title">CVV</div>
-            <div class="card-item cvv-visa cvv-mastercard"></div>
-          </label>
+        <div id="signature-panel" class="wrapper">
+          <div class="cvv-item card-label-title">CVV</div>
+          <div
+            class="cvv-item cvv cvv-visa cvv-mastercard card-label-title"
+          ></div>
         </div>
       </div>
     </div>
