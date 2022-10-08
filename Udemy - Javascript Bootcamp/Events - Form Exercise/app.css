@@ -40,11 +40,8 @@ img{
     display:flex;
 }
 
-.hidden-on-load{
-    display: none;
-}
-
 #card-number{
+    min-height:26px;
     font-size: x-large;
     font-weight: bold;
     text-shadow: 1px 1px rgba(255, 254, 254, 0.301);

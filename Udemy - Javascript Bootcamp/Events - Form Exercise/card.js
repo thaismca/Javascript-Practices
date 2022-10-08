@@ -49,12 +49,6 @@ const isNameValidInput = (event) => {
         return (key >= 65 && key <= 90) // Allow letters while shift is pressed
 };
 
-//display hidden-on-load elements
-const displayHiddenElements = (elements) => {
-    for(el of elements)
-        el.classList.remove('hidden-on-load');
-};
-
 //Functions to populate the selection dropdowns
 //first default element that can be applied to all drop down selections
 function defaultSelection(select){
@@ -135,9 +129,6 @@ cardTypeInput.addEventListener('input', (e) =>{
     cardYearInput.value = 'year';
     cvvInput.removeAttribute('disabled');
     cvvInput.value = '';
-
-    //make sure no elements in the card display are hidden
-    displayHiddenElements(hiddenElements);
     
     //make sure card representation reflects the form reset
     displayCardName();
