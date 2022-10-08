@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Credit Card Form Exercise</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Gemunu+Libre"
+    />
     <link rel="stylesheet" href="app.css" />
   </head>
 
@@ -23,18 +27,16 @@
         </div>
 
         <div class="flex">
-          <div id="card-number" class="full-width bottom-space flex">
-            1234 45677890 192
-          </div>
+          <div id="card-number" class="full-width bottom-space flex"></div>
           <div class="cvv cvv-amex flex"></div>
         </div>
 
         <div class="flex">
-          <div class="full-width">
+          <div class="full-width hidden-on-load">
             <label class="card-label-title">Card Holder</label>
             <div id="card-name" class="card-item">FULL NAME</div>
           </div>
-          <div>
+          <div class="hidden-on-load">
             <label class="card-label-title">Expires</label>
             <div class="card-item">
               <span id="card-date-month">MM/</span

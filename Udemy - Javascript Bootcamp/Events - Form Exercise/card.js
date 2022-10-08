@@ -11,10 +11,9 @@ function removeSpaces(str){
 
 //function to reset an object deleting all its properties and methods
 const resetObj = (obj) => {
-    for (const key in obj) {
+    for (const key in obj)
         delete obj[key];
-      }
-}
+};
 
 //clear disabled state from months
 const resetMonthsSelection = (select) => {
@@ -48,6 +47,12 @@ const isNameValidInput = (event) => {
             (key === 45 || key ===32)) // Allow hifen and space   
     else 
         return (key >= 65 && key <= 90) // Allow letters while shift is pressed
+};
+
+//display hidden-on-load elements
+const displayHiddenElements = (elements) => {
+    for(el of elements)
+        el.classList.remove('hidden-on-load');
 };
 
 //Functions to populate the selection dropdowns
@@ -86,6 +91,8 @@ const cvvInput = document.querySelector('#cvv-input');
 
 //card representation elements
 const logo = document.querySelector('#type-logo');
+const cardNumberDisplay = document.querySelector('#card-number');
+const hiddenElements = document.querySelectorAll('.hidden-on-load');
 
 //card front and back
 const cardFront = document.querySelector('#card-front');
@@ -105,7 +112,7 @@ for(i=0; i<10; i++){
     option.value = currYear + i;
     option.innerText = currYear + i;
     cardYearInput.appendChild(option);
-}
+};
 
 //---------- CREDIT CARD TYPE INPUT ----------
 cardTypeInput.addEventListener('input', (e) =>{
@@ -129,11 +136,18 @@ cardTypeInput.addEventListener('input', (e) =>{
     cvvInput.removeAttribute('disabled');
     cvvInput.value = '';
 
+    //make sure no elements in the card display are hidden
+    displayHiddenElements(hiddenElements);
+    
     //make sure card representation reflects the form reset
     displayCardName();
     displayCardMonth();
     displayCardYear();
     resetAllCvvDisplay();
+    cardNumberDisplay.innerHTML = ''
+
+    //generate card mask in display
+    generateCardNumberMask(cardTypeInput.value);
 
     //Card logo, card number and cvv input format based on card type
     logo.setAttribute('src', `img/${selectedType}.png`);
@@ -147,6 +161,35 @@ cardTypeInput.addEventListener('input', (e) =>{
     }
 });
 
+//---------- CREDID CARD NUMBER DISPLAY MASK ----------
+
+const generateCardNumberMask = (type) => {
+    if(type === 'amex'){
+        for(i=0; i < 17; i++){
+            ((i !== 4) && (i !== 13)) ? createDigitSpans() : createSpaceSpans();
+        }
+    } else {
+        for(i=0; i < 19; i++){
+            ((i !== 4) && (i !== 9) && (i !== 14)) ? createDigitSpans() : createSpaceSpans();
+        }
+    }
+    return cardNumberDisplay;
+};
+
+const createDigitSpans = () => {
+    let digit = document.createElement('span');
+    digit.classList.add('digit');
+    digit.innerText = '#'
+    cardNumberDisplay.appendChild(digit);
+};
+
+const createSpaceSpans = () => {
+    let space = document.createElement('span');
+    space.classList.add('space');
+    cardNumberDisplay.appendChild(space);    
+};
+
+
 //---------- CREDIT CARD NUMBER INPUT ----------
 //only register numeric inputs
 cardNumberInput.addEventListener('keydown', (e) => {
@@ -155,10 +198,21 @@ cardNumberInput.addEventListener('keydown', (e) => {
 
 cardNumberInput.addEventListener('input', (e) =>{
     //populate cardNumber in formData object
-    formData['cardNumber'] = e.target.value;  
+    formData['cardNumber'] = e.target.value;
 
-
+    replaceCardNumber(e);
 });
+
+//replace number displayed in card
+const replaceCardNumber = (e) => {
+    const digits = cardNumberDisplay.querySelectorAll('.digit');
+    let breakValue = [...e.target.value];
+    for(i=0; i < digits.length; i++){
+        if(breakValue[i]) digits[i].innerText = breakValue[i];
+        else digits[i].innerText = '#'
+    }  
+};
+
 
 //---------- CREDIT CARD NAME INPUT ----------
 //only register name valid inputs
@@ -180,7 +234,7 @@ cardNameInput.addEventListener('input', (e) => {
 const displayCardName = () => {
     let name = document.querySelector('#card-name');
     name.innerText = !cardNameInput.value ? 'FULL NAME' : cardNameInput.value;
-} 
+};
 
 //---------- EXIPIRY DATE INPUTS----------
 //year selection input
@@ -228,7 +282,7 @@ cardMonthInput.addEventListener('input', (e) => {
 const displayCardYear = () => {
     let year = document.querySelector('#card-date-year');
     year.innerText = (cardYearInput.value === 'year') ? 'YY' : `${cardYearInput.value.slice(2)}`;
-} 
+};
 
 //change month in card representation
 const displayCardMonth = () => {
@@ -236,7 +290,7 @@ const displayCardMonth = () => {
     //make sure it's always two digits
     let monthString = ('0' + cardMonthInput.selectedIndex).slice(-2);
     month.innerText = (cardMonthInput.value === 'month') ? 'MM/' : `${monthString}/`;
-}
+};
 
 //---------- CVV INPUT ----------
 //only register numeric inputs
@@ -271,7 +325,7 @@ const displayCardCvv = () => {
         maskedCvv += '*'
     }
     cvvPlacement.innerText = maskedCvv; 
-}
+};
 
 //reset cvv for when a new card type is selected
 const resetAllCvvDisplay = () => {
@@ -280,5 +334,4 @@ const resetAllCvvDisplay = () => {
         el.innerText = '';
     }
     
-}
-
+};

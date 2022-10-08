@@ -1,5 +1,5 @@
 body{
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Gemunu Libre, serif;
     color:rgb(49, 47, 47);
 }
 
@@ -40,19 +40,34 @@ img{
     display:flex;
 }
 
+.hidden-on-load{
+    display: none;
+}
+
 #card-number{
     font-size: x-large;
     font-weight: bold;
     text-shadow: 1px 1px rgba(255, 254, 254, 0.301);
 }
 
+#card-number span{
+    margin-right: 3px;
+}
+
+.space{
+    width: 15px;
+}
+
 .card-label-title{
-    font-size: small;
+    font-size: 15px;
+    letter-spacing: 1.5px;
     color:rgb(70, 67, 67);
 }
 
 .card-item{
     font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 2px;
     text-shadow: 1px 1px rgba(255, 254, 254, 0.301);
 }
 
@@ -82,11 +97,8 @@ img{
 }
 
 label{
-    font-size: small;
-}
-
-.form-line label{
-    padding: 5px;
+    font-size: 16px;
+    letter-spacing: 1.5px;
 }
 
 .full-form-width{
@@ -109,6 +121,10 @@ select{
 
 .form-line{
     width: 100%;
+}
+
+.form-line label{
+    padding: 12px 2px 5px;
 }
 
 #cvv-input{
