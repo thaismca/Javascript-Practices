@@ -9,10 +9,26 @@ function removeSpaces(str){
     return str = str.replaceAll(' ', '')
 };
 
-//function to reset an object deleting all its properties and methods
+//function to reset all properties in the object
 const resetObj = (obj) => {
     for (const key in obj)
-        delete obj[key];
+        obj[key] = '';
+};
+
+//remove disabled attributes in form when type is selected
+const removeDisabled = () => {
+    const disabled = document.querySelectorAll('.disabled-input');
+    for(el of disabled){
+        el.removeAttribute('disabled');
+    }
+};
+
+//remove invalid-input class in elements from form when type is selected
+const removeInvalid = () => {
+    const invalid = document.querySelectorAll('.invalid-input');
+    for(el of invalid){
+        el.classList.remove('invalid-input');
+    }
 };
 
 //clear disabled state from months
@@ -72,7 +88,14 @@ function populateSelection(arr, select){
 };
 
 //---------- FORM DATA ----------
-const formData = {};
+const formData = {
+    cardType: '',
+    cardNumber: '',
+    cardName: '',
+    cardMonth: '',
+    cardYear: '',
+    cvv: ''
+};
 
 //---------- SELECT ELEMENTS IN THE PAGE ----------
 //form inputs
@@ -114,20 +137,18 @@ cardTypeInput.addEventListener('input', (e) =>{
     resetObj(formData);
     //populate cardType in formData object
     let selectedType = e.target.value;
-    formData['cardType'] = selectedType;
+    formData.cardType = selectedType;
 
     //make sure all inputs are enabled and 
     //the form is clear whenever a card type is selected
-    cardNumberInput.removeAttribute('disabled');
+    removeDisabled();
+    removeInvalid();
+
     cardNumberInput.value = '';
-    cardNameInput.removeAttribute('disabled');
     cardNameInput.value = '';
-    cardMonthInput.removeAttribute('disabled');
     cardMonthInput.value = 'month';
     resetMonthsSelection(cardMonthInput);
-    cardYearInput.removeAttribute('disabled');
     cardYearInput.value = 'year';
-    cvvInput.removeAttribute('disabled');
     cvvInput.value = '';
     
     //make sure card representation reflects the form reset
@@ -146,6 +167,7 @@ cardTypeInput.addEventListener('input', (e) =>{
     if(selectedType === 'amex'){
         cardNumberInput.setAttribute('maxlength', '15');
         cvvInput.setAttribute('maxlength', '4');
+
     }else {
         cardNumberInput.setAttribute('maxlength', '16');
         cvvInput.setAttribute('maxlength', '3');
@@ -153,7 +175,6 @@ cardTypeInput.addEventListener('input', (e) =>{
 });
 
 //---------- CREDID CARD NUMBER DISPLAY MASK ----------
-
 const generateCardNumberMask = (type) => {
     if(type === 'amex'){
         for(i=0; i < 17; i++){
@@ -189,9 +210,18 @@ cardNumberInput.addEventListener('keydown', (e) => {
 
 cardNumberInput.addEventListener('input', (e) =>{
     //populate cardNumber in formData object
-    formData['cardNumber'] = e.target.value;
-
+    formData.cardNumber = e.target.value;
+    //replace number displayed in card
     replaceCardNumber(e);
+});
+
+cardNumberInput.addEventListener('blur', (e) =>{
+    //highlight the input if card is still not valid
+    if(formData.cardNumber.length != cardNumberInput.getAttribute('maxlength')){
+        e.target.classList.add('invalid-input');
+    }else {
+        e.target.classList.remove('invalid-input');
+    }
 });
 
 //replace number displayed in card
@@ -204,7 +234,6 @@ const replaceCardNumber = (e) => {
     }  
 };
 
-
 //---------- CREDIT CARD NAME INPUT ----------
 //only register name valid inputs
 cardNameInput.addEventListener('keypress', (e) => {
@@ -215,10 +244,19 @@ cardNameInput.addEventListener('input', (e) => {
     //change to uppercase when typing
     e.target.value = e.target.value.toUpperCase();
     //populate cardName in formData object
-    formData['cardName'] = e.target.value.trim();
+    formData.cardName = e.target.value.trim();
 
     //change name in card representation
     displayCardName(); 
+});
+
+cardNameInput.addEventListener('blur', (e) =>{
+    //highlight the input if name is still not valid
+    if(formData.cardName === ''){
+        e.target.classList.add('invalid-input');
+    }else {
+        e.target.classList.remove('invalid-input');
+    }
 });
 
 //change name in card representation
@@ -236,10 +274,11 @@ cardYearInput.addEventListener('input', (e) => {
         //check selected month and force new selection if already passed in the current year
         if(parseInt(cardMonthInput.selectedIndex) <= NOW.getMonth()){
             cardMonthInput.value = 'month';
+            cardMonthInput.classList.add('invalid-input');
             //change month in card representation
             displayCardMonth();
-            //remove cardMonth from formData object
-            if (formData['cardMonth']) delete formData['cardMonth']
+            //reset cardMonth in formData object
+            formData.cardMonth = ''
         }    
         //disable all month options that already passed in the current year
         for(i=0; i<= NOW.getMonth(); i++){
@@ -253,20 +292,39 @@ cardYearInput.addEventListener('input', (e) => {
     }
 
     //populate cardYear in formData object
-    formData['cardYear'] = selectedYear;
+    formData.cardYear = selectedYear;
     //change year in card representation
     displayCardYear();
+});
+
+cardYearInput.addEventListener('blur', (e) =>{
+    //highlight the input if year is still not valid
+    if(formData.cardYear === ''){
+        e.target.classList.add('invalid-input');
+    }else {
+        e.target.classList.remove('invalid-input');
+    }
 });
 
 //month selection input
 cardMonthInput.addEventListener('input', (e) => {
     let selectedMonth = e.target.value;
 
+    //remove invalid input highlight if applicable
+    cardMonthInput.classList.remove('invalid-input')
     //populate cardMonth in formData object
-    formData['cardMonth'] = selectedMonth;
+    formData.cardMonth = selectedMonth;
     //change month in card representation
     displayCardMonth();
+});
 
+cardMonthInput.addEventListener('blur', (e) =>{
+    //highlight the input if year is still not valid
+    if(formData.cardMonth === ''){
+        e.target.classList.add('invalid-input');
+    }else {
+        e.target.classList.remove('invalid-input');
+    }
 });
 
 //change year in card representation
@@ -291,7 +349,7 @@ cvvInput.addEventListener('keydown', (e) => {
 
 cvvInput.addEventListener('input', (e) =>{
     //populate cvv in formData object
-    formData['cvv'] = e.target.value;
+    formData.cvv = e.target.value;
     //change cvv in card representation
     displayCardCvv();
 });
@@ -306,6 +364,12 @@ cvvInput.addEventListener('focus', (e) => {
 cvvInput.addEventListener('blur', (e) => {
     cardFront.removeAttribute('hidden');
     cardBack.setAttribute('hidden', '');
+
+    if(formData.cvv.length != cvvInput.getAttribute('maxlength')){
+        e.target.classList.add('invalid-input');
+    }else {
+        e.target.classList.remove('invalid-input');
+    }
 });
 
 //change cvv in card representation
@@ -324,5 +388,4 @@ const resetAllCvvDisplay = () => {
     for(el of cvv) {
         el.innerText = '';
     }
-    
 };

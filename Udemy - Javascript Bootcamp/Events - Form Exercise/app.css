@@ -128,5 +128,8 @@ select{
     width: 80px;
 }
 
+.invalid-input{
+    border: 2px solid red;
+}
 
 

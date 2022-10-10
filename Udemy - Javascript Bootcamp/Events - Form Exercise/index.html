@@ -66,7 +66,7 @@
         <input
           type="text"
           id="card-number-input"
-          class="full-form-width"
+          class="full-form-width disabled-input"
           disabled
         />
       </div>
@@ -75,7 +75,7 @@
         <input
           type="text"
           id="card-name-input"
-          class="full-form-width"
+          class="full-form-width disabled-input"
           maxlength="22"
           disabled
         />
@@ -83,12 +83,22 @@
       <div class="form-line flex">
         <div id="date-input" class="full-form-width">
           <label class="flex">Expiry date</label>
-          <select id="card-month-input" name="Month" disabled></select>
-          <select id="card-year-input" name="Year" disabled></select>
+          <select
+            id="card-month-input"
+            name="Month"
+            class="disabled-input"
+            disabled
+          ></select>
+          <select
+            id="card-year-input"
+            name="Year"
+            class="disabled-input"
+            disabled
+          ></select>
         </div>
         <div id="cvv-number">
           <label for="cvv-input" class="flex">CVV</label>
-          <input type="text" id="cvv-input" disabled />
+          <input type="text" id="cvv-input" class="disabled-input" disabled />
         </div>
       </div>
     </div>
