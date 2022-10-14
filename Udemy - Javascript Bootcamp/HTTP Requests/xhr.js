@@ -48,7 +48,7 @@ secondReq.addEventListener('load', function() {
     //get the text that it's returned from the request (JSON) and parse that into JavaScript
     const data = JSON.parse(this.responseText);
 
-    //get whatever data that has another url taht can be passed in a subsequent request
+    //get whatever data that has another url that can be passed in a subsequent request
     //in  this case, getting the data from the first film from the first planet
     const filmUrl = data.results[0].films[0];
     
