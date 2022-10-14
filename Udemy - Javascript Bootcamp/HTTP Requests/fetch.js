@@ -38,7 +38,7 @@ fetch('http://swapi.dev/api/planets')
     });
 
 //----------------------------------------------------------------------------------------------------------------------------------
-    //chaining fetch requests
+//chaining fetch requests
 fetch('http://swapi.dev/api/planets')
     .then((response) => {
         if(!response.ok) throw new Error(`Status Code - ${response.status}`);
@@ -81,7 +81,7 @@ fetch('http://swapi.dev/api/planets')
 //-----------------------------------------------------------------------------------------------------------------------------------
 //refactoring previous fetch and changing to include more planets loaded from next pages of results
 
-//function to check if the status is ok and parse the response using the .jason method
+//function to check if the status is ok and parse the response using the .json method
 //it returns a promise, so I can chain another .then after calling it
 const checkStatusAndParse = (response) => {
     if(!response.ok) throw new Error(`Status Code - ${response.status}`);
