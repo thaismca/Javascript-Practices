@@ -37,9 +37,9 @@ fetch('http://swapi.dev/api/planets')
         document.body.appendChild(errorMessage);
     });
 
-    //----------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
     //chaining fetch requests
-    fetch('http://swapi.dev/api/planets')
+fetch('http://swapi.dev/api/planets')
     .then((response) => {
         if(!response.ok) throw new Error(`Status Code - ${response.status}`);
         //since a new promise is returned from response.json, we can return it from this first request
@@ -69,6 +69,50 @@ fetch('http://swapi.dev/api/planets')
         //in this case, just going to display the title property of the object in the console
         console.log(data.title);
     }))
+    //this runs when promise is rejected or when throwing an error
+    .catch((err) =>{
+        console.log('SOMETHING WENT WRONG WITH FETCH');
+        console.log(err);
+        const errorMessage = document.createElement('p');
+        errorMessage.innerText = `Something went wrong! ${err}`;
+        document.body.appendChild(errorMessage);
+    });
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+//refactoring previous fetch and changing to include more planets loaded from next pages of results
+
+//function to check if the status is ok and parse the response using the .jason method
+//it returns a promise, so I can chain another .then after calling it
+const checkStatusAndParse = (response) => {
+    if(!response.ok) throw new Error(`Status Code - ${response.status}`);
+    return response.json();
+}
+
+//a function to print the planet names from results page (each page has 10 planets)
+const printPlanetNames = (data) => {
+    for(let planet of data.results){
+        console.log(planet.name);
+    }
+
+    //solely print planet names does not return a promise, so I can chain another .then afterwards
+    //need to include a resolved promise to be returned and used in the following request
+    //since what I want is the url in data.next, this is what I'll return in this resolved promise
+    return Promise.resolve(data.next);
+}
+
+//a function to fetch data from a url, since I'll receive one in the return from printPlanetNames
+const fetchNextPlanets = (url) => {
+    return fetch(url);
+}
+
+fetch('http://swapi.dev/api/planets')
+    .then(checkStatusAndParse)
+    .then(printPlanetNames)
+    .then(fetchNextPlanets)
+    .then(checkStatusAndParse)
+    .then(printPlanetNames)
+    //can repeat this for as long as there are pages left
+
     //this runs when promise is rejected or when throwing an error
     .catch((err) =>{
         console.log('SOMETHING WENT WRONG WITH FETCH');
