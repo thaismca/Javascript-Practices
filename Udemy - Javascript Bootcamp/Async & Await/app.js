@@ -77,6 +77,37 @@ async function getPlanetsTryCatch(url = 'http://swapi.dev/api/planets') {
 getPlanetsTryCatch('http://swapi.dev/api/planets123');
 
 //when it's only one function being called, using either method makes no difference, but when we have multiple
-//chained requests, they will have different benefits - attaching the catch would make it easier because you can
-//use only one to catch all (same as we saw before with chained promises), try/catch makes it possible to give a 
-//more persnalized handling for rejection in each promise
+//chained requests, each approach will have its own different benefits - attaching the .catch after the function call
+// would make it easier because you can use only one to catch all (same as we saw before with chained promises), 
+// while try/catch makes it possible to give a more persnalized handling for rejection in each promise
+
+//----------SEQUENTIAL VERSUS PARALLEL REQUESTS---------------------------------------------------------------------------
+//sequential - the following request is only sent after the previous one is resolved
+//makes sense to use this one if you have one requesting depending on the previous one, like when the first returns
+//an url that will be passed in the following request (like we did in preious lessons)
+
+//in this case, we have three requests happening in sequence, the following only being sent when the previous is resolved
+//but it doesn't make sense to use this approach, since the request don't depend on one another
+async function get3PokemonsSequential() {
+    const pokemon1 = await axios.get('https://pokeapi.co/api/v2/pokemon/1');
+    const pokemon2 = await axios.get('https://pokeapi.co/api/v2/pokemon/2');
+    const pokemon3 = await axios.get('https://pokeapi.co/api/v2/pokemon/3');
+    console.log(pokemon1.data);
+    console.log(pokemon2.data);
+    console.log(pokemon3.data);
+}
+//get3PokemonsSequential()
+
+//we can have the requests from the previous function being sent all at the same time, in parallel
+async function get3PokemonsParallel(){
+    const promise1 = axios.get('https://pokeapi.co/api/v2/pokedmon/1');
+    const promise2 = axios.get('https://pokeapi.co/api/v2/pokemon/2');
+    const promise3 = axios.get('https://pokeapi.co/api/v2/pokemon/3');
+    const poke1 = await promise1;
+    const poke2 = await promise2;
+    const poke3 = await promise3;
+    console.log(poke1.data);
+    console.log(poke2.data);
+    console.log(poke3.data);
+}
+get3PokemonsParallel()
