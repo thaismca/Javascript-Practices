@@ -100,7 +100,7 @@ async function get3PokemonsSequential() {
 
 //we can have the requests from the previous function being sent all at the same time, in parallel
 async function get3PokemonsParallel(){
-    const promise1 = axios.get('https://pokeapi.co/api/v2/pokedmon/1');
+    const promise1 = axios.get('https://pokeapi.co/api/v2/pokemon/1');
     const promise2 = axios.get('https://pokeapi.co/api/v2/pokemon/2');
     const promise3 = axios.get('https://pokeapi.co/api/v2/pokemon/3');
     const poke1 = await promise1;
@@ -110,4 +110,23 @@ async function get3PokemonsParallel(){
     console.log(poke2.data);
     console.log(poke3.data);
 }
-get3PokemonsParallel()
+//get3PokemonsParallel()
+
+//refactoring parallel requests using Promise.all
+async function get3PokemonsAll(){
+    const prom1 = axios.get('https://pokeapi.co/api/v2/pokemon/1');
+    const prom2 = axios.get('https://pokeapi.co/api/v2/pokemon/2');
+    const prom3 = axios.get('https://pokeapi.co/api/v2/pokemon/3');
+    const results = await Promise.all([prom1, prom2, prom3]);
+    console.log(results);
+
+    //we can also call another function in the results
+    printPokemonNames(results);
+}
+get3PokemonsAll()
+
+function printPokemonNames(arr){
+    for(let pokemon of arr){
+        console.log(pokemon.data.name);
+    }
+}
