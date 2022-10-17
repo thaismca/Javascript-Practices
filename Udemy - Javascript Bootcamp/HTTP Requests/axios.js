@@ -76,7 +76,7 @@ const printPlanetNames = ({data}) => {
         console.log(planet.name);
     }
 
-    //solely print planet names does not return a promise, so I can chain another .then afterwards
+    //solely print planet names does not return a promise, so I can't chain another .then afterwards
     //need to include a resolved promise to be returned and used in the following request
     //since what I want is the url in data.next, this is what I'll return in this resolved promise
     return Promise.resolve(data.next);
