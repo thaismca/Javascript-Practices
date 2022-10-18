@@ -44,7 +44,34 @@ const correctCall = new Color(120, 34, 198); //console.log(wrongCall) will retur
 //Adding functions to the prototypes is done using the following syntax
 Color.prototype.rgb = function() { //cannot use arrow functions because of how that would mess with the scope of "this"
     const {r,g,b} = this;
-    return `rgb(${r}, ${g}, ${b})`
+    return `rgb(${r}, ${g}, ${b})`;
 };
-//When ispecting the object correctCall in the console, it's possible to see that the rgb function is actually inside the
+//When inspecting the object correctCall in the console, it's possible to see that the rgb function is actually inside the
 //prototype, not the instance of the object itself (only the properties are unique to each instance)
+
+//-----CLASS SYNTAX ------------------------------------------------------------------------------------------------------------
+//no need to have constructor and other methods created for the prototype separated from each other
+//although it does the same thing at the end of the day, the code is more organized when using class syntax
+class ColorClass {
+    //constructor keyword is mandatory
+    //it indicates a function that runs immediately when a new object for that class is instantiated
+    constructor(r, g, b){
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+
+    //now all other methods can be added inside of the class as following
+    rgb(){
+        const {r,g,b} = this;
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+}
+
+//instantiating a new object using the template of the class ColorClass
+const anotherColor = new ColorClass();
+//calling a method in the new object and storing the value returned from taht method to a variable
+const rgbString = anotherColor.rgb();
+
+//Same as with correctCall, when calling anotherColor in the console, it's possible to see that the rgb function is actually
+//inside the prototype, not the instance of the object itself (only the properties are unique to each instance)
