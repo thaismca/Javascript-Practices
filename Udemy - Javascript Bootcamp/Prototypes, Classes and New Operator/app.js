@@ -75,3 +75,57 @@ const rgbString = anotherColor.rgb();
 
 //Same as with correctCall, when calling anotherColor in the console, it's possible to see that the rgb function is actually
 //inside the prototype, not the instance of the object itself (only the properties are unique to each instance)
+
+//-----INHERITANCE : EXTENDS, SUPER AND SUBCLASSES ----------------------------------------------------------------------------
+//just examples to focus on the concepts
+//one class that has properties and methods that can be shared through multiple subclasses -> superclass
+class Pet {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    eat(){
+        return `${this.name} is eating`;
+    }
+}
+
+//classes that extend from other class -> subclasses
+class Cat extends Pet {
+    //if I want to add more properties for Cat on top of the ones from Pet
+    constructor(name, age, livesLeft = 9){
+        //use keyword super to refer to the constructor of the superclass
+        super(name, age);
+        this.livesLeft = livesLeft;
+    }
+
+    meow(){
+        return 'MEOOOOOOW!!!';
+    }
+}
+
+class Dog extends Pet {
+    bark(){
+        return 'WOOOF!!!';
+    }
+
+    eat(){
+        return `OMG! ${this.name} is eating!!!`
+    }
+}
+
+//When either a Dog or Cat object is instantiated, it will not only apply the template with methods and properties pertained to
+//its own Dog or Cat class, but it will also inherit all the properties and methods from Pet, including the constructor when 
+//the class doesn't have one of its own (as the Dog class)
+const cat1 = new Cat('Tom', 7, 8);
+const dog1 = new Dog('Thor', 10);
+
+//cat1 will have name: 'Tom' and age: 7 as properties, and it will be able to access the eat() method from the superclass 
+//and the meow() method from the subclass
+console.log(cat1.eat());
+console.log(`${cat1.name} says ${cat1.meow()}`);
+
+//dog1 will have name: 'Thor' and age: 10 as properties, and it would also be able to access the eat() method from the superclass,
+//but since it already has its own eat() method, the one declared in the subclass overrides the one in the superclass 
+console.log(dog1.eat()); //it will run the eat() method from Dog class
+console.log(`${dog1.name} says ${dog1.bark()}`);
