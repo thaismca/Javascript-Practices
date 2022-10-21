@@ -1,0 +1,28 @@
+This project is part of a practice proposed in the Section 20 of the course.
+https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17021534#overview
+
+Things the program does: 1- displays a timer, 2 - shows animated border around the timer
+
+Possible implementation 1
+- event listener to watch for a click on 'play' button
+- when 'play' is clicked, draw full border around the timer
+- each second the timer conts down, update the border  
+- each second the timer conts down, update the 'seconds left' text
+- when timer reaches 0, reset the boder 
+- when timer reaches 0, reset internal timer to get ready for another run
+
+Considering the two thigs that the program does, when checking the steps of the possible implementation 1, we can see every other line of instruction addresses something different inside the application. We alternate what every single line of instruction to handle a different part of the scope of our app. This means that the code can get really hard to understant over time, because we are going to change the context of what we are dealing with as we read every line of code in series. 
+
+So maybe it would be a better approach if we could try and isolate all the different responsibilities of our app into different and separate blocks.
+
+Possible implementation 2 - evented style approach
+- event listener to watch for a click on 'play' button
+- emit an event stating that the timer has started -> watch for this event and, when it occurs, draw the border
+- start counting down the timer
+- emit an event that the timer has 'ticked' -> watch for this event and, when it occurs, update the border
+- each second the timer conts down, update the 'seconds left' text
+- if the timer reaches 0
+  - emit an event taht the timer is done -> watch for this event and, when it occurs, reset the border
+  - reset internal timer to get ready for another run
+
+The idea is that, rather than try to write some code where we are alternating what we are doing step by step, and every line of code essentially does something tottaly different and unrelated to what occurred before it, we can instead have one block of code that is completely focused in one aspect of our app, and some other part needs to know about this stuff rather than directly take whatever action on itself inside this one block. For this to work, we would create one solid block taht is 100% concerned around the timer, and then that block of code will eventually emit some event, a call a callback, or otherwise tell the outside world that something important just occurred.
