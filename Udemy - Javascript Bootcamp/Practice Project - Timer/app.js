@@ -24,19 +24,29 @@ class Timer{
         //store a reference to it in an property interval for this instance of Timer
         this.interval = setInterval(this.tick, 1000);
     }
+
     //method to run when user clicks the play button
     pause = () => {
         //stop the countdown that was called in start
         clearInterval(this.interval);
     }
+
     //method to be called repeatedly over time, as long as the timer is counting down
     //should start when user clicks play, and stop when user clicks pause
     tick = () => {
-        //reach to the text input and get the current value out of it and parse it into a number
-        let timeRemaining = parseFloat(this.durationInput.value);
-        //update the timeRemaining and throw the new value back into the input element
-        this.durationInput.value = timeRemaining - 1;
+        //update the timeRemaining and throw the new value back into the input element using the set and get methods
+        this.timeRemaining = this.timeRemaining - 1;
     }
+    //creating getter and setter methods to work with the time remaining in the text input
+    get timeRemaining() {
+        //reach to the text input and get the current value out of it and parse it into a number
+        return parseFloat(this.durationInput.value);
+    }
+    set timeRemaining(time) {
+        //set the value of the input to the time parameter
+        this.durationInput.value = time;
+    }
+
     // /called whenever the user clicks the duration text and turns it into a text input
     //so the number can be editted to change the timer duration
     onChangeDuration = () => {
