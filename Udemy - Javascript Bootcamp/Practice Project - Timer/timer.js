@@ -11,6 +11,7 @@ class Timer{
         if(callbacks){
             this.onStart = callbacks.onStart;
             this.onTick = callbacks.onTick;
+            this.onChange = callbacks.onChange;
             this.onComplete =callbacks.onComplete;
         }
 
@@ -85,5 +86,9 @@ class Timer{
     onChangeDuration = () => {
         //pause the timer as soon as the click on the input happens
         this.pause(); 
+        //check if callbacks were passed and there is an onChange method that needs to run when user changes the input
+        if(this.onChange){
+            this.onChange();
+        }
     };
 };
