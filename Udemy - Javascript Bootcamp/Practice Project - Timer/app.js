@@ -1,12 +1,20 @@
 class Timer{
     //receive arguments inside of the constructor that correspond to references to DOM elements
-    constructor(durationInput, playButton, pauseButton){
+    //and an option argument that will represent a set of callbacks that can pottentially be called to notify
+    //the outside world that some important thing happened inside of the class
+    constructor(durationInput, playButton, pauseButton, callbacks){
         //store a refence to each of the arguments in case we need to work with them at some point inside of the class methods
         this.durationInput = durationInput;
         this.playButton = playButton;
         this.pauseButton = pauseButton;
+        //for studies purpose, the callbacks argument will be implemented as optional, so it's necessary to check if it was passed in
+        if(callbacks){
+            this.onStart = callbacks.onStart;
+            this.onTick = callbacks.onTick;
+            this.onComplete =callbacks.onComplete;
+        }
 
-        //bind some event listener to the elements that were passed in the arguments
+        //bind event listeners to the elements that were passed in the arguments
         //this is how a method that is defined inside of the class is going to be called
         this.playButton.addEventListener('click', this.start);
         this.pauseButton.addEventListener('click', this.pause);
@@ -16,6 +24,10 @@ class Timer{
     //use arrow functions so the value of 'this' is guaranteed to be be equal to the instance of the class
     //method to run when user clicks the play button
     start = () => {
+        //check if callbacks were passed and there is an onStart method that needs to run when timer starts
+        if(this.onStart){
+            this.onStart();
+        }
         //call tick() once as soon as the user clicks the play button, otherwise it will start to countdown after the first full second runs
         this.tick();
 
@@ -36,10 +48,18 @@ class Timer{
     tick = () => {
         //check if the countdown reached 0
         if(this.timeRemaining <= 0){
+             //check if callbacks were passed and there is an onComplete method that needs to run when countdown finishes
+             if(this.onComplete){
+                this.onComplete();
+            }
             //stop the countdown
             this.pause();
         } 
         else { //still didn't reach 0
+            //check if callbacks were passed and there is an onTick method that needs to run when timer ticks down
+            if(this.onTick){
+                this.onTick();
+            }
             //update the timeRemaining and throw the new value back into the input element using the set and get methods
             this.timeRemaining = this.timeRemaining - 1;
         }
@@ -69,4 +89,20 @@ const playButton = document.querySelector('#play');
 const pauseButton = document.querySelector('#pause');
 
 //create the instance of Timer passing those three elements that were selected
-const timer = new Timer(durationInput, playButton, pauseButton);
+//in order to notify the outside world that some important thing happened inside of the class, we are going to call a callback
+//the set of callbacks that can potentially be called will be passed in an object as the fourth argument in the constructor
+//the actions that we want to signal to the outside world are: 1- when timer starts, 2- when timer ticks, 3- when timer is finished
+const timer = new Timer(durationInput, playButton, pauseButton, {
+    //callback function to run when timer starts
+    onStart(){
+        console.log('Timer has started');
+    },
+    //callback function to run when timer ticks down
+    onTick(){
+        console.log('Timer has ticked');
+    },
+    //callback function to run when timer is finished
+    onComplete(){
+        console.log('Timer has finished');
+    }
+});
