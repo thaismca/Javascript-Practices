@@ -1,14 +1,20 @@
 
-//function that will draw a border whenever page loads or when user starts a new timer (clicks the input to change value)
-function drawBorder(element) {
+//function that will create a border
+//it will be called when page loads or when user needs a new timer (by clicking the input to change value)
+function generateBorder(element) {
+    //create and object that can be returned and its properties can be used outside of this function
+    //since they are going to be needed in the callbacks passed in the arguments for the Timer instance
     const timerBorder = {}
     timerBorder.radius = element.getAttribute('r');
+    timerBorder.cx = element.getAttribute('cx');
+    timerBorder.cy = element.getAttribute('cy');
     timerBorder.perimeter = (2 * Math.PI * parseFloat(timerBorder.radius));
 
-    //border styles
-    element.style.strokeDasharray = timerBorder.perimeter;
+    //draw border with the following styles
     element.style.stroke = 'green';
+    element.style.strokeDasharray = timerBorder.perimeter;
     element.style.strokeDashoffset = '0';
+    element.setAttribute('transform', `rotate(-90 ${timerBorder.cx} ${timerBorder.cy})`);
 
     return timerBorder;
 }
@@ -19,10 +25,10 @@ const durationInput = document.querySelector('#duration');
 const playButton = document.querySelector('#play');
 const pauseButton = document.querySelector('#pause');
 //border element
-const borderElement = document.querySelector('#timer-border')
+const borderElement = document.querySelector('#timer-border');
 
 //draw the border for first use of the timer with the default value
-const timerBorder = drawBorder(borderElement);
+const timerBorder = generateBorder(borderElement);
 
 //create the instance of Timer passing those three elements that were selected
 //in order to notify the outside world that some important thing happened inside of the class, we are going to call a callback
@@ -37,11 +43,11 @@ const timer = new Timer(durationInput, playButton, pauseButton, {
     //callback function to run when timer ticks down
     onTick(){
         //erase a segment of the border each time the timer ticks down
-        borderElement.style.strokeDashoffset = parseFloat(borderElement.style.strokeDashoffset) + timerBorder.segments;
+        borderElement.style.strokeDashoffset = parseFloat(borderElement.style.strokeDashoffset) - timerBorder.segments;
     },
     onChange(){
         //draw a new border when user changes the time in the input
-        drawBorder(borderElement);
+        generateBorder(borderElement);
     },
     //callback function to run when timer is finished
     onComplete(){
