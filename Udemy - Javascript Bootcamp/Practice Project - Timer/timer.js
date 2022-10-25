@@ -32,10 +32,10 @@ class Timer{
         //call tick() once as soon as the user clicks the play button, otherwise it will start to countdown after the first full second runs
         this.tick();
 
-        //call tick once every second
+        //call tick once every 50 miliseconds, so the animation of the border runs smoother
         //since we are going to need access to the interval outside of the scope of the start function,
         //store a reference to it in an property interval for this instance of Timer
-        this.interval = setInterval(this.tick, 1000);
+        this.interval = setInterval(this.tick, 50);
 
         //disable the play button so it cannot be clicked while the timer is counting down
         this.playButton.setAttribute('disabled', '');
@@ -67,7 +67,8 @@ class Timer{
                 this.onTick();
             }
             //update the timeRemaining and throw the new value back into the input element using the set and get methods
-            this.timeRemaining = this.timeRemaining - 1;
+            //each time tick runs, subtract 50 miliseconds
+            this.timeRemaining = this.timeRemaining - 0.05;
         }
         
     };
@@ -78,7 +79,7 @@ class Timer{
     };
     set timeRemaining(time) {
         //set the value of the input to the time parameter
-        this.durationInput.value = time;
+        this.durationInput.value = time.toFixed(2);
     };
 
     // /called whenever the user clicks the duration text and turns it into a text input

@@ -37,8 +37,9 @@ const timerBorder = generateBorder(borderElement);
 const timer = new Timer(durationInput, playButton, pauseButton, {
     //callback function to run when timer starts
     onStart(){
-        //determine border segments based on border perimeter and timer seconds
-        timerBorder.segments = parseFloat(timerBorder.perimeter) / parseFloat(durationInput.value);  
+        //determine border segments based on border perimeter and timer input value
+        //multiply by 0.05, since each segment will be removed every 50 miliseconds
+        timerBorder.segments = (parseFloat(timerBorder.perimeter) / parseFloat(durationInput.value)) * 0.05;  
     },
     //callback function to run when timer ticks down
     onTick(){
