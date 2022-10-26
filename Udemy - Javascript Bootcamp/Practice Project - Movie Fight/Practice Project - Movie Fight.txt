@@ -10,5 +10,12 @@ By Search: to list movies in the autocomplete widget that matches whatever the u
 By ID: to get more details about the movie that the user selects from th list of options in the autocomplete widget.
 
 2 - Build autocomplete widget from scratch
-
+- We are going to have an iput where user can type a string to search for a movie title.
+- As soon as the user enters in some kind of full string and stops typing, we are going to take that search string and make a search request off to the API, and get back some list of results.
+- Then, we are going to take all those search results, open up a little menu underneath that input and render out all the possible movies that the user might be looking for.
+- Each item in the list will be comprised of the movie poster, movie title and movie year.
+- If the search returns no result, the menu should be entirely closed.
+- Since we are going to require the user to click on a movie in the list to select it, pressing enter when entrying data in the search input should do nothing.
+- When an entry in the list of movies is selected by the user, the text in the search input should be updated to match the selected movie title, and the menu should be closed.
+- If user clicks outside of the dropdown menu at any point, the menu should be closed and nothing else should happen.
  
