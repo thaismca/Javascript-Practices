@@ -15,8 +15,8 @@ const fetchData = async (searchTerm) => {
 
 //helper debounce function that receives a function in the arguments, to be used anywhere in the code where we want to introduce
 //some rate limiting on how often this function can be invoked
-//it also receives a delay argument, that represents the miliseconds to be passed in the setTimeout
-const debounce = (func, delay) => {
+//it also receives a delay argument, that represents the miliseconds to be passed in the setTimeout (default to 1000)
+const debounce = (func, delay = 1000) => {
     //it will return a function that will implement a shield and guard how ofter func can actually be invoked
     //func might need to receive some arguments, so we need to make sure that if we ever pass any arguments to this wrapping function
     //they will be forward to func whenever it's called

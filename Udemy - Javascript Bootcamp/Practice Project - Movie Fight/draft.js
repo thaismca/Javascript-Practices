@@ -37,3 +37,24 @@ const onInput = (e) => {
 //this entire process is referred to as debouncing an input -> wait for some time to pass after the last event to actually do something
 
 input.addEventListener('input', onInput);
+
+//--------------------------------------------------------------------------------------------------------------------------------------------
+//after debounce refactoring
+//debounce can be applied in two different ways
+
+//applied to the declaration of onInput - it means onInput will always be wrapped in debouce when invoked
+const onInput = debounce((e) => {
+    fetchData(e.target.value);
+}, 500);
+//select the search input and add the event listener
+const input = document.querySelector('input');
+input.addEventListener('input', onInput);
+
+//applied when invoking onInput - it means onInput can be used with or without being wrapped in debounce
+//it will only have debounce wrapper applied when called inside of a debounce invoking
+const onInput = (e) => {
+    fetchData(e.target.value);
+};
+//select the search input and add the event listener
+const input = document.querySelector('input');
+input.addEventListener('input', debounce(onInput, 500));
