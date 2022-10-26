@@ -15,13 +15,14 @@ const fetchData = async (searchTerm) => {
 
 //helper debounce function that receives a function in the arguments, to be used anywhere in the code where we want to introduce
 //some rate limiting on how often this function can be invoked
-const debounce = (func) => {
+//it also receives a delay argument, that represents the miliseconds to be passed in the setTimeout
+const debounce = (func, delay) => {
     //it will return a function that will implement a shield and guard how ofter func can actually be invoked
     //func might need to receive some arguments, so we need to make sure that if we ever pass any arguments to this wrapping function
     //they will be forward to func whenever it's called
+    let timeoutId; //variable to keep track of the current timer identifier
     return (...args) => {
         //check if there is a timer from a previous input that is still pending
-        let timeoutId;
         if(timeoutId) {
             //if one is found, clearTimeout so func is never called
             clearTimeout(timeoutId);
@@ -32,15 +33,15 @@ const debounce = (func) => {
             //call the function and take all the arguments or whatever is inside of the args array and pass them in
             //as separate arguments to the original function
             func.apply(null, args);
-        }, 1000);
+        }, delay);
     };
 };
 
-//a function that can be called on user input, that will be wrapped in the debounce helper function
+//a function that can be called on user input, that will be wrapped in the debounce helper function, with a delay of 500 miliseconds
 //assign the function to a variable that will be passed as the second argument in the input EventListener
 const onInput = debounce((e) => {
     fetchData(e.target.value);
-});
+}, 500);
 
 //select the search input and add the event listener
 const input = document.querySelector('input');
