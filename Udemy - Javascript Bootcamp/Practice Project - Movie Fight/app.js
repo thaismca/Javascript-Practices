@@ -10,6 +10,9 @@ const fetchData = async (searchTerm) => {
         }
     });
 
+    if(response.data.Error){
+        return ""; //for now, return an empty string when no results are found or too many results 
+    }
     //return the data form the response that is relevant to this application
     //Search is a property inside of the response object that is an array of objects that contain information about the search results
     return response.data.Search;

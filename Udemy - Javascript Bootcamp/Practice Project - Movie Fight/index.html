@@ -26,7 +26,18 @@
       </div>
     </section>
     <div class="container">
-      <input />
+      <!--This is the required structure for a dropdown using bulma-->
+      <div class="dropdown is-active">
+        <input />
+        <div class="dropdown-menu">
+          <div class="dropdown-content">
+            <!--here is where we'd add our list of movies dinamically-->
+            <a class="dropdown-item">Movie #1</a>
+            <a class="dropdown-item">Movie #2</a>
+            <a class="dropdown-item">Movie #3</a>
+          </div>
+        </div>
+      </div>
       <div id="temp"></div>
     </div>
     <script src="utils.js"></script>
