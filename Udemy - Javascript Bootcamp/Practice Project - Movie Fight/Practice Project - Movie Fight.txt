@@ -1,0 +1,14 @@
+Practice Project- Movie Fight
+https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17003654#overview
+
+Challenges:
+1 - Fetch data about movies
+Free API for getting movie data: omdbapi.com
+We are going to have to do initially a search to find some records that match the user search term, and then a follow up request to get information about a particular movie that the user selected. This means we are going to use both available endpoints in the API.
+
+By Search: to list movies in the autocomplete widget that matches whatever the user types in the search input.
+By ID: to get more details about the movie that the user selects from th list of options in the autocomplete widget.
+
+2 - Build autocomplete widget from scratch
+
+ 
