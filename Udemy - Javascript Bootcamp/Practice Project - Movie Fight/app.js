@@ -10,13 +10,28 @@ const fetchData = async (searchTerm) => {
         }
     });
 
-    console.log(response.data);
+    //return the data form the response that is relevant to this application
+    //Search is a property inside of the response object that is an array of objects that contain information about the search results
+    return response.data.Search;
 };
 
 //a function that can be called on user input
 //assign the function to a variable that will be passed as the second argument in the input EventListener
-const onInput = (e) => {
-    fetchData(e.target.value);
+const onInput = async (e) => {
+    //store whatever returns from fetchData to a variable, using await because fetchData is async
+    const movies = await fetchData(e.target.value);
+
+    //iterate over the list of movies that came back from the request
+    for(let movie of movies) {
+        //for every movie that was fetched, create a div element that sumarizes the movie (poster image and string with title + year)
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <img src="${movie.Poster}"/>
+            <h1>${movie.Title} (${movie.Year})</h1>
+        `;
+        //append this new div to the document
+        document.querySelector('#temp').appendChild(div);
+    }
 };
 
 //select the search input and add the event listener

@@ -1,6 +1,6 @@
 //file to store code that was first written to understand some concepts and that will end up being refactored in the app.js file
 //so I can easily access older notes and implementations when studying
-//NOTE: trying to actually use this script might cause errors
+//NOTE: trying to actually use this script will cause errors
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 //first implementation of the delayed search input
