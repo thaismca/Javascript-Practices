@@ -22,8 +22,8 @@ const fetchData = async (searchTerm) => {
 //this allows a more independent code for a more reusable widget, that can be applied to any HTML file
 //requiring only one div existing in the HTML document where this HTML can be added to work, not the entire structure
 //in this case, this one existing div in the HTML document must have an "autocomplete" class applied to it
-const root = document.querySelector('.autocomplete');
-root.innerHTML = `
+const dropdownRoot = document.querySelector('.autocomplete');
+dropdownRoot.innerHTML = `
     <label>Search for a movie</label>
     <input class="input" />
     <div class="dropdown">
@@ -75,5 +75,14 @@ const onInput = async (e) => {
 //add the event listener to the selected input
 //wrap the onInput function into the debounce helper function, with a delay of 500 miliseconds
 input.addEventListener('input', debounce(onInput, 500));
+
+//close the menu when the user clicks anywhere in the page, except the autocomplete widget
+//add an event listener to the entire document to listen for a click
+document.addEventListener('click', (e) =>{
+    //check if the event target happened in any element inside of dropdownRoot 
+    if(e.target.contains(dropdownRoot)){
+        dropdown.classList.remove('is-active');
+    }
+});
 
 
