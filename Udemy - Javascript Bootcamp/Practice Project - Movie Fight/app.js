@@ -46,6 +46,9 @@ const onInput = async (e) => {
     //store whatever returns from fetchData to a variable, using await because fetchData is async
     const movies = await fetchData(e.target.value);
 
+    //make sure to clean any existing result list from a previous search request
+    resultsWrapper.innerHTML = ""; 
+
     //make the dropdown visible by adding class is-active (from Bulma structure) to the element selected and stored in the const dropdown
     dropdown.classList.add('is-active');
 
@@ -55,8 +58,13 @@ const onInput = async (e) => {
         //this tag must have the dropdown-item class applied for styling purposes (from Bulma structure)
         const listOption = document.createElement('a');
         listOption.classList.add('dropdown-item');
+
+        //some movies from the API don't have a link to the image in the Poster property, they have the string 'N/A' instead
+        //handle so there are no broken references in our list if the movie doesn't actually have a poster
+        const imgSrc = movie.Poster === 'N/A' ? "img/no-poster.jpg" : movie.Poster;
+
         listOption.innerHTML = `
-            <img src="${movie.Poster}"/>
+            <img src="${imgSrc}" />
             ${movie.Title} (${movie.Year})
         `;
         //append this new anchor tag that represents a list option that can be selected in the dropdown to the resultsWrapper
