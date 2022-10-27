@@ -11,7 +11,7 @@ const fetchData = async (searchTerm) => {
     });
 
     if(response.data.Error){
-        return ""; //for now, return an empty string when no results are found or too many results 
+        return response.data; //return the response data if there's an Error property (no results are found or too many results) 
     }
     //return the data form the response that is relevant to this application
     //Search is a property inside of the response object that is an array of objects that contain information about the search results
@@ -43,14 +43,25 @@ const resultsWrapper = document.querySelector('.dropdown-content');
 //a function that can be called on user input
 //assign the function to a variable that will be passed as the second argument in the input EventListener
 const onInput = async (e) => {
+    //if value in the search input is an empty string (to handle the case when user erases everything that was typed before)
+    if(e.target.value === ''){
+        dropdown.classList.remove('is-active');
+        return;
+    }
     //store whatever returns from fetchData to a variable, using await because fetchData is async
     const movies = await fetchData(e.target.value);
+    console.log(movies)
 
     //make sure to clean any existing result list from a previous search request
     resultsWrapper.innerHTML = ""; 
-
     //make the dropdown visible by adding class is-active (from Bulma structure) to the element selected and stored in the const dropdown
     dropdown.classList.add('is-active');
+
+    //if there's an Error property in the movies object, display the error message and don't execute anything else
+    if(movies.Error){
+        resultsWrapper.innerHTML = `<i>${movies.Error}</i>`
+        return;
+    }
 
     //iterate over the list of movies that came back from the request
     for(let movie of movies) {
