@@ -24,6 +24,7 @@ Refactoring code
 To make the autocomplete feature more reusable and beter organize the code, we are going to work with two different js files:
 
 1 - app.js: non-reusable code for our very specific project
+Config for autocomplete (to customize autocomplete)
 - root: element that the autocomplete should be rendered into
 - fetchData(): function to search movies
 - requestMovie(): function that makes a follow up request when a movie is clicked
