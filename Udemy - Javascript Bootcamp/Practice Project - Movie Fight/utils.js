@@ -1,5 +1,43 @@
 //---------- HELPER FUNCTIONS ---------------------------------------------------------------------------------------------------------------
+//helper function to make a HTTP request to the OMDb API By Search
+//it accepts a string searchTerm that will be past as the s argument expected by the API
+const searchRequest = async (searchTerm) => {
+    //axios.get can receive an object with parameters in the arguments, to create a query string that will be added to the request url
+    const response = await axios.get('http://www.omdbapi.com/', {
+        //according to the API documentation, the apikey and a string s corresponding to a movie title to search for
+        //are the required parameters to make a request using the By Search endpoint
+        params: {
+            apikey: '44e448f2',
+            s: searchTerm
+        }
+    });
 
+    if(response.data.Error){
+        return response.data; //return the response data if there's an Error property (no results are found or too many results) 
+    }
+    //return the data form the response that is relevant to this application
+    //Search is a property inside of the response object that is an array of objects that contain information about the search results
+    return response.data.Search;
+};
+//--------------------------------------------------------------------------------------------------------------------------------------------
+//helper function to make a follow up HTTP request to the OMDb API By ID
+//it accepts a movie object that will have this imdbID property to be past as the i argument expected by the API
+const movieRequest = async (movie) => {
+    //axios.get can receive an object with parameters in the arguments, to create a query string that will be added to the request url
+    const response = await axios.get('http://www.omdbapi.com/', {
+        //according to the API documentation, the apikey and a string i corresponding to the movie IMDb ID
+        //are the required parameters to make a request using the By ID endpoint
+        params: {
+            apikey: '44e448f2',
+            i: movie.imdbID
+        }
+    });
+    //return the data form the response that is relevant to this application
+    //Search is a property inside of the response object that is an array of objects that contain information about the search results
+    //return response.data;
+    console.log(response.data)
+};
+//--------------------------------------------------------------------------------------------------------------------------------------------
 //helper debounce function that receives a function in the arguments, to be used anywhere in the code where we want to introduce
 //some rate limiting on how often this function can be invoked
 //it also receives a delay argument, that represents the miliseconds to be passed in the setTimeout (default to 1000)

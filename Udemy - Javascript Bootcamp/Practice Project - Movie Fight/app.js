@@ -1,23 +1,3 @@
-//helper function to make HTTP request
-const fetchData = async (searchTerm) => {
-    //axios.get can receive an object with parameters in the arguments, to create a query string that will be added to the request url
-    const response = await axios.get('http://www.omdbapi.com/', {
-        //according to the API documentation, the apikey and a string s corresponding to a movie title to search for
-        //are the required parameters to make a request using the By Search endpoint
-        params: {
-            apikey: '44e448f2',
-            s: searchTerm
-        }
-    });
-
-    if(response.data.Error){
-        return response.data; //return the response data if there's an Error property (no results are found or too many results) 
-    }
-    //return the data form the response that is relevant to this application
-    //Search is a property inside of the response object that is an array of objects that contain information about the search results
-    return response.data.Search;
-};
-
 //moving the generation of HTML following the required structure for a dropdown using bulma to the js file
 //this allows a more independent code for a more reusable widget, that can be applied to any HTML file
 //requiring only one div existing in the HTML document where this HTML can be added to work, not the entire structure
@@ -49,7 +29,7 @@ const onInput = async (e) => {
         return;
     }
     //store whatever returns from fetchData to a variable, using await because fetchData is async
-    const movies = await fetchData(e.target.value);
+    const movies = await searchRequest(e.target.value);
     console.log(movies)
 
     //make sure to clean any existing result list from a previous search request
@@ -78,6 +58,18 @@ const onInput = async (e) => {
             <img src="${imgSrc}" />
             ${movie.Title} (${movie.Year})
         `;
+
+        //add an event listener to the listOption to listen for a click on it (when user selects a movie in the dropdown)
+        listOption.addEventListener('click', () => {
+        //when the item is clicked
+            //close the dropdown menu
+            dropdown.classList.remove('is-active');
+            //update the text inside the input to match the selection
+            input.value = `${movie.Title} (${movie.Year})`;
+            //make follow up request to get the movie details
+            movieRequest(movie);
+        });
+
         //append this new anchor tag that represents a list option that can be selected in the dropdown to the resultsWrapper
         resultsWrapper.appendChild(listOption);
     }
