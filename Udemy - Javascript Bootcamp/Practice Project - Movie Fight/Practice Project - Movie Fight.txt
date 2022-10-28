@@ -26,9 +26,13 @@ To make the autocomplete feature more reusable and beter organize the code, we a
 1 - app.js: non-reusable code for our very specific project
 Config for autocomplete (to customize autocomplete)
 - root: element that the autocomplete should be rendered into
-- fetchData(): function to search movies
 - renderOption(): function that knows how to render a movie option
+- onOptionSelect: function that knows what to do when a movie option is selected
+-setInputValue: function that knows what to display in the input when a movie option is selected
+
+- fetchData(): function to search movies
 - requestMovie(): function that makes a follow up request when a movie is clicked
+-movieTemplate(): function that generates and returns the HTML structure for a movie
 
 2 - autocomplete.js: super reusable code to get an autocomplete to work. 
 - Zero knowledge about 'movies', so i can be used for different objects (like recipes, blog posts, etc.)

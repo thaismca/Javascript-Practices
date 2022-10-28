@@ -1,6 +1,10 @@
 //a function to create a reusable autocomplete widget
 //it receives a config object containing all the kind of custom functions that specify how autocompete should work for a given project
-const createAutocomplete = ({dropdownRoot, renderOption}) => {
+//dropdownRoot: the element where this dropdown will be inserted
+//renderOption: function that knows how to render an option in the dropdown
+//onOptionSelect: function that knows what should be done when a option is selected
+//setInputValue: function to set what information must be displayed in the input when an option is selected
+const createAutocomplete = ({dropdownRoot, renderOption, onOptionSelect, setInputValue}) => {
     //generation of HTML following the required structure for a dropdown using bulma to the js file
     //this allows a more independent code for a more reusable widget, that can be applied to any HTML file
     //the element where this dropdown will be inserted will be passed in the config object as dropdownRoot
@@ -49,7 +53,7 @@ const createAutocomplete = ({dropdownRoot, renderOption}) => {
             //this tag must have the dropdown-item class applied for styling purposes (from Bulma structure)
             const listOption = document.createElement('a');
             listOption.classList.add('dropdown-item');
-            //create option using the HTML returned from renderOption, paasing the current item that we are at from the iterable
+            //create option using the HTML returned from renderOption, passing the current item that we are at from the iterable
             listOption.innerHTML = renderOption(movie);
 
             //add an event listener to the listOption to listen for a click on it (when user selects a movie in the dropdown)
@@ -58,11 +62,10 @@ const createAutocomplete = ({dropdownRoot, renderOption}) => {
                 //close the dropdown menu
                 dropdown.classList.remove('is-active');
                 //update the text inside the input to match the selection
-                input.value = `${movie.Title} (${movie.Year})`;
-                //make follow up request for movie details
-                const movieDetail = await movieRequest(movie);
-                //use the helper function to create the HTML using the movie template and add this to the HTML document
-                document.querySelector('#summary').innerHTML = movieTemplate(movieDetail); 
+                input.value = setInputValue(movie);
+                //call the function that was passed in the config that should be called when a option is selected
+                //passing the current item that we are at from the iterable
+                onOptionSelect(movie);
             });
 
             //append this new anchor tag that represents a list option that can be selected in the dropdown to the resultsWrapper

@@ -12,5 +12,18 @@ createAutocomplete({
             <img src="${imgSrc}" />
             ${movie.Title} (${movie.Year})
         `;
+    },
+
+    //function to be invoked when a option in the dropdown menu is select
+    async onOptionSelect(movie) {
+        //make follow up request for movie details
+        const movieDetail = await movieRequest(movie);
+        //use the helper function to create the HTML using the movie template and add this to the HTML document
+        document.querySelector('#summary').innerHTML = movieTemplate(movieDetail);
+    },
+
+    //function to display the selected movie name and year inside of the input once an option is selected
+    setInputValue(movie) {
+        return `${movie.Title} (${movie.Year})`;
     }
 })
