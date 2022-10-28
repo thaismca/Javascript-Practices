@@ -27,8 +27,8 @@ To make the autocomplete feature more reusable and beter organize the code, we a
 Config for autocomplete (to customize autocomplete)
 - root: element that the autocomplete should be rendered into
 - fetchData(): function to search movies
+- renderOption(): function that knows how to render a movie option
 - requestMovie(): function that makes a follow up request when a movie is clicked
-- renderMovie(): function that knows how to render a movie
 
 2 - autocomplete.js: super reusable code to get an autocomplete to work. 
 - Zero knowledge about 'movies', so i can be used for different objects (like recipes, blog posts, etc.)

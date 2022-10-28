@@ -1,6 +1,6 @@
 //a function to create a reusable autocomplete widget
 //it receives a config object containing all the kind of custom functions that specify how autocompete should work for a given project
-const createAutocomplete = ({dropdownRoot}) => {
+const createAutocomplete = ({dropdownRoot, renderOption}) => {
     //generation of HTML following the required structure for a dropdown using bulma to the js file
     //this allows a more independent code for a more reusable widget, that can be applied to any HTML file
     //the element where this dropdown will be inserted will be passed in the config object as dropdownRoot
@@ -49,15 +49,8 @@ const createAutocomplete = ({dropdownRoot}) => {
             //this tag must have the dropdown-item class applied for styling purposes (from Bulma structure)
             const listOption = document.createElement('a');
             listOption.classList.add('dropdown-item');
-
-            //some movies from the API don't have a link to the image in the Poster property, they have the string 'N/A' instead
-            //handle so there are no broken references in our list if the movie doesn't actually have a poster
-            const imgSrc = movie.Poster === 'N/A' ? "img/no-poster.jpg" : movie.Poster;
-
-            listOption.innerHTML = `
-                <img src="${imgSrc}" />
-                ${movie.Title} (${movie.Year})
-            `;
+            //create option using the HTML returned from renderOption, paasing the current item that we are at from the iterable
+            listOption.innerHTML = renderOption(movie);
 
             //add an event listener to the listOption to listen for a click on it (when user selects a movie in the dropdown)
             listOption.addEventListener('click', async (e) => {
