@@ -19,3 +19,19 @@ By ID: to get more details about the movie that the user selects from th list of
 - When an entry in the list of movies is selected by the user, the text in the search input should be updated to match the selected movie title, and the menu should be closed.
 - If user clicks outside of the dropdown menu at any point, the menu should be closed and nothing else should happen.
  
+------------------------------------------------------------------------------
+Refactoring code
+To make the autocomplete feature more reusable and beter organize the code, we are going to work with two different js files:
+
+1 - app.js: non-reusable code for our very specific project
+- root: element that the autocomplete should be rendered into
+- fetchData(): function to search movies
+- requestMovie(): function that makes a follow up request when a movie is clicked
+- renderMovie(): function that knows how to render a movie
+
+2 - autocomplete.js: super reusable code to get an autocomplete to work. 
+- Zero knowledge about 'movies', so i can be used for different objects (like recipes, blog posts, etc.)
+- Must be able to be ran several times in the same project.
+- Function that will take the autocomplete config and render an autocomplete on the screen.
+
+NOTE: currently we have a file with some helper functions (utils.js) and a messy code for making the autocomplete to work (app.js). This structure will no longer be applied.
