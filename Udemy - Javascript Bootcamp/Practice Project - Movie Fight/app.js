@@ -60,14 +60,16 @@ const onInput = async (e) => {
         `;
 
         //add an event listener to the listOption to listen for a click on it (when user selects a movie in the dropdown)
-        listOption.addEventListener('click', () => {
+        listOption.addEventListener('click', async (e) => {
         //when the item is clicked
             //close the dropdown menu
             dropdown.classList.remove('is-active');
             //update the text inside the input to match the selection
             input.value = `${movie.Title} (${movie.Year})`;
-            //make follow up request to get the movie details
-            movieRequest(movie);
+            //make follow up request for movie details
+            const movieDetail = await movieRequest(movie);
+            //use the helper function to create the HTML using the movie template and add this to the HTML document
+            document.querySelector('#summary').innerHTML = movieTemplate(movieDetail); 
         });
 
         //append this new anchor tag that represents a list option that can be selected in the dropdown to the resultsWrapper
