@@ -11,7 +11,7 @@ const createAutocomplete = ({dropdownRoot, searchRequest, renderOption, onOption
     //this allows a more independent code for a more reusable widget, that can be applied to any HTML file
     //the element where this dropdown will be inserted will be passed in the config object as dropdownRoot
     dropdownRoot.innerHTML = `
-        <label>Search for a movie</label>
+        <label><i class="fas fa-search"></i> Search</label>
         <input class="input" />
         <div class="dropdown">
             <div class="dropdown-menu">
@@ -35,6 +35,7 @@ const createAutocomplete = ({dropdownRoot, searchRequest, renderOption, onOption
             return;
         }
         
+        //make an HTTP request according to what was defined in searchRequest
         const searchResults = await searchRequest(e.target.value);
 
         //make sure to clean any existing result list from a previous search request
