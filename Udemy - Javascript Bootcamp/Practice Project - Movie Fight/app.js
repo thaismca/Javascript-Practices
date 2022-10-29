@@ -9,7 +9,7 @@
 //setInputValue: function to set what information must be displayed in the input when an option is selected
 createAutocomplete({
     //property that defines the element that the autocomplete should be added to in the page
-    dropdownRoot: document.querySelector(".autocomplete-one"),
+    dropdownRoot: document.querySelector("#left-autocomplete"),
 
     //function to make a HTTP request to the OMDb API By Search
     //must return either a list of results or an error message in the searchError property
