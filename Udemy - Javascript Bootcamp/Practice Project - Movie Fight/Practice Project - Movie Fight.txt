@@ -26,11 +26,11 @@ To make the autocomplete feature more reusable and beter organize the code, we a
 1 - app.js: non-reusable code for our very specific project
 Config for autocomplete (to customize autocomplete)
 - root: element that the autocomplete should be rendered into
-- renderOption(): function that knows how to render a movie option
+- searchRequest(): function to make a HTTP request that returns a list of options to be displayed, according to the search term, or an error message, if no results return from the search
+- renderOption(): function that knows how to render a movie option in the dropdown
 - onOptionSelect: function that knows what to do when a movie option is selected
 -setInputValue: function that knows what to display in the input when a movie option is selected
 
-- fetchData(): function to search movies
 - requestMovie(): function that makes a follow up request when a movie is clicked
 -movieTemplate(): function that generates and returns the HTML structure for a movie
 
