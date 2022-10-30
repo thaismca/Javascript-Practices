@@ -63,7 +63,7 @@ createAutocomplete({
         //hide tutorial
         document.querySelector('.tutorial').classList.add('is-hidden');
         //use helper function to make follow up request for movie details
-        const movieDetail = await movieRequest(movie);
+        const movieDetail = await movieRequest(movie, 'left');
         //use helper function to create the HTML using the movie template and add this to the HTML document
         document.querySelector('#left-summary').innerHTML = movieTemplate(movieDetail);
     },
@@ -81,7 +81,7 @@ createAutocomplete({
         //hide tutorial
         document.querySelector('.tutorial').classList.add('is-hidden');
         //use helper function to make follow up request for movie details
-        const movieDetail = await movieRequest(movie);
+        const movieDetail = await movieRequest(movie, 'right');
         //use helper function to create the HTML using the movie template and add this to the HTML document
         document.querySelector('#right-summary').innerHTML = movieTemplate(movieDetail);
     },
@@ -93,7 +93,10 @@ createAutocomplete({
 //----------HELPER FUNCTIONS-----------------------------------------------------------------------------------------------------------------
 //helper function to make a follow up HTTP request to the OMDb API By ID
 //it accepts a movie object that will have this imdbID property to be past as the i argument expected by the API
-const movieRequest = async (movie) => {
+//it also receives a string indicating the autocomplete where the request comes from (left or right)
+let leftMovie;
+let rightMovie;
+const movieRequest = async (movie, autocompleteSide) => {
     //axios.get can receive an object with parameters in the arguments, to create a query string that will be added to the request url
     const response = await axios.get('http://www.omdbapi.com/', {
         //according to the API documentation, the apikey and a string i corresponding to the movie IMDb ID
@@ -103,10 +106,28 @@ const movieRequest = async (movie) => {
             i: movie.imdbID
         }
     });
+    //check the side where the request came from and updae the corresponding variable
+    if(autocompleteSide === 'left'){
+        leftMovie = response.data;
+    } else {
+        rightMovie = response.data;
+    }
+
+    //check if there are movies selected for both left and right sides, and do the comparison only if both are selected
+    if(leftMovie && rightMovie){
+        //invoke helper function that handles the comparison
+        runComparison(leftMovie, rightMovie);
+    }
+
     //return the data form the response that is relevant to this application
-    //Search is a property inside of the response object that is an array of objects that contain information about the search results
     return response.data;
 };
+//--------------------------------------------------------------------------------------------------------------------------------------------
+//helper to handle the comparison between the two selected movies
+const runComparison = (leftMovie, rightMovie) => {
+    console.log(leftMovie);
+    console.log(rightMovie);
+}
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //helper to render the HTML that displays a movie details, using classes from bulma to style how information is displayed
 const movieTemplate = (movieDetail) => {
