@@ -6,7 +6,6 @@
 //searchRequest: function to make a HTTP request that returns a list of options to be displayed, according to the search term,
 //or an error message, if no results return from the search (assigned to property searchError)
 //renderOption: function that knows how to render an option in the dropdown
-//onOptionSelect: function that knows what should be done when a option is selected
 //setInputValue: function to set what information must be displayed in the input when an option is selected
 const autocompleteConfig = {
     //function to make a HTTP request to the OMDb API By Search
@@ -44,13 +43,6 @@ const autocompleteConfig = {
         `;
     },
 
-    //function to be invoked when a option in the dropdown menu is select
-    async onOptionSelect(movie) {
-        //use helper function to make follow up request for movie details
-        const movieDetail = await movieRequest(movie);
-        //use helper function to create the HTML using the movie template and add this to the HTML document
-        document.querySelector('#summary').innerHTML = movieTemplate(movieDetail);
-    },
     //function to display the selected movie name and year inside of the input once an option is selected
     setInputValue(movie) {
         return `${movie.Title} (${movie.Year})`;
@@ -60,16 +52,41 @@ const autocompleteConfig = {
 //Each one of these function calls creates one of the autocomplete widgets using the template declared in autocomplete.js
 //receiving the following parameters
 //dropdownRoot: property that assigns the element where each specific dropdown will be inserted
+//onOptionSelect: function that knows what should be done when a option is selected
 //functions listed in autocompleteConfig that are reusable between this and more autocomplete widgets in the page
 createAutocomplete({
     //property that defines the element that the autocomplete should be added to in the page
     dropdownRoot: document.querySelector("#left-autocomplete"),
+    
+    //function that renders the information about selected movie in the correct side of the screen
+    async onOptionSelect(movie) {
+        //hide tutorial
+        document.querySelector('.tutorial').classList.add('is-hidden');
+        //use helper function to make follow up request for movie details
+        const movieDetail = await movieRequest(movie);
+        //use helper function to create the HTML using the movie template and add this to the HTML document
+        document.querySelector('#left-summary').innerHTML = movieTemplate(movieDetail);
+    },
+    
+    //all reusable code in autocompleteConfig
     ...autocompleteConfig //this ... means make a copy of everything inside the autocompleteConfig object here 
 });
 
 createAutocomplete({
     //property that defines the element that the autocomplete should be added to in the page
     dropdownRoot: document.querySelector("#right-autocomplete"),
+
+    //function that renders the information about selected movie in the correct side of the screen
+    async onOptionSelect(movie) {
+        //hide tutorial
+        document.querySelector('.tutorial').classList.add('is-hidden');
+        //use helper function to make follow up request for movie details
+        const movieDetail = await movieRequest(movie);
+        //use helper function to create the HTML using the movie template and add this to the HTML document
+        document.querySelector('#right-summary').innerHTML = movieTemplate(movieDetail);
+    },
+
+    //all reusable code in autocompleteConfig
     ...autocompleteConfig //this ... means make a copy of everything inside the autocompleteConfig object here 
 });
 
@@ -107,7 +124,7 @@ const movieTemplate = (movieDetail) => {
               <h4>${movieDetail.Genre}</h4>
               <p>${movieDetail.Plot}</p>
             </div>
-          </div>
+        </div>
         </article>
 
         <!--movie stats-->
@@ -125,11 +142,11 @@ const movieTemplate = (movieDetail) => {
         </article>
         <article class="notification is-primary">
           <p class="title">${movieDetail.imdbRating}</p>
-          <p class="subtitle">IMDb Rating</p>
+          <p class="subtitle">IMDB Rating</p>
         </article>
         <article class="notification is-primary">
           <p class="title">${movieDetail.imdbVotes}</p>
-          <p class="subtitle">IMDb Votes</p>
+          <p class="subtitle">IMDB Votes</p>
         </article>
     `;
 }

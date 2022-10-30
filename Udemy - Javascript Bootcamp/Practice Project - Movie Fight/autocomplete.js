@@ -66,7 +66,7 @@ const createAutocomplete = ({dropdownRoot, searchRequest, renderOption, onOption
                 //update the text inside the input to match the selection
                 input.value = setInputValue(result);
                 //call the function that was passed in the config that should be called when a option is selected
-                //passing the current item that we are at from the iterable
+                //passing the current item that we are at from the iterable and where it should be added in the document
                 onOptionSelect(result);
             });
 
