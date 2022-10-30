@@ -83,7 +83,7 @@ const createAutocomplete = ({dropdownRoot, searchRequest, renderOption, onOption
     //add an event listener to the entire document to listen for a click
     document.addEventListener('click', (e) =>{
         //check if the event target happened in any element inside of dropdownRoot 
-        if(e.target.contains(dropdownRoot)){
+        if(!dropdownRoot.contains(e.target)){
             dropdown.classList.remove('is-active');
         }
     });

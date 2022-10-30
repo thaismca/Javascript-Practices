@@ -1,16 +1,14 @@
 //----------CUSTOMIZE AUTOCOMPLETE-----------------------------------------------------------------------------------------------------------
-//This function call creates an autocomplete widget using the template declared in autocomplete.js
-//it receives the following parameters
-//dropdownRoot: property that assigns the element where this dropdown will be inserted
+
+//since we are going to have two instances of autocomplete that will share all configs except the dropdownRoot property,
+//create an object to hold all the functions that are reusable between both instances
+//these functions are
 //searchRequest: function to make a HTTP request that returns a list of options to be displayed, according to the search term,
 //or an error message, if no results return from the search (assigned to property searchError)
 //renderOption: function that knows how to render an option in the dropdown
 //onOptionSelect: function that knows what should be done when a option is selected
 //setInputValue: function to set what information must be displayed in the input when an option is selected
-createAutocomplete({
-    //property that defines the element that the autocomplete should be added to in the page
-    dropdownRoot: document.querySelector("#left-autocomplete"),
-
+const autocompleteConfig = {
     //function to make a HTTP request to the OMDb API By Search
     //must return either a list of results or an error message in the searchError property
     async searchRequest(searchTerm) {
@@ -57,6 +55,22 @@ createAutocomplete({
     setInputValue(movie) {
         return `${movie.Title} (${movie.Year})`;
     }
+};
+
+//Each one of these function calls creates one of the autocomplete widgets using the template declared in autocomplete.js
+//receiving the following parameters
+//dropdownRoot: property that assigns the element where each specific dropdown will be inserted
+//functions listed in autocompleteConfig that are reusable between this and more autocomplete widgets in the page
+createAutocomplete({
+    //property that defines the element that the autocomplete should be added to in the page
+    dropdownRoot: document.querySelector("#left-autocomplete"),
+    ...autocompleteConfig //this ... means make a copy of everything inside the autocompleteConfig object here 
+});
+
+createAutocomplete({
+    //property that defines the element that the autocomplete should be added to in the page
+    dropdownRoot: document.querySelector("#right-autocomplete"),
+    ...autocompleteConfig //this ... means make a copy of everything inside the autocompleteConfig object here 
 });
 
 //----------HELPER FUNCTIONS-----------------------------------------------------------------------------------------------------------------
