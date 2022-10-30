@@ -159,4 +159,22 @@ document.addEventListener('click', (e) =>{
     }
 });
 
+//----------------------------------------------------------------------------------------------------------------------------------------
+//from the part of the movieTemplate function that gets a number representation from the movie Awards
+//this is how that same part that is currently using reduce in the aap.js file can be written using only a for of loop
 
+    //awards (will considerer whatever movie with bigger number in total, considering either wins or nominations)
+    //get an array containing each word of the string in one of the array's position
+    const awardsString = movieDetail.Awards.split(' ');
+    //iterate over the array and, when finding a valid number, add to the awards counter
+    let awards = 0;
+    for(word of awardsString) {
+        //try and ger a number from the word
+        const value = parseInt(word);
+        //if a valid number is obtained from parsing the word, add to the awards variable
+        if(isNaN(value)){
+            return;
+        } else {
+            awards = awards + value;
+        }
+    }  

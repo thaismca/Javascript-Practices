@@ -131,6 +131,54 @@ const runComparison = (leftMovie, rightMovie) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //helper to render the HTML that displays a movie details, using classes from bulma to style how information is displayed
 const movieTemplate = (movieDetail) => {
+    //get number representations of the data displayed in the stats, so a comparison can run in the future
+
+    //awards (will considerer whatever movie with bigger number in total, considering either wins or nominations)
+    //get an array containing each word of the string in one of the array's position (split on ' ')
+    //iterate over the array and add all valid numbers
+    const awards = movieDetail.Awards.split(' ').reduce((prev, word) => {
+        //try and get a number from the word
+        const value = parseInt(word);
+        
+        if(isNaN(value)){
+            //if not a valid number (isNaN), just return whatever there is in the prev accumulator
+           return prev;
+        }
+        else {
+            //if a valid number is obtained from parsing the word, add to the prev accumulator and return the sum
+            return  prev + value;
+        }
+    }, 0); 
+    
+    //box office amount
+    //remove $ and , , from string and extract an integer only -> replace then with '' -> parse what's left into an integer
+    const boxOffice = parseInt(movieDetail.BoxOffice.replace(/\$/g, '').replace(/,/g, ''));
+    //check if it's an invalid number and consider it 0 if that's the case (covers when box office is 'N/A' or undefined)
+    if(!boxOffice){
+        boxOffice = 0; //no box office valid data, then it should be considered 0
+    } 
+    
+    //metascore - parse into an int
+    const metascore = parseInt(movieDetail.Metascore);
+    //check if it's an invalid number and consider it 0 if that's the case (covers when metascore is 'N/A' or undefined)
+    if(!metascore){
+        metascore = 0; //no valid metascore, then it should be considered 0
+    }
+
+    //IMDb Rating - parse into a float
+    const imdbRating = parseFloat(movieDetail.imdbRating);
+    //check if it's an invalid number and consider it 0 if that's the case (covers when IMDb rating is 'N/A' or undefined)
+    if(!imdbRating){
+        imdbRating = 0; //no valid IMDb Rating, then it should be considered 0
+    }
+
+    //IMDb Votes - parse into a int
+    const imdbVotes = parseInt(movieDetail.imdbVotes.replace(/,/g, ''));
+    //check if it's an invalid number and consider it 0 if that's the case (covers when IMDb voting is 'N/A' or undefined)
+    if(!imdbVotes){
+        imdbVotes = 0; //no valid metascore, then it should be considered 0
+    }
+
     return `
         <!--movie summary-->
         <article class="media">
