@@ -7,6 +7,9 @@ Free API for getting movie data: omdbapi.com
 We are going to have to do initially a search to find some records that match the user search term, and then a follow up request to get information about a particular movie that the user selected. This means we are going to use both available endpoints in the API.
 
 By Search: to list movies in the autocomplete widget that matches whatever the user types in the search input.
+
+API limitation: if you type only some part of a word that exists in the movie's titla, it won't work. User needs to type an entire word in order to fetch valid data. For instance, typing "aveng" won't bring any results, but typing "avenger" (singular) will bring movies that contain this exact word, and typing "avengers" plural will bring other movies that contain this other string.
+
 By ID: to get more details about the movie that the user selects from th list of options in the autocomplete widget.
 
 2 - Build autocomplete widget from scratch
@@ -32,10 +35,10 @@ Config for autocomplete (to customize autocomplete)
 -setInputValue: function that knows what to display in the input when a movie option is selected
 
 - requestMovie(): function that makes a follow up request when a movie is clicked
--movieTemplate(): function that generates and returns the HTML structure for a movie
+- movieTemplate(): function that generates and returns the HTML structure for a movie
 
 2 - autocomplete.js: super reusable code to get an autocomplete to work. 
-- Zero knowledge about 'movies', so i can be used for different objects (like recipes, blog posts, etc.)
+- Zero knowledge about 'movies', so it can be used for different objects (like recipes, blog posts, etc.)
 - Must be able to be ran several times in the same project.
 - Function that will take the autocomplete config and render an autocomplete on the screen.
 
