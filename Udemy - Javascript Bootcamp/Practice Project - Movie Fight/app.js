@@ -49,6 +49,7 @@ const autocompleteConfig = {
     }
 };
 
+
 //Each one of these function calls creates one of the autocomplete widgets using the template declared in autocomplete.js
 //receiving the following parameters
 //dropdownRoot: property that assigns the element where each specific dropdown will be inserted
@@ -62,10 +63,8 @@ createAutocomplete({
     async onOptionSelect(movie) {
         //hide tutorial
         document.querySelector('.tutorial').classList.add('is-hidden');
-        //use helper function to make follow up request for movie details
-        const movieDetail = await movieRequest(movie, 'left');
-        //use helper function to create the HTML using the movie template and add this to the HTML document
-        document.querySelector('#left-summary').innerHTML = movieTemplate(movieDetail);
+        //use helper function to make follow up request for movie details and display stats in the left-summary
+        movieRequest(movie, document.querySelector('#left-summary'), 'left');
     },
     
     //all reusable code in autocompleteConfig
@@ -80,15 +79,14 @@ createAutocomplete({
     async onOptionSelect(movie) {
         //hide tutorial
         document.querySelector('.tutorial').classList.add('is-hidden');
-        //use helper function to make follow up request for movie details
-        const movieDetail = await movieRequest(movie, 'right');
-        //use helper function to create the HTML using the movie template and add this to the HTML document
-        document.querySelector('#right-summary').innerHTML = movieTemplate(movieDetail);
+        //use helper function to make follow up request for movie details and display stats in the right-summary
+        movieRequest(movie, document.querySelector('#right-summary'), 'right');
     },
-
     //all reusable code in autocompleteConfig
     ...autocompleteConfig //this ... means make a copy of everything inside the autocompleteConfig object here 
 });
+
+
 
 //----------HELPER FUNCTIONS-----------------------------------------------------------------------------------------------------------------
 //helper function to make a follow up HTTP request to the OMDb API By ID
@@ -96,7 +94,7 @@ createAutocomplete({
 //it also receives a string indicating the autocomplete where the request comes from (left or right)
 let leftMovie;
 let rightMovie;
-const movieRequest = async (movie, autocompleteSide) => {
+const movieRequest = async (movie, summaryElement, side) => {
     //axios.get can receive an object with parameters in the arguments, to create a query string that will be added to the request url
     const response = await axios.get('http://www.omdbapi.com/', {
         //according to the API documentation, the apikey and a string i corresponding to the movie IMDb ID
@@ -106,27 +104,60 @@ const movieRequest = async (movie, autocompleteSide) => {
             i: movie.imdbID
         }
     });
-    //check the side where the request came from and updae the corresponding variable
-    if(autocompleteSide === 'left'){
+
+    //use helper function to create the HTML using the movie template and add this to the HTML document in the summaryElement
+    summaryElement.innerHTML = movieTemplate(response.data);
+
+    //check the side where the request came from and update the corresponding variable
+    if(side === 'left'){
         leftMovie = response.data;
     } else {
         rightMovie = response.data;
     }
-
     //check if there are movies selected for both left and right sides, and do the comparison only if both are selected
     if(leftMovie && rightMovie){
         //invoke helper function that handles the comparison
-        runComparison(leftMovie, rightMovie);
+        runComparison();
     }
-
-    //return the data form the response that is relevant to this application
-    return response.data;
 };
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //helper to handle the comparison between the two selected movies
-const runComparison = (leftMovie, rightMovie) => {
-    console.log(leftMovie);
-    console.log(rightMovie);
+const runComparison = () => {
+    const leftSideStats = document.querySelectorAll('#left-summary .notification');
+    const rightSideStats = document.querySelectorAll('#right-summary .notification');
+
+    console.log(leftSideStats);
+    console.log(rightSideStats)
+
+    //loop over the leftStats
+    leftSideStats.forEach((leftStat, index) => {
+        //get corresponding right stat into a variable by using the current leftSideStat index
+        const rightStat = rightSideStats[index];
+        //get the actual value property of the current stat at each side
+        const leftSideValue = parseFloat(leftStat.dataset.value);
+        const rightSideValue = parseFloat(rightStat.dataset.value);
+        //compare current stat value in both sides, and apply .is-warning to and remove .is primary from the lowest
+        if(rightSideValue > leftSideValue) { //right side with better stat
+            leftStat.classList.remove('is-primary');
+            leftStat.classList.add('is-warning');
+
+            rightStat.classList.add('is-primary');
+            rightStat.classList.remove('is-warning');
+
+        } else if (rightSideValue < leftSideValue) { //left side with better stat
+            leftStat.classList.add('is-primary');
+            leftStat.classList.remove('is-warning');
+
+            rightStat.classList.remove('is-primary');
+            rightStat.classList.add('is-warning');
+        } else { //right and left sides are equal, both should be yellow
+            leftStat.classList.remove('is-primary');
+            leftStat.classList.remove('is-warning');
+
+            rightStat.classList.remove('is-primary');
+            rightStat.classList.remove('is-warning');
+        }
+    });
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //helper to render the HTML that displays a movie details, using classes from bulma to style how information is displayed
@@ -134,57 +165,76 @@ const movieTemplate = (movieDetail) => {
     //get number representations of the data displayed in the stats, so a comparison can run in the future
 
     //awards (will considerer whatever movie with bigger number in total, considering either wins or nominations)
-    //get an array containing each word of the string in one of the array's position (split on ' ')
-    //iterate over the array and add all valid numbers
-    const awards = movieDetail.Awards.split(' ').reduce((prev, word) => {
-        //try and get a number from the word
-        const value = parseInt(word);
-        
-        if(isNaN(value)){
-            //if not a valid number (isNaN), just return whatever there is in the prev accumulator
-           return prev;
-        }
-        else {
-            //if a valid number is obtained from parsing the word, add to the prev accumulator and return the sum
-            return  prev + value;
-        }
-    }, 0); 
+    let awards;
+    //first check if awards data thata come from the API is not undefined (set awards to 0 if that's the case)
+    if (!movieDetail.Awards) {
+        awards = 0;
+    } else {
+        //get an array containing each word of the string in one of the array's position (split on ' ')
+        //iterate over the array and add all valid numbers
+        awards = movieDetail.Awards.split(' ').reduce((prev, word) => {
+            //try and get a number from the word
+            const value = parseInt(word);
+            
+            if(isNaN(value)){
+                //if not a valid number (isNaN), just return whatever there is in the prev accumulator
+               return prev;
+            }
+            else {
+                //if a valid number is obtained from parsing the word, add to the prev accumulator and return the sum
+                return  prev + value;
+            }
+        }, 0); 
+
+    } 
     
     //box office amount
     //remove $ and , , from string and extract an integer only -> replace then with '' -> parse what's left into an integer
-    const boxOffice = parseInt(movieDetail.BoxOffice.replace(/\$/g, '').replace(/,/g, ''));
-    //check if it's an invalid number and consider it 0 if that's the case (covers when box office is 'N/A' or undefined)
+    //but first check if box office data that comes from the API is not undefined (set box office to 0 if that's the case)
+    let boxOffice = (!movieDetail.BoxOffice) ? 0 : parseInt(movieDetail.BoxOffice.replace(/\$/g, '').replace(/,/g, ''));
+    //check if it's an invalid number and consider it 0 if that's the case
+    //(covers when box office is 'N/A' or other string indicading absence of data)
     if(!boxOffice){
         boxOffice = 0; //no box office valid data, then it should be considered 0
     } 
     
     //metascore - parse into an int
-    const metascore = parseInt(movieDetail.Metascore);
-    //check if it's an invalid number and consider it 0 if that's the case (covers when metascore is 'N/A' or undefined)
+    //but first check if metascore data that comes from the API is not undefined (set metascore to 0 if that's the case)
+    let metascore = (!movieDetail.Metascore) ? 0 : parseInt(movieDetail.Metascore);
+    //check if it's an invalid number and consider it 0 if that's the case
+    //(covers when metascore is 'N/A' or other string indicading absence of data)
     if(!metascore){
         metascore = 0; //no valid metascore, then it should be considered 0
     }
 
     //IMDb Rating - parse into a float
-    const imdbRating = parseFloat(movieDetail.imdbRating);
-    //check if it's an invalid number and consider it 0 if that's the case (covers when IMDb rating is 'N/A' or undefined)
+    //but first check if rating data that comes from the API is not undefined (set IMDb rating to 0 if that's the case)
+    let imdbRating = (!movieDetail.imdbRating) ? 0 : parseFloat(movieDetail.imdbRating);
+    //check if it's an invalid number and consider it 0 if that's the case
+    //(covers when IMDb rating is 'N/A' or other string indicading absence of data)
     if(!imdbRating){
         imdbRating = 0; //no valid IMDb Rating, then it should be considered 0
     }
 
     //IMDb Votes - parse into a int
-    const imdbVotes = parseInt(movieDetail.imdbVotes.replace(/,/g, ''));
-    //check if it's an invalid number and consider it 0 if that's the case (covers when IMDb voting is 'N/A' or undefined)
+    //but first check if votes data that comes from the API is not undefined (set IMDb votes to 0 if that's the case)
+    let imdbVotes = parseInt(movieDetail.imdbVotes.replace(/,/g, ''));
+    //check if it's an invalid number and consider it 0 if that's the case
+    //(covers when IMDb votes is 'N/A' or other string indicading absence of data)
     if(!imdbVotes){
-        imdbVotes = 0; //no valid metascore, then it should be considered 0
+        imdbVotes = 0; //no valid IMDb votes, then it should be considered 0
     }
+
+    //movie poster
+    //check if there is no poster for the selected movie and use the image no-poster,jpg if that's the case
+    const imgSrc = movieDetail.Poster === 'N/A' ? "img/no-poster.jpg" : movieDetail.Poster;
 
     return `
         <!--movie summary-->
         <article class="media">
           <figure class="media-left">
             <p class="image">
-              <img src="${movieDetail.Poster}" />
+              <img src="${imgSrc}" />
             </p>
           </figure>
           <div class="media-content">
@@ -197,23 +247,23 @@ const movieTemplate = (movieDetail) => {
         </article>
 
         <!--movie stats-->
-        <article class="notification is-primary">
+        <article data-value=${awards} class="notification">
           <p class="title">${movieDetail.Awards}</p>
           <p class="subtitle">Awards</p>
         </article>
-        <article class="notification is-primary">
+        <article data-value=${boxOffice} class="notification">
           <p class="title">${movieDetail.BoxOffice}</p>
           <p class="subtitle">Box Office</p>
         </article>
-        <article class="notification is-primary">
+        <article data-value=${metascore} class="notification">
           <p class="title">${movieDetail.Metascore}</p>
           <p class="subtitle">Metascore</p>
         </article>
-        <article class="notification is-primary">
+        <article data-value=${imdbRating} class="notification">
           <p class="title">${movieDetail.imdbRating}</p>
           <p class="subtitle">IMDB Rating</p>
         </article>
-        <article class="notification is-primary">
+        <article data-value=${imdbVotes} class="notification">
           <p class="title">${movieDetail.imdbVotes}</p>
           <p class="subtitle">IMDB Votes</p>
         </article>
