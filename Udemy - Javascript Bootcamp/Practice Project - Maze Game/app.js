@@ -1,9 +1,11 @@
 //getting access to some objects out of the Matter JS library 
 //Engine: will be used to make transitions from a current state of our entire world into some new state
-//Render: is going to be use to draw stuff onto the screen
+//Render: is going to be used to draw stuff onto the screen
 //Runner: is going to coordinate updates between the engine and the world
 //Bodies: a reference to the entire collection of all the different shapes we can create
-const { Engine, Render, Runner, World, Bodies } = Matter;
+//MouseConstraint: contains methods for creating mouse constraints that are used for allowing user interaction via mouse or touch
+//Mouse: contains methods for creating and manipulating mouse inputs
+const { Engine, Render, Runner, World, Bodies, MouseConstraint, Mouse } = Matter;
 
 //create a new engine
 const engine = Engine.create();
@@ -26,6 +28,11 @@ const { world } = engine;
 Render.run(render);
 //runner to coordinate all the changes from state A to state B of the engine
 Runner.run(Runner.create(), engine);
+
+//create a mouse constraint and add it to the world
+//the mouse constraint creation can be handled when passing the constraint to the add function (no need to declare beforehand)
+//to create a mouse constraint, the arguments that need to be passed are the engine and a reference to the mouse input (Mouse.create(element))
+World.add(world, MouseConstraint.create(engine, {mouse: Mouse.create(render.canvas)}));
 
 //creating walls
 const walls =[
