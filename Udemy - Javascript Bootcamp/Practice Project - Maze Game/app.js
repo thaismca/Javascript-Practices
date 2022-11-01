@@ -27,6 +27,20 @@ Render.run(render);
 //runner to coordinate all the changes from state A to state B of the engine
 Runner.run(Runner.create(), engine);
 
+//creating walls
+const walls =[
+    //for each wall, create a new shape, passing the shape's position and size
+    //note: isStatic is a property that creates a shape that doesn't move at all (not even affected by gravity)
+    Bodies.rectangle(400, 0, 800, 30, {isStatic: true}), //top wall
+    Bodies.rectangle(0, 300, 30, 600, {isStatic: true}), //left wall
+    Bodies.rectangle(400, 600, 800, 30, {isStatic: true}), //bottom wall
+    Bodies.rectangle(800, 300, 30, 600, {isStatic: true}), //right wall
+]
+//add the shape to the world -> shape won't appear in world without this
+World.add(world, walls);
+
+
+
 //create a new shape, passing the shape's position and size
 //note: isStatic is a property that creates a shape that doesn't move at all (not even affected by gravity)
 const shape = Bodies.rectangle(200, 200, 50, 50, { isStatic: true});
@@ -34,5 +48,9 @@ const shape = Bodies.rectangle(200, 200, 50, 50, { isStatic: true});
 World.add(world, shape);
 
 //non static shape, to demonstrate gravity when isStatic is not set to true
-const shape2 = Bodies.rectangle(380, 200, 50, 50);
+const shape2 = Bodies.circle(380, 200, 25);
 World.add(world, shape2);
+
+//create a new polygon shape, passing the shape's position, sides and radius
+const shape3 = Bodies.polygon(520, 200, 6, 25, { isStatic: true});
+World.add(world, shape3);
