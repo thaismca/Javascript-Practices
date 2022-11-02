@@ -23,3 +23,27 @@ Terminology
 - Render: whenever the engine processes an update, render will take a look at all the different shapes and show them on the screen.
 Body: A shape that we are displaying, and can be a circle, rectangle, oval, etc.
 
+Maze Generation Algorithm
+- Create a grid of cells;
+- Pick random starting cell;
+- For that cell, build a randomly-ordered list of neighbors;
+- If a neighbor has been visited before, remove it from the list;
+- Considering only the remaining neighbors, 'move' to one of them and remove the wall between those two cells;
+- Repeat steps 3-5 for this new neighbor;
+- If no moves are possible when reaching a cell but there are still unvisited cells, backtrack until a cell that does have a valid neighbor to move to is found;
+- Repeat steps 3-5
+
+Grid -> 2d array that tracks all the actual existing cells
+Vertical - wall between two different cells that are right next to each other on the same row
+Horizontal - wall between two different cells that are right next to each other on the same column
+Both Vertical and Horizontal will be represented by 2d arrays
+absence of a wall between two cells - true
+presence of a wall between two cells - false
+
+        [0] [1]                     [0]                  [1] 
+     .___v___v___      vertical = [ [true, false, true], [true, false, true] ]            
+[0] h|___        |   
+[1] h|   |___|   |                  [0]                  [1]
+     |___ ___ ___|   horizontal = [ [false, true, true], [true, false, true] ]
+
+
