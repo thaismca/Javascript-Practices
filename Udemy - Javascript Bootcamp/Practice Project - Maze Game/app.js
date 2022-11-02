@@ -51,11 +51,10 @@ World.add(world, walls);
 //since upon initialization no cells are considered visited, each one will be initialized with 'false'
 //at first, a 3x3 grid will be hardcoded, but this is going to be refactored later
 
-//this would be an initial approach to create a 3x3 grid
-const grid = [];
-for(let i = 0; i < 3; i++) {
-    grid.push([]); //create row
-    for(let j =0; j < 3; j++) {
-        grid[i].push(false);
-    }
-}
+//const grid = Array(3) -> create an empty array that has 3 possible places in it
+//.fill(null) -> add some values to those possible places just so they are initialized and I can iterate on them
+//map -> map over the array and run a callback function for each one of the elements
+//the callback will return an array of 3 elements with value of false -> Array(3).fill(false)
+//so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
+const grid = Array(3).fill(null).map(()=> Array(3).fill(false));
+console.log(grid)
