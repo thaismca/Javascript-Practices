@@ -49,7 +49,14 @@ World.add(world, walls);
 //-----MAZE GENERATION--------------------------------------------------------------------------------------------------------
 //grid -> 2d array that tracks all the actual existing cells to record whether each one of them was already visited or not
 //since upon initialization no cells are considered visited, each one will be initialized with 'false'
+
+//verticals -> 2d array that tracks the walls between two different cells that are right next to each other on the same row
+//horizontals -> 2d array that tracks walls between two different cells that are right next to each other on the same column
+//absence of a wall between two cells -> true | presence of a wall between two cells -> false
+//since upon initialization all walls will be present for all cells, each wall representation will be initialized with 'false'
+
 //at first, a 3x3 grid will be hardcoded, but this is going to be refactored later
+//outter arrays always represent rows, inner arrays always represent columns
 
 //const grid = Array(3) -> create an empty array that has 3 possible places in it
 //.fill(null) -> add some values to those possible places just so they are initialized and I can iterate on them
@@ -58,3 +65,13 @@ World.add(world, walls);
 //so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
 const grid = Array(3).fill(null).map(()=> Array(3).fill(false));
 console.log(grid)
+
+//const verticals = Array(3) -> create an empty array that has 3 possible places in it to represent the rows in verticals (outter array)
+//the callback in map will return an array of 2 elements with value of false, to represent the colums in verticals (inner array)
+//so for each of the 3 elements of the grid array, we are going to add another array as [false, false]
+const verticals = Array(3).fill(null).map(() => Array(2).fill(false));
+
+//const horizontals = Array(2) -> create an empty array that has 2 possible places in it to represent the rows in horizontal (outter array)
+//the callback in map will return an array of 3 elements with value of false, to represent the colums in horizontals (inner array)
+//so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
+const horizontals = Array(2).fill(null).map(() => Array(3).fill(false));

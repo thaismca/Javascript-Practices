@@ -40,10 +40,13 @@ Both Vertical and Horizontal will be represented by 2d arrays
 absence of a wall between two cells - true
 presence of a wall between two cells - false
 
-        [0] [1]                     [0]                  [1] 
-     .___v___v___      vertical = [ [true, false, true], [true, false, true] ]            
-[0] h|___        |   
-[1] h|   |___|   |                  [0]                  [1]
-     |___ ___ ___|   horizontal = [ [false, true, true], [true, false, true] ]
+Outter array will always represent rows
+Inner array will always represent columns
+
+          		         [0]           [1] 	       [2]
+  .___v___v___      vertical = [ [true, true], [false, false], [true, true] ]            
+ h|___        |   
+ h|   |___|   |                  [0]                  [1]
+  |___ ___ ___|   horizontal = [ [false, true, true], [true, false, true] ]
 
 
