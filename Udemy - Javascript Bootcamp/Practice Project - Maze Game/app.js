@@ -44,3 +44,18 @@ const walls =[
 ]
 //add the shape to the world -> shape won't appear in world without this
 World.add(world, walls);
+
+
+//-----MAZE GENERATION--------------------------------------------------------------------------------------------------------
+//grid -> 2d array that tracks all the actual existing cells to record whether each one of them was already visited or not
+//since upon initialization no cells are considered visited, each one will be initialized with 'false'
+//at first, a 3x3 grid will be hardcoded, but this is going to be refactored later
+
+//this would be an initial approach to create a 3x3 grid
+const grid = [];
+for(let i = 0; i < 3; i++) {
+    grid.push([]); //create row
+    for(let j =0; j < 3; j++) {
+        grid[i].push(false);
+    }
+}

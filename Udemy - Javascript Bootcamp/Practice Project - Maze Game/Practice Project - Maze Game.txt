@@ -33,7 +33,7 @@ Maze Generation Algorithm
 - If no moves are possible when reaching a cell but there are still unvisited cells, backtrack until a cell that does have a valid neighbor to move to is found;
 - Repeat steps 3-5
 
-Grid -> 2d array that tracks all the actual existing cells
+Grid -> 2d array that tracks all the actual existing cells to record whether each one of them was already visited or not
 Vertical - wall between two different cells that are right next to each other on the same row
 Horizontal - wall between two different cells that are right next to each other on the same column
 Both Vertical and Horizontal will be represented by 2d arrays
