@@ -55,23 +55,30 @@ World.add(world, walls);
 //absence of a wall between two cells -> true | presence of a wall between two cells -> false
 //since upon initialization all walls will be present for all cells, each wall representation will be initialized with 'false'
 
-//at first, a 3x3 grid will be hardcoded, but this is going to be refactored later
 //outter arrays always represent rows, inner arrays always represent columns
+//maze config
+//a const to represent the maze bdimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
+const cells = 3;
+
 
 //const grid = Array(3) -> create an empty array that has 3 possible places in it
 //.fill(null) -> add some values to those possible places just so they are initialized and I can iterate on them
 //map -> map over the array and run a callback function for each one of the elements
 //the callback will return an array of 3 elements with value of false -> Array(3).fill(false)
 //so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
-const grid = Array(3).fill(null).map(()=> Array(3).fill(false));
-console.log(grid)
+const grid = Array(cells).fill(null).map(()=> Array(cells).fill(false));
 
 //const verticals = Array(3) -> create an empty array that has 3 possible places in it to represent the rows in verticals (outter array)
 //the callback in map will return an array of 2 elements with value of false, to represent the colums in verticals (inner array)
 //so for each of the 3 elements of the grid array, we are going to add another array as [false, false]
-const verticals = Array(3).fill(null).map(() => Array(2).fill(false));
+const verticals = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
 
 //const horizontals = Array(2) -> create an empty array that has 2 possible places in it to represent the rows in horizontal (outter array)
 //the callback in map will return an array of 3 elements with value of false, to represent the colums in horizontals (inner array)
 //so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
-const horizontals = Array(2).fill(null).map(() => Array(3).fill(false));
+const horizontals = Array(cells-1).fill(null).map(() => Array(cells).fill(false));
+
+console.log(grid)
+console.log(verticals)
+console.log(horizontals)
+
