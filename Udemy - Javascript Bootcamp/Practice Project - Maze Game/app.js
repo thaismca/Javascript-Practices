@@ -5,8 +5,10 @@
 //Bodies: a reference to the entire collection of all the different shapes we can create
 //MouseConstraint: contains methods for creating mouse constraints that are used for allowing user interaction via mouse or touch
 //Mouse: contains methods for creating and manipulating mouse inputs
-const { Engine, Render, Runner, World, Bodies, MouseConstraint, Mouse } = Matter;
-const width = 800;
+const { Engine, Render, Runner, World, Bodies } = Matter;
+
+//some of the logic around the maze generation ends up being a lot easier to write if working with a perfect square canvas
+const width = 600;
 const height = 600;
 
 //create a new engine
@@ -31,11 +33,6 @@ Render.run(render);
 //runner to coordinate all the changes from state A to state B of the engine
 Runner.run(Runner.create(), engine);
 
-//create a mouse constraint and add it to the world
-//the mouse constraint creation can be handled when passing the constraint to the add function (no need to declare beforehand)
-//to create a mouse constraint, the arguments that need to be passed are the engine and a reference to the mouse input (Mouse.create(element))
-World.add(world, MouseConstraint.create(engine, {mouse: Mouse.create(render.canvas)}));
-
 //creating walls
 const walls =[
     //for each wall, create a new shape, passing the shape's position and size
@@ -47,16 +44,3 @@ const walls =[
 ]
 //add the shape to the world -> shape won't appear in world without this
 World.add(world, walls);
-
-//creating random shapes
-for(let i = 0; i < 60; i++){
-    //randomize the type of shape that is created and the position where the shape is created
-    //in this case, the area where the shape can be created is limited by the canvas width and half of its height
-    if(Math.random() > 0.33) {
-        World.add(world, Bodies.rectangle(Math.random() * width, Math.random() * (height/2), 50, 50));
-    } else if(Math.random() > 0.66) {
-        World.add(world, Bodies.circle(Math.random() * width, Math.random() * (height/2), 30));
-    } else {
-        World.add(world, Bodies.polygon(Math.random() * width, Math.random() * (height/2), 6, 30));
-    }
-}
