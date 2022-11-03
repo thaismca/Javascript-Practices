@@ -57,8 +57,11 @@ World.add(world, walls);
 
 //outter arrays always represent rows, inner arrays always represent columns
 //maze config
-//a const to represent the maze bdimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
-const cells = 3;
+//a const to represent the maze dimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
+const cells = 5;
+//variables to represent the width and height of each cell
+const unitWidth = width/cells;
+const unitHeight = height/cells;
 
 
 //const grid = Array(3) -> create an empty array that has 3 possible places in it
@@ -78,7 +81,80 @@ const verticals = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
 //so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
 const horizontals = Array(cells-1).fill(null).map(() => Array(cells).fill(false));
 
-console.log(grid)
-console.log(verticals)
-console.log(horizontals)
+//shufle array helper function
+const shuffle = (arr) => {
+    //get the length of the array
+    let counter = arr.length;
+    //iterate over the array starting from the last element until it reaches the first one
+    while(counter > 0) {
+        //get a random index inside the array
+        const index = Math.floor(Math.random() * counter);
+        //decrease counter by 1
+        counter --;
+        //swap elements at the indexes represented by the values of index and counter
+        const temp = arr[index];
+        arr[index] = arr[counter];
+        arr[counter] = temp;
+    }
+    //return shuffled array
+    return arr;
+};
 
+//a recursive function that updates verticals and horizontals generating info that can be used to create a valid maze
+const stepThroughCell = (row, column) => {
+    //if the cell was already visited, then return (do nothing)
+    if(grid[row][column] === true){
+        return;
+    }
+    
+    //mark this cell as being visited (update grid array)
+    grid[row][column] = true;
+    //assemble randomly-ordered list of neighbors using the shuffle helper function
+    const neighbors = shuffle([
+        [row - 1, column, 'up'], //above
+        [row + 1, column, 'down'], //below
+        [row, column - 1, 'left'], //left
+        [row, column + 1, 'right'] //right
+    ]);
+
+    //for each neighbor
+    for(let neighbor of neighbors) {
+        //deconstruct from neighbor variables that represent the row and column of the next cell that can be visited next
+        const [nextRow, nextColumn, direction] = neighbor;
+        //see if neighbor is out of bounds
+        if(nextRow < 0 || nextRow >= cells || nextColumn < 0 || nextColumn >= cells){
+            //don't do anything else for this current iteration -> move on to the next neighbor of neighbors
+            continue;
+        }
+        //if the neighbor was already visited, continue to next neighbor
+        if(grid[nextRow][nextColumn] === true){
+            continue;
+        }
+        //remove a wall from either horizontals or verticals, depending on the direction we are moving
+        //up or down -> update horizontals | left or right -> update verticals
+        //to update the walls in either direction, consider the position from the starting cell (row, column)
+        //column doesn't change when moving up/down, and row doesn't change when moving left/right
+        if(direction === 'up'){
+            horizontals[row-1][column] = true;
+        } else if(direction === 'down'){
+            horizontals[row][column] = true;
+        } else if(direction === 'left'){
+            verticals[row][column-1] = true;
+        } else if(direction === 'right'){
+            verticals[row][column] = true;
+        }
+
+        //call stepThroughCell passing this neighbor nextRow and nextColumn
+        stepThroughCell(nextRow, nextColumn); 
+    }
+};  
+
+//generate the two random numbers that will represents the position of the cell that will be selected to start the maze generation from 
+const startRow = Math.floor(Math.random() * cells);
+const startColumn = Math.floor(Math.random() * cells);
+
+//call StepThroughCell passing those random indices to update horizontals and verticals with info that can be used to create a valid maze 
+stepThroughCell(startRow, startColumn);
+console.log(grid)
+console.log(horizontals)
+console.log(verticals)
