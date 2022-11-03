@@ -3,9 +3,8 @@
 //Render: is going to be used to draw stuff onto the screen
 //Runner: is going to coordinate updates between the engine and the world
 //Bodies: a reference to the entire collection of all the different shapes we can create
-//MouseConstraint: contains methods for creating mouse constraints that are used for allowing user interaction via mouse or touch
-//Mouse: contains methods for creating and manipulating mouse inputs
-const { Engine, Render, Runner, World, Bodies } = Matter;
+//Body: has functions that are going to be used to manipulate body models
+const { Engine, Render, Runner, World, Bodies, Body } = Matter;
 
 //some of the logic around the maze generation ends up being a lot easier to write if working with a perfect square canvas
 const width = 600;
@@ -58,7 +57,7 @@ World.add(world, walls);
 
 //maze config
 //a const to represent the maze dimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
-const cells = 6;
+const cells = 10;
 //variables to represent the width and height of each cell
 const unitWidth = width/cells;
 const unitHeight = height/cells;
@@ -211,8 +210,25 @@ const player = Bodies.circle(
     unitHeight/2,  //y position
     //size -> scale with the unit size (50% of the unit width)
     (unitWidth * 0.5)/2, //player radius
-    //static shape
-    {isStatic: true} //temporary, since we are going to add the ability to move it using keyboard keys
 );
 //add the goal to the world -> shape won't appear in world without this
 World.add(world, player);
+
+//key controls
+document.addEventListener('keydown', e => {
+    //a reference to the player's current velocity
+    const {x, y} = player.velocity;
+    if(e.code === 'ArrowDown' || e.code === 'KeyS'){
+        //move player down -> add velocity in the down direction by adding to current y
+        Body.setVelocity(player, { x, y: y+5 });
+    } else if(e.code === 'ArrowUp' || e.code === 'KeyW'){
+        //move player up -> add velocity in the up direction by subtracting from current y
+        Body.setVelocity(player, { x, y: y-5 });
+    } else if(e.code === 'ArrowLeft' || e.code === 'KeyA'){
+        //move player left -> add velocity in the left direction by subtracting from current x
+        Body.setVelocity(player, { x: x-5, y });
+    } else if(e.code === 'ArrowRight' || e.code === 'KeyD'){
+        //move player right -> add velocity in the right direction by adding to current x
+        Body.setVelocity(player, { x: x+5, y });
+    }
+})
