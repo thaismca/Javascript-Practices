@@ -4,7 +4,8 @@
 //Runner: is going to coordinate updates between the engine and the world
 //Bodies: a reference to the entire collection of all the different shapes we can create
 //Body: has functions that are going to be used to manipulate body models
-const { Engine, Render, Runner, World, Bodies, Body } = Matter;
+//Events: has methods to fire and listen to events on other objects
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
 //some of the logic around the maze generation ends up being a lot easier to write if working with a perfect square canvas
 const width = 600;
@@ -197,8 +198,12 @@ const goal = Bodies.rectangle(
     //size -> scale with the unit size (60% of the unit size)
     unitWidth * 0.6, //goal width
     unitHeight * 0.6, //goal height
-    //static shape
-    {isStatic: true}
+    { 
+      //customize label (to make it easier to write function that detects collision)
+      label: 'goal',
+      //static shape
+      isStatic: true
+    }
 );
 //add the goal to the world -> shape won't appear in world without this
 World.add(world, goal);
@@ -211,14 +216,18 @@ const player = Bodies.circle(
     unitHeight/2,  //y position
     //size -> scale with the unit size (50% of the unit width)
     (unitWidth * 0.5)/2, //player radius
-    //frictionAir: makes body slow down when moving through space
-    {frictionAir: 0.05}
+    { 
+        //customize label (to make it easier to write function that detects collision)
+        label: 'player',
+        //frictionAir: makes body slow down when moving through space
+        frictionAir: 0.05
+    }
+    
 );
 //add the goal to the world -> shape won't appear in world without this
 World.add(world, player);
 
-
-//key controls
+//player key controls
 document.addEventListener('keydown', e => {
     //a reference to the player's current velocity
     const {x, y} = player.velocity;
@@ -237,4 +246,22 @@ document.addEventListener('keydown', e => {
         //move player right -> add velocity in the right direction by adding to current x
         Body.setVelocity(player, { x: Math.min(x+1, speedLimit), y });
     }
+});
+
+//-----WIN CONDITION----------------------------------------------------------------------------------------------------------------------
+//use the Events module to listen for a colisionStart event
+Events.on(engine, 'collisionStart', (e) => {
+    //iterate over the pair array that is created when the event occurs,
+    //that contains info about which bodies were involved in that collision
+
+    e.pairs.forEach((collision) => {
+        //array with the labels that are applied to the bodies that we want to check if they were the ones that collided
+        const labels = ['player', 'goal'];
+        //since we can't be sure which shape will be assigned to BodyA or BodyB upon collision,
+        //our if statement needs to check if both BodyA and BodyB contain one of the labels
+        //since each label only appear once, this means that we are looking to have both labels applied, one to BodyA and other to BodyB
+        if(labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
+            console.log('Player won!')
+        }
+    });
 });
