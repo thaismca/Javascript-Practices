@@ -37,10 +37,10 @@ Runner.run(Runner.create(), engine);
 const walls =[
     //for each wall, create a new shape, passing the shape's position and size
     //note: isStatic is a property that creates a shape that doesn't move at all (not even affected by gravity)
-    Bodies.rectangle((width/2), 0, width, 30, {isStatic: true}), //top wall
-    Bodies.rectangle(0, (height/2), 30, height, {isStatic: true}), //left wall
-    Bodies.rectangle((width/2), height, width, 30, {isStatic: true}), //bottom wall
-    Bodies.rectangle(width, (height/2), 30, height, {isStatic: true}), //right wall
+    Bodies.rectangle((width/2), 0, width, 3, {isStatic: true}), //top wall
+    Bodies.rectangle(0, (height/2), 3, height, {isStatic: true}), //left wall
+    Bodies.rectangle((width/2), height, width, 3, {isStatic: true}), //bottom wall
+    Bodies.rectangle(width, (height/2), 3, height, {isStatic: true}), //right wall
 ]
 //add the shape to the world -> shape won't appear in world without this
 World.add(world, walls);
