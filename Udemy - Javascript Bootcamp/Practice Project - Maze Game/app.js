@@ -12,6 +12,7 @@ const height = 600;
 
 //create a new engine
 const engine = Engine.create();
+engine.world.gravity.y = false; //disables gravity in the y axis
 //get access to a world that got created along with that engine
 //a world is kind of like a snapshot of all the differents shapes that we have
 const { world } = engine;
@@ -218,17 +219,19 @@ World.add(world, player);
 document.addEventListener('keydown', e => {
     //a reference to the player's current velocity
     const {x, y} = player.velocity;
+    //a limit to the speed that the ball can reach, to prevent it from moving too fast
+    const speedLimit = 6;
     if(e.code === 'ArrowDown' || e.code === 'KeyS'){
         //move player down -> add velocity in the down direction by adding to current y
-        Body.setVelocity(player, { x, y: y+5 });
+        Body.setVelocity(player, { x, y: Math.min(y+3, speedLimit) });
     } else if(e.code === 'ArrowUp' || e.code === 'KeyW'){
         //move player up -> add velocity in the up direction by subtracting from current y
-        Body.setVelocity(player, { x, y: y-5 });
+        Body.setVelocity(player, { x, y: Math.max(y-3, -speedLimit) });
     } else if(e.code === 'ArrowLeft' || e.code === 'KeyA'){
         //move player left -> add velocity in the left direction by subtracting from current x
-        Body.setVelocity(player, { x: x-5, y });
+        Body.setVelocity(player, { x: Math.max(x-3, -speedLimit), y });
     } else if(e.code === 'ArrowRight' || e.code === 'KeyD'){
         //move player right -> add velocity in the right direction by adding to current x
-        Body.setVelocity(player, { x: x+5, y });
+        Body.setVelocity(player, { x: Math.min(x+3, speedLimit), y });
     }
 })
