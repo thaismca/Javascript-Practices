@@ -211,27 +211,30 @@ const player = Bodies.circle(
     unitHeight/2,  //y position
     //size -> scale with the unit size (50% of the unit width)
     (unitWidth * 0.5)/2, //player radius
+    //frictionAir: makes body slow down when moving through space
+    {frictionAir: 0.05}
 );
 //add the goal to the world -> shape won't appear in world without this
 World.add(world, player);
+
 
 //key controls
 document.addEventListener('keydown', e => {
     //a reference to the player's current velocity
     const {x, y} = player.velocity;
     //a limit to the speed that the ball can reach, to prevent it from moving too fast
-    const speedLimit = 6;
+    const speedLimit = 3;
     if(e.code === 'ArrowDown' || e.code === 'KeyS'){
         //move player down -> add velocity in the down direction by adding to current y
-        Body.setVelocity(player, { x, y: Math.min(y+3, speedLimit) });
+        Body.setVelocity(player, { x, y: Math.min(y+1, speedLimit) });
     } else if(e.code === 'ArrowUp' || e.code === 'KeyW'){
         //move player up -> add velocity in the up direction by subtracting from current y
-        Body.setVelocity(player, { x, y: Math.max(y-3, -speedLimit) });
+        Body.setVelocity(player, { x, y: Math.max(y-1, -speedLimit) });
     } else if(e.code === 'ArrowLeft' || e.code === 'KeyA'){
         //move player left -> add velocity in the left direction by subtracting from current x
-        Body.setVelocity(player, { x: Math.max(x-3, -speedLimit), y });
+        Body.setVelocity(player, { x: Math.max(x-1, -speedLimit), y });
     } else if(e.code === 'ArrowRight' || e.code === 'KeyD'){
         //move player right -> add velocity in the right direction by adding to current x
-        Body.setVelocity(player, { x: Math.min(x+3, speedLimit), y });
+        Body.setVelocity(player, { x: Math.min(x+1, speedLimit), y });
     }
-})
+});
