@@ -58,7 +58,7 @@ World.add(world, walls);
 //outter arrays always represent rows, inner arrays always represent columns
 //maze config
 //a const to represent the maze dimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
-const cells = 5;
+const cells = 6;
 //variables to represent the width and height of each cell
 const unitWidth = width/cells;
 const unitHeight = height/cells;
@@ -155,6 +155,35 @@ const startColumn = Math.floor(Math.random() * cells);
 
 //call StepThroughCell passing those random indices to update horizontals and verticals with info that can be used to create a valid maze 
 stepThroughCell(startRow, startColumn);
-console.log(grid)
-console.log(horizontals)
-console.log(verticals)
+
+//iterate over horizontals to draw horizontal walls based on the data in horizontals
+horizontals.forEach((row, rowIndex) => {
+    row.forEach((segment, columnIndex) => {
+        if(segment === true) { //no wall
+            return;
+        }
+        //create a rectangle that will represent the wall
+        const xPos = (columnIndex * unitWidth) + (unitWidth/2);
+        const yPos = (rowIndex * unitHeight) + unitHeight;
+        const wall = Bodies.rectangle(xPos, yPos, unitWidth, 10, {isStatic: true});
+
+        //add the wall to the world -> shape won't appear in world without this
+        World.add(world, wall);
+    });
+});
+
+//iterate over verticals to draw vertical walls based on the data in verticals
+verticals.forEach((row, rowIndex) => {
+    row.forEach((segment, columnIndex) => {
+        if(segment === true) { //no wall
+            return;
+        }
+        //create a rectangle that will represent the wall
+        const xPos = (columnIndex + 1) * unitWidth;
+        const yPos = (rowIndex * unitHeight) + (unitHeight/2);
+        const wall = Bodies.rectangle(xPos, yPos, 10, unitHeight, {isStatic: true});
+
+        //add the wall to the world -> shape won't appear in world without this
+        World.add(world, wall);
+    });
+});
