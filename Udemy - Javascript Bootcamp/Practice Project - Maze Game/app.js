@@ -54,8 +54,8 @@ World.add(world, walls);
 //horizontals -> 2d array that tracks walls between two different cells that are right next to each other on the same column
 //absence of a wall between two cells -> true | presence of a wall between two cells -> false
 //since upon initialization all walls will be present for all cells, each wall representation will be initialized with 'false'
-
 //outter arrays always represent rows, inner arrays always represent columns
+
 //maze config
 //a const to represent the maze dimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
 const cells = 6;
@@ -81,7 +81,7 @@ const verticals = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
 //so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
 const horizontals = Array(cells-1).fill(null).map(() => Array(cells).fill(false));
 
-//shufle array helper function
+//helper function that shuffles elements in an array and returns this shuffled array
 const shuffle = (arr) => {
     //get the length of the array
     let counter = arr.length;
@@ -188,7 +188,8 @@ verticals.forEach((row, rowIndex) => {
     });
 });
 
-//maze goal
+//-----MAZE GOAL----------------------------------------------------------------------------------------------------------------------------
+//drawing the rectangle that represents the maze goal
 const goal = Bodies.rectangle(
     //position -> middle of the cell in the bottom-right corner
     width - (unitWidth/2), //x position
@@ -201,3 +202,17 @@ const goal = Bodies.rectangle(
 );
 //add the goal to the world -> shape won't appear in world without this
 World.add(world, goal);
+
+//-----MAZE PLAYER--------------------------------------------------------------------------------------------------------------------------
+//drawing the circle that represents the maze player
+const player = Bodies.circle(
+    //position -> middle of the cell in the top-left corner
+    unitWidth/2, //x position
+    unitHeight/2,  //y position
+    //size -> scale with the unit size (50% of the unit width)
+    (unitWidth * 0.5)/2, //player radius
+    //static shape
+    {isStatic: true} //temporary, since we are going to add the ability to move it using keyboard keys
+);
+//add the goal to the world -> shape won't appear in world without this
+World.add(world, player);
