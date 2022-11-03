@@ -187,3 +187,17 @@ verticals.forEach((row, rowIndex) => {
         World.add(world, wall);
     });
 });
+
+//maze goal
+const goal = Bodies.rectangle(
+    //position -> middle of the cell in the bottom-right corner
+    width - (unitWidth/2), //x position
+    height - (unitHeight/2),  //y position
+    //size -> scale with the unit size (60% of the unit size)
+    unitWidth * 0.6, //goal width
+    unitHeight * 0.6, //goal height
+    //static shape
+    {isStatic: true}
+);
+//add the goal to the world -> shape won't appear in world without this
+World.add(world, goal);
