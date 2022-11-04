@@ -26,7 +26,8 @@ const { world } = engine;
     options: {
         //specify the height and width of the canvas element that is going to be used to display all that's rendered
         width,
-        height
+        height,
+        wireframes: false
     }
  });
  //tell the render object to start working and draw all the updates of world onto the screen
@@ -60,7 +61,7 @@ World.add(world, walls);
 //maze config
 //variables to represent the maze dimensions in number of cells for
 const gridColumns = 10;
-const gridRows = 3;
+const gridRows = 5;
 //variables to represent the width and height of each cell
 const unitWidth = width/gridColumns;
 const unitHeight = height/gridRows;
@@ -164,7 +165,7 @@ horizontals.forEach((row, rowIndex) => {
         //create a rectangle that will represent the wall
         const xPos = (columnIndex * unitWidth) + (unitWidth/2);
         const yPos = (rowIndex * unitHeight) + unitHeight;
-        const wall = Bodies.rectangle(xPos, yPos, unitWidth, 10, {isStatic: true});
+        const wall = Bodies.rectangle(xPos, yPos, unitWidth, 10, {isStatic: true, render: {fillStyle: 'gray'}});
 
         //add the wall to the world -> shape won't appear in world without this
         World.add(world, wall);
@@ -180,7 +181,7 @@ verticals.forEach((row, rowIndex) => {
         //create a rectangle that will represent the wall
         const xPos = (columnIndex + 1) * unitWidth;
         const yPos = (rowIndex * unitHeight) + (unitHeight/2);
-        const wall = Bodies.rectangle(xPos, yPos, 10, unitHeight, {isStatic: true});
+        const wall = Bodies.rectangle(xPos, yPos, 10, unitHeight, {isStatic: true, render: {fillStyle: 'gray'}});
 
         //add the wall to the world -> shape won't appear in world without this
         World.add(world, wall);
@@ -200,7 +201,8 @@ const goal = Bodies.rectangle(
       //customize label (to make it easier to write function that detects collision)
       label: 'goal',
       //static shape
-      isStatic: true
+      isStatic: true,
+      render: {fillStyle: 'LimeGreen'}
     }
 );
 //add the goal to the world -> shape won't appear in world without this
@@ -218,7 +220,8 @@ const player = Bodies.circle(
         //customize label (to make it easier to write function that detects collision)
         label: 'player',
         //frictionAir: makes body slow down when moving through space
-        frictionAir: 0.05
+        frictionAir: 0.05,
+        render: {fillStyle: 'Khaki'}
     }
     
 );
@@ -230,19 +233,19 @@ document.addEventListener('keydown', e => {
     //a reference to the player's current velocity
     const {x, y} = player.velocity;
     //a limit to the speed that the ball can reach, to prevent it from moving too fast
-    const speedLimit = 3;
+    const speedLimit = 4;
     if(e.code === 'ArrowDown' || e.code === 'KeyS'){
         //move player down -> add velocity in the down direction by adding to current y
-        Body.setVelocity(player, { x, y: Math.min(y+1, speedLimit) });
+        Body.setVelocity(player, { x, y: Math.min(y+2, speedLimit) });
     } else if(e.code === 'ArrowUp' || e.code === 'KeyW'){
         //move player up -> add velocity in the up direction by subtracting from current y
-        Body.setVelocity(player, { x, y: Math.max(y-1, -speedLimit) });
+        Body.setVelocity(player, { x, y: Math.max(y-2, -speedLimit) });
     } else if(e.code === 'ArrowLeft' || e.code === 'KeyA'){
         //move player left -> add velocity in the left direction by subtracting from current x
-        Body.setVelocity(player, { x: Math.max(x-1, -speedLimit), y });
+        Body.setVelocity(player, { x: Math.max(x-2, -speedLimit), y });
     } else if(e.code === 'ArrowRight' || e.code === 'KeyD'){
         //move player right -> add velocity in the right direction by adding to current x
-        Body.setVelocity(player, { x: Math.min(x+1, speedLimit), y });
+        Body.setVelocity(player, { x: Math.min(x+2, speedLimit), y });
     }
 });
 
@@ -268,6 +271,9 @@ Events.on(engine, 'collisionStart', (e) => {
                     Body.setStatic(body, false);
                 }
             });
+
+            //display win message and restart button
+            document.querySelector('.winner').classList.remove('hidden');
 
         }
     });
