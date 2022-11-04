@@ -13,7 +13,7 @@ const height = 600;
 
 //create a new engine
 const engine = Engine.create();
-engine.world.gravity.y = false; //disables gravity in the y axis
+engine.world.gravity.y = 0; //disables gravity in the y axis
 //get access to a world that got created along with that engine
 //a world is kind of like a snapshot of all the differents shapes that we have
 const { world } = engine;
@@ -38,10 +38,10 @@ Runner.run(Runner.create(), engine);
 const walls =[
     //for each wall, create a new shape, passing the shape's position and size
     //note: isStatic is a property that creates a shape that doesn't move at all (not even affected by gravity)
-    Bodies.rectangle((width/2), 0, width, 3, {isStatic: true}), //top wall
-    Bodies.rectangle(0, (height/2), 3, height, {isStatic: true}), //left wall
-    Bodies.rectangle((width/2), height, width, 3, {isStatic: true}), //bottom wall
-    Bodies.rectangle(width, (height/2), 3, height, {isStatic: true}), //right wall
+    Bodies.rectangle((width/2), 0, width, 3, {label: 'wall', isStatic: true}), //top wall
+    Bodies.rectangle(0, (height/2), 3, height, {label: 'wall', isStatic: true}), //left wall
+    Bodies.rectangle((width/2), height, width, 3, {label: 'wall', isStatic: true}), //bottom wall
+    Bodies.rectangle(width, (height/2), 3, height, {label: 'wall', isStatic: true}), //right wall
 ]
 //add the shape to the world -> shape won't appear in world without this
 World.add(world, walls);
@@ -261,7 +261,16 @@ Events.on(engine, 'collisionStart', (e) => {
         //our if statement needs to check if both BodyA and BodyB contain one of the labels
         //since each label only appear once, this means that we are looking to have both labels applied, one to BodyA and other to BodyB
         if(labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
-            console.log('Player won!')
+            //animation that makes everything inside the walls to fall appart
+            //enable gravity in the y axis
+            world.gravity.y = 1;
+            //setStatic to false for all bodies except the walls and the player
+            world.bodies.forEach((body) => {
+                if(body.label !== 'wall' && body.label !== 'player'){
+                    Body.setStatic(body, false);
+                }
+            });
+
         }
     });
 });
