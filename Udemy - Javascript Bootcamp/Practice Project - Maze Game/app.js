@@ -7,9 +7,9 @@
 //Events: has methods to fire and listen to events on other objects
 const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
-//some of the logic around the maze generation ends up being a lot easier to write if working with a perfect square canvas
-const width = 600;
-const height = 600;
+//canvas width and height to match the full space avaiable in the window
+const width = document.documentElement.clientWidth;
+const height = document.documentElement.clientHeight;
 
 //create a new engine
 const engine = Engine.create();
@@ -58,29 +58,27 @@ World.add(world, walls);
 //outter arrays always represent rows, inner arrays always represent columns
 
 //maze config
-//a const to represent the maze dimensions in number of cells (either vertically or horizontally, since we are working with square mazes)
-const cells = 10;
+//variables to represent the maze dimensions in number of cells for
+const gridColumns = 10;
+const gridRows = 3;
 //variables to represent the width and height of each cell
-const unitWidth = width/cells;
-const unitHeight = height/cells;
+const unitWidth = width/gridColumns;
+const unitHeight = height/gridRows;
 
 
-//const grid = Array(3) -> create an empty array that has 3 possible places in it
+//const grid = Array(gridRows) -> create an empty array that has gridRows as number of possible places in it (creates rows)
 //.fill(null) -> add some values to those possible places just so they are initialized and I can iterate on them
 //map -> map over the array and run a callback function for each one of the elements
-//the callback will return an array of 3 elements with value of false -> Array(3).fill(false)
-//so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
-const grid = Array(cells).fill(null).map(()=> Array(cells).fill(false));
+//the callback will return an array of gridColumns elements with value of false -> Array(gridColumns).fill(false) (creates collums)
+const grid = Array(gridRows).fill(null).map(()=> Array(gridColumns).fill(false));
 
-//const verticals = Array(3) -> create an empty array that has 3 possible places in it to represent the rows in verticals (outter array)
-//the callback in map will return an array of 2 elements with value of false, to represent the colums in verticals (inner array)
-//so for each of the 3 elements of the grid array, we are going to add another array as [false, false]
-const verticals = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
+//const verticals = Array(gridRows) -> create an empty array that has gridRows as number of possible places in it (rows in verticals)
+//the callback in map will return an array of gridColumns -1 elements with value of false (colums in verticals)
+const verticals = Array(gridRows).fill(null).map(() => Array(gridColumns-1).fill(false));
 
-//const horizontals = Array(2) -> create an empty array that has 2 possible places in it to represent the rows in horizontal (outter array)
-//the callback in map will return an array of 3 elements with value of false, to represent the colums in horizontals (inner array)
-//so for each of the 3 elements of the grid array, we are going to add another array as [false, false, false]
-const horizontals = Array(cells-1).fill(null).map(() => Array(cells).fill(false));
+//const horizontals = Array(gridRows-1) -> create an empty array that has gridRows -1 as number of possible places in it (rows in horizontals)
+//the callback in map will return an array of gridColumn elements with value of false (colums in horizontals)
+const horizontals = Array(gridRows-1).fill(null).map(() => Array(gridColumns).fill(false));
 
 //helper function that shuffles elements in an array and returns this shuffled array
 const shuffle = (arr) => {
@@ -123,7 +121,7 @@ const stepThroughCell = (row, column) => {
         //deconstruct from neighbor variables that represent the row and column of the next cell that can be visited next
         const [nextRow, nextColumn, direction] = neighbor;
         //see if neighbor is out of bounds
-        if(nextRow < 0 || nextRow >= cells || nextColumn < 0 || nextColumn >= cells){
+        if(nextRow < 0 || nextRow >= gridRows || nextColumn < 0 || nextColumn >= gridColumns){
             //don't do anything else for this current iteration -> move on to the next neighbor of neighbors
             continue;
         }
@@ -151,8 +149,8 @@ const stepThroughCell = (row, column) => {
 };  
 
 //generate the two random numbers that will represents the position of the cell that will be selected to start the maze generation from 
-const startRow = Math.floor(Math.random() * cells);
-const startColumn = Math.floor(Math.random() * cells);
+const startRow = Math.floor(Math.random() * gridRows);
+const startColumn = Math.floor(Math.random() * gridColumns);
 
 //call StepThroughCell passing those random indices to update horizontals and verticals with info that can be used to create a valid maze 
 stepThroughCell(startRow, startColumn);
@@ -214,8 +212,8 @@ const player = Bodies.circle(
     //position -> middle of the cell in the top-left corner
     unitWidth/2, //x position
     unitHeight/2,  //y position
-    //size -> scale with the unit size (50% of the unit width)
-    (unitWidth * 0.5)/2, //player radius
+    //size -> scale with the unit size (50% of the unit width or height, whichever is the smallest)
+    (Math.min(unitWidth, unitHeight) * 0.5)/2, //player radius
     { 
         //customize label (to make it easier to write function that detects collision)
         label: 'player',
