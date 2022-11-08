@@ -196,7 +196,8 @@ class Maze {
 };
 
 //----- GAME FUNCTIONS ----------------------------------------------------------------------------------------------------------------------
-function gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns){
+//function that creates a game 
+function gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns, levelCompleteElement){
     //disable gravity in the y axis
     world.gravity.y = 0;
     //generate the two random numbers that will represents the position of the cell that will be selected to start the maze generation from 
@@ -209,10 +210,25 @@ function gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns){
     engine.world.gravity.y = 0; //disables gravity in the y axis
     maze.drawMaze();
 
+    //generate level complete screen if the levelCompleteElement is passed
+    if(levelCompleteElement) {
+        createLevelCompleteScreen(levelCompleteElement);
+    }
+    
     return maze;
 };
 
-function gameOver(bodyA, bodyB){
+function createLevelCompleteScreen(element){
+    element.innerHTML = `
+    <div class="level-win hidden">
+      <h1>YOU WIN!</h1>
+      <button id="restart">restart game</button>
+      <button id="next">next level</button>
+    </div>
+    `
+};
+
+function gameOver(bodyA, bodyB,){
     //enable gravity to run animation
     world.gravity.y = 1;
     //change labels from player and goal so the collision is no longer tracked
@@ -226,14 +242,14 @@ function gameOver(bodyA, bodyB){
     });
 
     //display win message and restart button
-    document.querySelector('.winner').classList.remove('hidden');
+    document.querySelector('.level-win').classList.remove('hidden');
 };
 
 function reset(){
     //remove all bodies from the world.bodies array
     world.bodies.splice(0, world.bodies.length);
     //hide win message and restart button
-    document.querySelector('.winner').classList.add('hidden');
+    document.querySelector('.level-win').classList.add('hidden');
     //start a new game
     maze = gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns);
 };
