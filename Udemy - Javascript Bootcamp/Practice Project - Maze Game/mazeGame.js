@@ -196,6 +196,12 @@ class Maze {
 };
 
 //----- GAME FUNCTIONS ----------------------------------------------------------------------------------------------------------------------
+//level tracker
+const level = {
+    levelRows: 0,
+    levelColumns: 0
+}
+
 //function that creates a game 
 function gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns, levelCompleteElement){
     //disable gravity in the y axis
@@ -209,6 +215,10 @@ function gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns, levelCompleteEl
     maze.stepThroughCell(startRow, startColumn);
     engine.world.gravity.y = 0; //disables gravity in the y axis
     maze.drawMaze();
+
+    //level tracker update
+    level.levelRows = mazeRows;
+    level.levelColumns = mazeColumns;
 
     //generate level complete screen if the levelCompleteElement is passed
     if(levelCompleteElement) {
@@ -226,9 +236,26 @@ function createLevelCompleteScreen(element){
       <button id="next">next level</button>
     </div>
     `
+
+    //restart game
+    document.querySelector('#restart').addEventListener('click', () => {
+        reset(mazeRows, mazeColumns);
+    });
+
+    //play next level
+    document.querySelector('#next').addEventListener('click', () =>{
+        let { levelRows, levelColumns } = level
+        if(levelColumns <= levelRows * 2){
+            levelColumns++;
+        } else {
+            levelRows++;
+            levelColumns = levelRows;
+        }
+        reset(levelRows, levelColumns);
+    })
 };
 
-function gameOver(bodyA, bodyB,){
+function levelComplete(bodyA, bodyB,){
     //enable gravity to run animation
     world.gravity.y = 1;
     //change labels from player and goal so the collision is no longer tracked
@@ -245,13 +272,14 @@ function gameOver(bodyA, bodyB,){
     document.querySelector('.level-win').classList.remove('hidden');
 };
 
-function reset(){
+//a function to reset the maze at a given level
+function reset(levelRows, levelColumns){
     //remove all bodies from the world.bodies array
     world.bodies.splice(0, world.bodies.length);
     //hide win message and restart button
     document.querySelector('.level-win').classList.add('hidden');
     //start a new game
-    maze = gameStart(mazeWidth, mazeHeight, mazeRows, mazeColumns);
+    maze = gameStart(mazeWidth, mazeHeight, levelRows, levelColumns);
 };
 
 //player key controls
@@ -288,7 +316,7 @@ Events.on(engine, 'collisionStart', (e) => {
         //our if statement needs to check if both BodyA and BodyB contain one of the labels
         //since each label only appear once, this means that we are looking to have both labels applied, one to BodyA and other to BodyB
         if(labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
-            gameOver(collision.bodyA, collision.bodyB);
+            levelComplete(collision.bodyA, collision.bodyB);
         }
     });
 });
