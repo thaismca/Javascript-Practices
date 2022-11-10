@@ -15,5 +15,9 @@ document.querySelector('form').addEventListener('submit', (e) => {
     linkInput.value = `${window.location}#${encoded}`;
     //automatically select the text so the user can easily copy it to the clipboard
     linkInput.select();
+
+    //toggle elements visibility
+    document.querySelector('#message-form').classList.add('hide');
+    document.querySelector('#link-form').classList.remove('hide');
     
 });
