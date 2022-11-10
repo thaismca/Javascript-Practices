@@ -1,4 +1,4 @@
-//create references to relevant elements in the page
+//create references to elements that will have visibility toggled in the page
 const messageForm = document.querySelector('#message-form');
 const linkForm = document.querySelector('#link-form');
 const messageDisplay = document.querySelector("#message-display");
@@ -9,7 +9,7 @@ if(hash) {
     //toggle elements visibility
     messageForm.classList.add('hide');
     messageDisplay.classList.remove('hide');
-    
+
     //decode the part of the hash that represents the encoded message (the hash without the # symbol)
     const decoded = atob(hash.replace('#', ''));
     //add the message to the document
@@ -22,12 +22,19 @@ document.querySelector('form').addEventListener('submit', (e) => {
     //prevent the form submission to a backend server
     e.preventDefault();
 
+    //get a reference to the input where the message is typed
+    const messageInput = document.querySelector('#message-input');
+
+    //display error message if message is empty
+    if(messageInput.value === ''){
+        M.toast({html: 'Enter a valid message!', displayLength: 1500, classes: 'red darken-1'})
+        return;
+    }
+
     //toggle elements visibility
     messageForm.classList.add('hide');
     linkForm.classList.remove('hide');
 
-    //get a reference to the input where the message is typed
-    const messageInput = document.querySelector('#message-input');
     //use btoa() to encode the message
     const encoded = btoa(messageInput.value);
 
