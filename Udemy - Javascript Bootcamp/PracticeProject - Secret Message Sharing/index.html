@@ -13,11 +13,20 @@
       .row {
         margin-top: 20vh;
       }
+      h1 {
+        margin-top: 0;
+      }
     </style>
   </head>
   <body>
     <div class="row">
       <div class="col s8 offset-s2">
+        <!--message display-->
+        <div id="message-display" class="card-panel hide">
+          <h1 id="message-decoded"></h1>
+          <div><a href="./index.html">Create your own message</a></div>
+        </div>
+        <!--message form-->
         <div id="message-form" class="card-panel">
           <form>
             <label>Enter a Secret Message</label>
@@ -25,7 +34,7 @@
             <button class="btn">Create</button>
           </form>
         </div>
-
+        <!--link form-->
         <div id="link-form" class="card-panel hide">
           Share this link with a friend
           <input id="link-input" />
