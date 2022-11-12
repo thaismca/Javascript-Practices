@@ -36,6 +36,13 @@ readdir(path[,options],callback) -> function that is going to allow the accompli
 
 Reads the contents of a directory. The callback gets two arguments (err, files) where files is an array of the names of the files in the directory excluding '.' and '..'.
 
+-----------------------------------------------------------------------
+
+process.cwd() method -> returns the current working directory of the Node.js process. We are going to use this method when passing the current directory as the path argument to readdir, instead of simply '.', since it has much better cross-platform compatibility.
+
+Note: no need to add a require statment for the process module!
+The process module is automatically added into the global scope of every project, so it does not have to be required ahead of time to actually make use of it. This is one of the very few modules that behaves in that way.
+
 
 
 
