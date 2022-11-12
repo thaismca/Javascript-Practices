@@ -19,7 +19,7 @@ In this project, the goal is to use NodeJS to re-implement this basic functional
 
 -----------------------------------------------------------------------
 
-How are we going to actually read out files and folder in the directory? At this point we've only een taking a look at Javascript inside the browser, without having any access whatsoever to the user's hard drive.
+How are we going to actually read out files and folder in the directory? At this point we've only been taking a look at Javascript inside the browser, without having any access whatsoever to the user's hard drive.
 
 It all changes with NodeJS!
 
@@ -43,9 +43,57 @@ process.cwd() method -> returns the current working directory of the Node.js pro
 Note: no need to add a require statment for the process module!
 The process module is automatically added into the global scope of every project, so it does not have to be required ahead of time to actually make use of it. This is one of the very few modules that behaves in that way.
 
+-----------------------------------------------------------------------
 
+Running node program as executable
 
+As for the lastest implementation, in order to run our program from a very far removed directory, we need to run node and then list out the exact path to navigate back over to this project directory just to run the program.
 
+To solve this, we are going to implement a command that we can run and have it print ot the files and folders in the current directory, without the need to run node and pass in the file we want to execute, putting all the path to reach that file when not in the same directory.
 
+To start building any project using Node JS, first we have to build a package.json file. The npm init command is used to create a Node. js project. The npm init command will create a package where the project files will be stored. All the modules you download will be stored in the package.
+
+----------STEP 1: Create package.json file with "bin" section
+
+--> Inside the project directory, run "npm init -y" in the comand prompt (the y flag will simply generate an empty npm project without going through an interactive process)
+
+After running this command, a new file wil be added inside of the project directory -> package.json
+
+This file, overall, describes some of the different qualities of the project (name, version, description, main file, keywords, author, licence)
+
+Besides that, there are two extremely important uses for this package.json file:
+
+- scripts section -> inside this sections we're going to end up writing some different little programs that do some automated tasks inside of the project.
+
+- dependencies -> if we decide to install someone else's code or a dependency into our project, it will be automatically inside of this package.json file, so if we ever decide to share our project with someone else, they can run a single command that will take a look at all dependencies that get listed inside this file and automatically install it for them as well.
+
+The other thing we can do inside this package.json file is to set up a little configuration section that allows us to run some commands and have it to trigger some code inside of our project. -> "bin"
+
+This "bin" section means that we have some binary or, essentially, some executable thing that we want to be able to run inside of our project.
+"bin": {
+    "program-name": "file that contains the code we want to run"
+}
+
+--> Inside the package.json file, add the "bin" section. Then create a command (program-name key) that will run the app.js file.
+"bin": {
+    "nls": "app.js"
+}
+
+----------STEP 2: Change app.js file permissions
+----------STEP 3: Add comment to app.js file to allow it to be treated as an executable
+
+These steps shouldn't be required on a Windows machine
+
+--> Inside the project directory, run "chmod +x app.js" in the comand prompt
+
+--> At the very top of the app.js file, add the line #!/usr/bin/env node
+
+This line above is telling our computer we want to use Node to execute the file, as opposed to trying to execute the file directly.
+
+----------STEP 4: Link our project
+
+--> Inside the project directory, run "npm link" in the comand prompt 
+
+This essentially is going to take our current project and make it available to everywhere, or every directory on our machine -> make it globally available everywhere else
 
 

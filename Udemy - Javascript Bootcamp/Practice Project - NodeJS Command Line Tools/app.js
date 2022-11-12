@@ -1,3 +1,8 @@
+#!/usr/bin/env node
+
+//this line above is telling our computer we want to use Node to execute this file, as opposed to trying to execute this file directly
+
+
 //get access to the File System Module from Node.js inside of this project
 //The node:fs module enables interacting with the file system
 const fs = require('node:fs');
