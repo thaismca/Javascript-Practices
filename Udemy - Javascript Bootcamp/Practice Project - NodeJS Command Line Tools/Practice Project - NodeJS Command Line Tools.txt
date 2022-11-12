@@ -1,0 +1,44 @@
+Practice Project - NodeJS Command Line Tools
+https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17006892#overview
+
+Goals:
+- Introduction to NodeJS.
+- Get a handle on the NodeJS Standard Library.
+- Get more practice with topics around assync programming and some array methods.
+
+-----------------------------------------------------------------------
+
+App Overview:
+If you run a Linux based machine, or a Mac based machine, or even a Windows machine with a Linux terminal emulator, there's a command that can be run at the terminal to print out the different files and folders inside of some directory -> ls.
+
+ls command can be used in two ways
+- no arguments: prints out files and folders in the current directory
+- with a path: prints out files and folders in relative or absolute path
+
+In this project, the goal is to use NodeJS to re-implement this basic functionality around the ls command. A version of ls that we can run directly at our terminal, inside of any project or any directory on our machine, and just print out all the files and folders inside there.
+
+-----------------------------------------------------------------------
+
+How are we going to actually read out files and folder in the directory? At this point we've only een taking a look at Javascript inside the browser, without having any access whatsoever to the user's hard drive.
+
+It all changes with NodeJS!
+
+NodeJS Standard Library Documentation -> nodejs.org/api
+At the left hand side, there's a list of libraries or modules inside of the NodeJS Standard Library. We can use these different modules and their code and classes and functions to build out a Node application pretty easily. 
+
+These modules can be used to get access to things on a user's device that we don't usually have access to. For our project, we are going to work with the File System on the user's machine.
+
+In th NodeJS list of modules -> File System
+https://nodejs.org/api/fs.html
+In this documentation, there's a lot of different functions that can be used to work with the user's file system. We can use the functions and objects from this documetnation to read different files on the user's hard drive, create files, edit files, rename them and so on.
+
+readdir(path[,options],callback) -> function that is going to allow the accomplishment of the app, which is to print out all the files and folders inside of some given directory.
+
+Reads the contents of a directory. The callback gets two arguments (err, files) where files is an array of the names of the files in the directory excluding '.' and '..'.
+
+
+
+
+
+
+
