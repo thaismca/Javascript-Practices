@@ -6,7 +6,7 @@ Goals:
 - Get a handle on the NodeJS Standard Library.
 - Get more practice with topics around assync programming and some array methods.
 
------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 App Overview:
 If you run a Linux based machine, or a Mac based machine, or even a Windows machine with a Linux terminal emulator, there's a command that can be run at the terminal to print out the different files and folders inside of some directory -> ls.
@@ -17,7 +17,7 @@ ls command can be used in two ways
 
 In this project, the goal is to use NodeJS to re-implement this basic functionality around the ls command. A version of ls that we can run directly at our terminal, inside of any project or any directory on our machine, and just print out all the files and folders inside there.
 
------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 How are we going to actually read out files and folder in the directory? At this point we've only been taking a look at Javascript inside the browser, without having any access whatsoever to the user's hard drive.
 
@@ -36,14 +36,14 @@ readdir(path[,options],callback) -> function that is going to allow the accompli
 
 Reads the contents of a directory. The callback gets two arguments (err, files) where files is an array of the names of the files in the directory excluding '.' and '..'.
 
------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 process.cwd() method -> returns the current working directory of the Node.js process. We are going to use this method when passing the current directory as the path argument to readdir, instead of simply '.', since it has much better cross-platform compatibility.
 
 Note: no need to add a require statment for the process module!
 The process module is automatically added into the global scope of every project, so it does not have to be required ahead of time to actually make use of it. This is one of the very few modules that behaves in that way.
 
------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Running node program as executable
 
@@ -88,7 +88,7 @@ These steps shouldn't be required on a Windows machine
 
 --> At the very top of the app.js file, add the line #!/usr/bin/env node
 
-This line above is telling our computer we want to use Node to execute the file, as opposed to trying to execute the file directly.
+This line above is telling our computer we want to use Node to execute the file, as opposed to trying to execute the file directly. 
 
 ----------STEP 4: Link our project
 
@@ -96,4 +96,20 @@ This line above is telling our computer we want to use Node to execute the file,
 
 This essentially is going to take our current project and make it available to everywhere, or every directory on our machine -> make it globally available everywhere else
 
+------------------------------------------------------------------------------------
 
+Changing the way the list of folders and files is displayed
+
+As for the lastest implementation, all folders and files inside a given directory are being printed out inside a simple array. There's no differentiation between what is a file and what is a folder. So as for the next step, we want to improve the formatting, by displaying the list is a better format and also color code the things that are being logged.
+
+Our current implementation will make this a challenge. We re using readdir, which returns an array of strings that represents the name of the files and folders, and nothing else (no information on what those things are, just their names).
+
+From the fs module -> lstat(path[,options],callback)
+Retrieves the <fs.Stats> for the symbolic link referred to by the path. The callback gets two arguments (err, stats) where stats is a <fs.Stats> object. A <fs.Stats> object provides information about a file. This function is used to get some information about one single file or folder at a time. So for this project we are going to end up having to call lstat multiple times, with every single object that we get back inside of the file names array that we get back from readdir.
+
+There are two methods from the <fs.Stats> class that can be used to check if an object describes a regular file or a folder.
+
+- stats.isDirectory(): Returns true if the <fs.Stats> object describes a file system directory.
+NOTE: If the <fs.Stats> object was obtained from fs.lstat(), this method will always return false. This is because fs.lstat() returns information about a symbolic link itself and not the path it resolves to.
+
+-stats.isFile(): Returns true if the <fs.Stats> object describes a regular file.
