@@ -9,9 +9,8 @@ const fs = require('node:fs');
 
 //this const fs now holds an object containing all pieces of functionality that are stuffed into the file system module
 //so now in this object we can get access to every single function listed in the File System module documentation
-//the one we care about for the sake of this app is the readdir function, that reads the contents of a directory
 
-fs.readdir(process.cwd(), (err, files) => {
+fs.readdir(process.cwd(), async (err, files) => {
     //the callback gets two arguments (err, files) where files is an array of the names of the files in the directory
 
     //EITHER err === an error object, which means something wen wrong
@@ -21,36 +20,30 @@ fs.readdir(process.cwd(), (err, files) => {
         console.log(err);
     }
 
-    //CALLBACK-BASED SOLUTION
-    //create an array (allStats) which length is going to be equal the number of calls we expect to have
-    //inside this array, every element is going to start off as 'null'
-    const allStats = Array(files.length).fill(null);
-
-    for(let file of files){
-        //get the index of the current element
-        const index = files.indexOf(file);
-        
-        fs.lstat(file, (err, stats) => {
-            if(err){
-                console.log(err);
-            }
-            //add the stats to the appropriate position of the allStats array (matching the index of current file of filenames)
-            allStats[index] = stats;
-
-            //check if there are still null values in the allStats array
-            //ready will be true only if there are no falsy returns from any of the elements in the allStats array
-            const ready = allStats.every((stats) => {
-                return stats;
-            });
-
-            //if there are no null elements in allStats
-            if(ready){
-                //iterate over the allStats array
-                allStats.forEach((stats, index) => {
-                    //print out the element in files that matches the current allStats index, and whether it's a file or not
-                    console.log(files[index], stats.isFile());
-                });
-            }
-        });
+    //CALLBACK-BASED SOLUTION USING PROMISES
+    //this part doesn't change, either manually wrapping the lstat function in a promise or using node built-in methods to assist
+    for(let file of files) {
+        try{
+            const stats = await lstat(file);
+            console.log(file, stats.isFile());
+        }
+        catch(err) {
+            console.log(err);
+        }  
     }
+
 });
+
+//manually wrap the lstat function in a  promise
+const lstat = (file) => {
+    return new Promise((resolve, reject) => {
+        fs.lstat(file, (err, stats) => {
+            //if an error is returned from the lstat call, reject the promise
+            if(err){
+                reject(err);
+            }
+            //resolve with the stats data that is returned from the lstat call (when no error)
+            resolve(stats); 
+        })
+    })
+}

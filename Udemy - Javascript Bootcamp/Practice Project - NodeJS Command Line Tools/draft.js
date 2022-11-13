@@ -28,3 +28,49 @@ fs.readdir(process.cwd(), (err, files) => {
     }
 
 });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//CALLBACK-BASED SOLUTION
+fs.readdir(process.cwd(), (err, files) => {
+    //the callback gets two arguments (err, files) where files is an array of the names of the files in the directory
+
+    //EITHER err === an error object, which means something wen wrong
+    //OR err === null, which means everything is okay
+    if(err) {
+        //error handling code
+        console.log(err);
+    }
+
+    //CALLBACK-BASED SOLUTION
+    //create an array (allStats) which length is going to be equal the number of calls we expect to have
+    //inside this array, every element is going to start off as 'null'
+    const allStats = Array(files.length).fill(null);
+
+    for(let file of files){
+        //get the index of the current element
+        const index = files.indexOf(file);
+        
+        fs.lstat(file, (err, stats) => {
+            if(err){
+                console.log(err);
+            }
+            //add the stats to the appropriate position of the allStats array (matching the index of current file of filenames)
+            allStats[index] = stats;
+
+            //check if there are still null values in the allStats array
+            //ready will be true only if there are no falsy returns from any of the elements in the allStats array
+            const ready = allStats.every((stats) => {
+                return stats;
+            });
+
+            //if there are no null elements in allStats
+            if(ready){
+                //iterate over the allStats array
+                allStats.forEach((stats, index) => {
+                    //print out the element in files that matches the current allStats index, and whether it's a file or not
+                    console.log(files[index], stats.isFile());
+                });
+            }
+        });
+    }
+});

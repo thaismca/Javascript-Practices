@@ -120,11 +120,25 @@ IS IT A FILE OR A FOLDER?
 
 We are going to implement this using three different options, and see the pros and cons of each approach:
 
-----------OPTION 1
+----------OPTION 1: callback based solution
 Mantain an array of the results from each lstat. As each callback is invoked, add the stats object to this array. When array is full, log everything in it.
 
-----------OPTION 2
-Wrap the lstat call witha  promisse, use async/await syntax to process lstat call one at a time.
+In this approach, we have no idea ever what order the callbacks are going to be invoked in. So as a solution, before we do any calls to lstat whatoever, we're going to create an array (allStats) which length is going to be equal the number of calls we expect to have. Inside this array, every element is going to start off as 'null'.
+
+For each callback that is invoked, check the index of the element for which that lstat call was made, and store the stats object that we get back from that call and update the element at the corresponding index of the allStats array. Then we're going to check if there are any null values in the array, and wait for the rest of the callbacks to be invoked if there are any. If there are no more null elements in the allStats array, that means we have all the data that we expect to ever get, so we can do some processing at this point. We can now iterate through this list of allStats now that we have all the data we expect to have, and it is in the same order as the original stats calls that we made.
+
+CONS: if we ever had to add on any additional layer of complexity (for instance, do another assynchronous call for some other function after the lstat call), this solution would start to get really confusing really quickly. 
+
+
+----------OPTION 2:
+Wrap the lstat call with a  promise, use async/await syntax to process lstat call one at a time.
+
+A promise is a much more convenient way of handling assynchronous code than callback-based functions. In this case, we are going to take the lstat function and wrap it with a promise, so we can use async/await syntax to process the lstat calls one at a time. We are going to make the lstat call number one, and wait for that to be resolved and the stats data is returned, before move on to the next lstat call. Finally, we can somehow keep track of each of these different statements and all the data that is coming back, and then do our console logs at the very end. We'll always know that we are doing all the different calls in the same exact order.
+
+There are three different ways to implement this in our current code:
+- manually wrap the lstat function inside of a promise
+- 
+-
 
 ----------OPTION 3
-Wrap the lstat call with a promisse, use async/await + the Promisse.all helper method to process lstat calls all at once.
+Wrap the lstat call with a promise, use async/await + the Promisse.all helper method to process lstat calls all at once.
