@@ -45,7 +45,7 @@ The process module is automatically added into the global scope of every project
 
 ------------------------------------------------------------------------------------
 
-Running node program as executable
+RUNNING NODE PROGRAM AS EXECUTABLE
 
 As for the lastest implementation, in order to run our program from a very far removed directory, we need to run node and then list out the exact path to navigate back over to this project directory just to run the program.
 
@@ -98,7 +98,7 @@ This essentially is going to take our current project and make it available to e
 
 ------------------------------------------------------------------------------------
 
-Changing the way the list of folders and files is displayed
+CHANGING THE WAY THE LIST OF FOLDERS AND FILES IS DISPLAYED
 
 As for the lastest implementation, all folders and files inside a given directory are being printed out inside a simple array. There's no differentiation between what is a file and what is a folder. So as for the next step, we want to improve the formatting, by displaying the list is a better format and also color code the things that are being logged.
 
@@ -113,3 +113,18 @@ There are two methods from the <fs.Stats> class that can be used to check if an 
 NOTE: If the <fs.Stats> object was obtained from fs.lstat(), this method will always return false. This is because fs.lstat() returns information about a symbolic link itself and not the path it resolves to.
 
 -stats.isFile(): Returns true if the <fs.Stats> object describes a regular file.
+
+------------------------------------------------------------------------------------
+
+IS IT A FILE OR A FOLDER?
+
+We are going to implement this using three different options, and see the pros and cons of each approach:
+
+----------OPTION 1
+Mantain an array of the results from each lstat. As each callback is invoked, add the stats object to this array. When array is full, log everything in it.
+
+----------OPTION 2
+Wrap the lstat call witha  promisse, use async/await syntax to process lstat call one at a time.
+
+----------OPTION 3
+Wrap the lstat call with a promisse, use async/await + the Promisse.all helper method to process lstat calls all at once.
