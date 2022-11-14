@@ -129,16 +129,15 @@ For each callback that is invoked, check the index of the element for which that
 
 CONS: if we ever had to add on any additional layer of complexity (for instance, do another assynchronous call for some other function after the lstat call), this solution would start to get really confusing really quickly. 
 
-
 ----------OPTION 2:
 Wrap the lstat call with a  promise, use async/await syntax to process lstat call one at a time.
 
 A promise is a much more convenient way of handling assynchronous code than callback-based functions. In this case, we are going to take the lstat function and wrap it with a promise, so we can use async/await syntax to process the lstat calls one at a time. We are going to make the lstat call number one, and wait for that to be resolved and the stats data is returned, before move on to the next lstat call. Finally, we can somehow keep track of each of these different statements and all the data that is coming back, and then do our console logs at the very end. We'll always know that we are doing all the different calls in the same exact order.
 
 There are three different ways to implement this in our current code:
-- manually wrap the lstat function inside of a promise
-- 
--
+- manually wrap the lstat function inside of a promise.
+- using the promisify method, from the Utilities module in NodeJS, that takes a function following the common error-first callback style, i.e. taking an (err, value) => ... callback as the last argument, and returns a version that returns promises.
+-using lstat version from the fs Promises API method: fs.promises.lstat (File System module itself has a sub module in it available as fs.promises that has all the different functions that the fs module has in a promise based interface)
 
 ----------OPTION 3
 Wrap the lstat call with a promise, use async/await + the Promisse.all helper method to process lstat calls all at once.
