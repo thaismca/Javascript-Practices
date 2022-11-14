@@ -6,6 +6,7 @@
 //get access to the File System Module from Node.js inside of this project
 //The node:fs module enables interacting with the file system
 const fs = require('node:fs');
+const { stat } = require('node:fs/promises');
 
 //this const fs now holds an object containing all pieces of functionality that are stuffed into the file system module
 //so now in this object we can get access to every single function listed in the File System module documentation
@@ -23,15 +24,22 @@ fs.readdir(process.cwd(), async (err, files) => {
         console.log(err);
     }
 
-    //CALLBACK-BASED SOLUTION USING PROMISES
-    //this part doesn't change, either manually wrapping the lstat function in a promise or using node built-in methods to assist
-    for(let file of files) {
-        try{
-            const stats = await lstat(file);
-            console.log(file, stats.isFile());
-        }
-        catch(err) {
-            console.log(err);
-        }  
+    //PROMISE.ALL BASED SOLUTION
+    //map over the files array and call lstat for each file -> create an array with the Promises that are returned from each lstat call
+    const statPromises = files.map((file) => {
+        return lstat(file);
+    });
+
+    //pass the statPromises array to Promise.all -> when all promises from the array are resolved,
+    //Promise.all will return a new array containing all stats data inside of it -> allStats
+    const allStats = await Promise.all(statPromises);
+
+    //iterate over the allStats array
+    for(let stats of allStats) {
+        //get the index of the current element
+        const index = allStats.indexOf(stats);
+        //print out the element in files that matches the current allStats index, and whether it's a file or not
+        console.log(files[index], stats.isFile());
     }
+    
 });

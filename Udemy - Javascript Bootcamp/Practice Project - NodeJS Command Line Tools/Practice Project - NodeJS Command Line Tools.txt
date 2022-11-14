@@ -137,7 +137,19 @@ A promise is a much more convenient way of handling assynchronous code than call
 There are three different ways to implement this in our current code:
 - manually wrap the lstat function inside of a promise.
 - using the promisify method, from the Utilities module in NodeJS, that takes a function following the common error-first callback style, i.e. taking an (err, value) => ... callback as the last argument, and returns a version that returns promises.
--using lstat version from the fs Promises API method: fs.promises.lstat (File System module itself has a sub module in it available as fs.promises that has all the different functions that the fs module has in a promise based interface)
+-using lstat version from the fs Promises API method: fs.promises.lstat (File System module itself has a sub module in it available as fs.promises that has all the different functions that the fs module has in a promise based interface).
+
+CONS: everything in this implementation runs in serial, which means that we run only one lstat operation at a time. This puts a limitation on how application scalability. We don't get to enjoy the benefit of any performance enhancement from running multiple lstat calls in parallel
 
 ----------OPTION 3
 Wrap the lstat call with a promise, use async/await + the Promisse.all helper method to process lstat calls all at once.
+
+This option is kind of a combination of the options 1 and 2. We are going to use a promise to organize the code, but simultaneously we are going to mantain an array of data, and we are going to wait for every record inside that array to have some data inside of it before we try to process anything. But that array collection proccess that was a manual operation in option number 1 is going to be done for us automatically with the Promise.all helper method.
+
+await Promise.all( [{promise 1}, {promise 2}, ...] ) -> [ {data from promise 1}, {data from promise 2}, ... ]
+
+Promise.all is a built-in Javascript method. It's called with an array of promise objects. In our project, each one of these promise is going to be a lstat call. Each of these different promises is going to eventually resolve with some data that's going to be the actual stats object. What Promise.all does is wait for all the promises of the array to be resolved. It's then going to take the data from each of them, throw all data inside of an array, and them return that big array with all the data.
+
+We make use of Promise.all any time we need to wait for many different options to run in parallel. Once they all resolve, we get our information.
+
+When we are making use of Promise.all, we only use the await keyword on Promise.all, as opposed to each individual function that returns a promise.
