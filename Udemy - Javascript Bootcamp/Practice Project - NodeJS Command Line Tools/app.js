@@ -6,7 +6,8 @@
 //get access to the File System Module from Node.js inside of this project
 //The node:fs module enables interacting with the file system
 const fs = require('node:fs');
-const { stat } = require('node:fs/promises');
+//get access to the chalk package
+const chalk = require('chalk');
 
 //this const fs now holds an object containing all pieces of functionality that are stuffed into the file system module
 //so now in this object we can get access to every single function listed in the File System module documentation
@@ -38,8 +39,16 @@ fs.readdir(process.cwd(), async (err, files) => {
     for(let stats of allStats) {
         //get the index of the current element
         const index = allStats.indexOf(stats);
-        //print out the element in files that matches the current allStats index, and whether it's a file or not
-        console.log(files[index], stats.isFile());
+        //check if the current element is a file
+        if(stats.isFile()){
+            //print out the element in files that matches the current allStats index, and color file name in yellow 
+            console.log(chalk.yellow(files[index]));
+        }
+        //current element is not a file
+        else {
+            //print out the element in files that matches the current allStats index, and color its name in bold green 
+            console.log(chalk.green.bold(files[index]));
+        }
     }
     
 });

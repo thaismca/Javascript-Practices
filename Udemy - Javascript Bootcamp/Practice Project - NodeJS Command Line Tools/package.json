@@ -11,5 +11,8 @@
   "license": "ISC",
   "bin": {
     "nls": "app.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
   }
 }

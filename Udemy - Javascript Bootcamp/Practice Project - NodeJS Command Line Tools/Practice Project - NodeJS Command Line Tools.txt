@@ -153,3 +153,16 @@ Promise.all is a built-in Javascript method. It's called with an array of promis
 We make use of Promise.all any time we need to wait for many different options to run in parallel. Once they all resolve, we get our information.
 
 When we are making use of Promise.all, we only use the await keyword on Promise.all, as opposed to each individual function that returns a promise.
+
+------------------------------------------------------------------------------------
+
+Console logs with colors
+
+open source package from npm -> chalk
+https://www.npmjs.com/package/chalk
+
+In order to make use of this package in our project, we are going to install it with the command 'npm install chalk@4'. Running this command while in the project directory will make it reach out to the npm registry, download that package and add it into the project. This will add a section "dependencies" in the package.joson file of the project, and "chalk" will be added to this section. It will also add a new folder called "node_modules", where all dependencies that were installed for the project get placed, including not only the ones I installed myself, but also all dependencies from these projects that I included.
+
+
+
+
