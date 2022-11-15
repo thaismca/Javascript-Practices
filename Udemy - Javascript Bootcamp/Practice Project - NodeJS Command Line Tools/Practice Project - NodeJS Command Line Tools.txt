@@ -28,7 +28,7 @@ At the left hand side, there's a list of libraries or modules inside of the Node
 
 These modules can be used to get access to things on a user's device that we don't usually have access to. For our project, we are going to work with the File System on the user's machine.
 
-In th NodeJS list of modules -> File System
+In the NodeJS list of modules -> File System
 https://nodejs.org/api/fs.html
 In this documentation, there's a lot of different functions that can be used to work with the user's file system. We can use the functions and objects from this documetnation to read different files on the user's hard drive, create files, edit files, rename them and so on.
 
@@ -162,6 +162,37 @@ open source package from npm -> chalk
 https://www.npmjs.com/package/chalk
 
 In order to make use of this package in our project, we are going to install it with the command 'npm install chalk@4'. Running this command while in the project directory will make it reach out to the npm registry, download that package and add it into the project. This will add a section "dependencies" in the package.joson file of the project, and "chalk" will be added to this section. It will also add a new folder called "node_modules", where all dependencies that were installed for the project get placed, including not only the ones I installed myself, but also all dependencies from these projects that I included.
+
+------------------------------------------------------------------------------------
+
+Accepting command line arguments
+
+Currently, the nls command can print out files and folders inside the current directory, but we want to make it so it can print out the contents of any arbitrary directory if we pass in some path as an argument to the command.
+
+Receiving arguments -> The process.argv property is an inbuilt application programming interface of the process module which is used to get the arguments passed to the node.js process when run in the command line. This property returns an array containing the arguments passed to the process when run it in the command line. The first element is the process execution path and the second element is the path for the js file. If you run a command with an argument, it will be added as the next element in this process.argv array.
+
+So if we call nls followed by a directory, we can get access to that directory in the process.argv at the index 2.
+
+
+Joining paths -> lstat calls are made passing in either a relative path to the file that we want to get the stats for, or the absolute path. In this application, lstat is currently being called with a file name, that is a simple string indicating the name of the file that we want to get some stats for. In this case, lstat is going to look inside of our current working directory and try to find a file inside there that has this file name that we passed in.
+
+If we call nls passing in another directory in the arguments, it won't work. It will try to find files from the working directory in the directory that is passed in, where the file doesn't exist. So we need to make sure that when we call lstat we pass in a relative path to that target file.
+
+In the NodeJS list of modules -> Path
+https://nodejs.org/api/path.html
+
+The node:path module provides utilities for working with file and directory paths.
+It revolves all around helping the developer to get file names or paths to files in the machine put together. It's going to handle all the differences in cross-plaform compatibility.
+
+The path.join() method joins all given path segments together using the platform-specific separator as a delimiter, then normalizes the resulting path. Zero-length path segments are ignored. If the joined path string is a zero-length string then '.' will be returned, representing the current working directory.
+
+
+
+ 
+
+
+
+
 
 
 
