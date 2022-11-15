@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "watchit" : "app.js"
+    "watchit": "app.js"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3"
   }
 }
