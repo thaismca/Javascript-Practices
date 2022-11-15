@@ -1,0 +1,32 @@
+Practice Project - Project Runner
+https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17007006
+
+Command line tool that watches for changes in the directory that contains a given project file, and reruns that project any time a change is detected. For this project we are going to rely more upon outside libraries, so we are going to do more filling in the blanks in this project, rather than doing everything essentially from scratch.
+
+--- Challenges
+1. Need to detect when a file changes
+We want to restart a program not only when the file that we are executing gets changed, but we want to watch the entire folder and see if anything in it changes (files are editted, added or removed).
+
+chokidar -> package that will be used to detect file changes
+Minimal and efficient cross-platform file watching library
+https://www.npmjs.com/package/chokidar
+
+2. It would be nice to provide some help to users of our CLI tool
+Imagine that other people will be using the tool, so we need to make it more user friendly and integrate some help system into it, to male it more obvious to other engineers how to use the program.
+
+caporal -> package that will be used to build the CLI tool
+A full-featured framework for building command line applications (cli) with node.js, including help generation, colored output, verbosity control, custom logger, coercion and casting, typos suggestions, and auto-complete for bash/zsh/fish.
+https://www.npmjs.com/package/caporal
+
+3. Need to figure out how to execute some JS code from withing a JS program
+child_Process -> standard library module that will be used to execute a program
+The node:child_process module provides the ability to spawn subprocesses
+
+
+--- Project setup
+Steps to use the aplication as a command line tool
+  - add comment at the very top of the project file that allow us to execute this file as though it were an executable -> #!/usr/bin/env node
+  - if on a linux or mac OS machine: run command in the project directory to allow executing the file as program -> chmod +x app.js
+  - run command in the project direcory to generate a package.json file for the project -> npm init -y
+  - in the package.json file: add "bin" section and create a command to execute the app.js file (watchit)
+  - run command in the project directory to take our current project and make it globally available everywhere else in the machine -> npm link
