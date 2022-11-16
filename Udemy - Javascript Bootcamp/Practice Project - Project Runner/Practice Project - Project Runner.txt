@@ -27,6 +27,36 @@ The node:child_process module provides the ability to spawn subprocesses
 Steps to use the aplication as a command line tool
   - add comment at the very top of the project file that allow us to execute this file as though it were an executable -> #!/usr/bin/env node
   - if on a linux or mac OS machine: run command in the project directory to allow executing the file as program -> chmod +x app.js
-  - run command in the project direcory to generate a package.json file for the project -> npm init -y
+  - run command in the project directory to generate a package.json file for the project -> npm init -y
   - in the package.json file: add "bin" section and create a command to execute the app.js file (watchit)
   - run command in the project directory to take our current project and make it globally available everywhere else in the machine -> npm link
+
+
+--- Watching files with chokidar
+ - run command in the project director install package: npm install chokidar
+ - in the app.js file, require in chokidar
+
+ISSUE WITH ADD EVENT
+The 'add' callback is not only going to be invoked whenever a new file is created inside of the project directory, but it will also be called when chokidar first starts up and sees a file inside of the project direcory. So when the program is started we immediately see a tons of different 'FILE ADDED' console logs statements.
+
+This is what's going to happen whenever chokidar first starts up inside of our application:
+
+ - We are going to have watchit started up and have some directory provided by the user.
+ - Chokidar is going to see all the files inside that directory and it's going to register each one of them, each time emmiting an 'add' event .
+ - Immediately we are going to start to run the user's code, and chokidar is going to emit that 'add' event again. This is going to stop the user's program we just created, and start it up again, since we detected that something has changed (although nothing really changed, it's just that chokidar invoked the 'add' event callback when it first saw the file inside of the project directory.
+ - The previous step will be repeated for each file that exists in the project directory. Essentially, for every file inside a project's directory, we are going to stop the user's code if we've already executed it, and then start it back up again, just because we initiated or started up our program.
+
+HOW TO SOLVE THIS ISSUE?
+We want to have our program to start up, have chokidar start to watch some directory and then the instant that it adds a file, rather than starting up the user's code right away, it would be nice to put in some little timer of sorts and wait for some time to go by and see if any other 'add' event gets emmited. If so, then restart that timer, and only execute user's code when that timer is fully finished without a new 'add' event. This would mean that start up is completed and we are ready to start user's code. This process is called DEBOUNCING A FUNCTION.
+
+--- Deboucing 'add' event callback function
+In this project, we are going to solve this by using another npm package -> lodash.debounce
+https://www.npmjs.com/package/lodash.debounce
+This package contains one function, that is intended to solve the issue where a function is called way too often.
+Rather than invoking the 'add' event callback function right away, we are going to force it to wait for 100 miliseconds go by without any event occuring before we finally execute the callback.
+
+ - run command in the project director install package: npm install lodash.debounce
+ - in the app.js file, require in lodash.debounce
+
+
+
