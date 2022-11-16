@@ -15,6 +15,9 @@ const fs = require('node:fs');
 //get access to the spawn function of the Child Process Module from Node.js inside of this project
 //this method can be used to spawn a new subprocess
 const { spawn } = require('node:child_process');
+//get access to the chalk package inside of this project
+//package that will be used to style console outputs
+const chalk = require('chalk');
 
 program
     //program version
@@ -36,15 +39,23 @@ program
         }
         //if cannot find the file, the promise is rejected with an error 
         catch(err){
-            throw new Error(`Could not find the file ${name}`);
+            throw new Error(chalk.red(`Could not find the file ${name}`));
         }
         
+        //variable to track if there's a subprocess currently running
+        let proc;
         //a function to be executed when chokidar emits an event
         //debounce the function so it doesn't get called too often
-        const start = debounce(() => {
+        const start = debounce((e) => {
+            //check if there's a subprocess currently running -> kill it
+            if(proc){
+                proc.kill();
+            }
+            //notify user that a new version of the program is running
+            console.log(chalk.blue.bold('>>>>>>> Starting process...'));
             //spawn a subprocess that will run the node command passing in the file name to be executed with node in the args
             //the stdio set to inherit will allow the logs and errors from this subprocess to be displayed using the main process stdio
-            spawn('node', [name], { stdio: 'inherit' });
+            proc = spawn('node', [name], { stdio: 'inherit' });
         }, 300);
 
         //use chokidar to watch the current directory
