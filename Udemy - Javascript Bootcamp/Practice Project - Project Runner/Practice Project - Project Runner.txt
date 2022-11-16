@@ -59,4 +59,31 @@ Rather than invoking the 'add' event callback function right away, we are going 
  - in the app.js file, require in lodash.debounce
 
 
+--- Handling CLI Tools with Caporal
+ - run command in the project director install package: npm install caporal
+ - in the app.js file, require in caporal
+
+Caporal has a really specific set of instructions on how to use it in its documentation.
+When we require caporal, we're going to first chain on a couple of different methods to configure the command line tool we are trying to create.
+ - version: sets a flag to inform user what version of the program is running.
+ - command: it's used only if we want to have some kind of subcommand inside of our command line tool.
+ - argument: specify an argument that a command is going to take.
+ - option: specify an option flag that can be passed along.
+ - action: specify the function that is executed when a user calls our program and provides all these different commands, arguments and options.
+
+NOTE: for both argument and option calls, we can specify the respective argumentor call in two different ways
+ - <string>: means that the argument or option "string" is required to run the command. Failing to passing it when trying to execute the program will cause an error message to be displayed (handled by the caporal package).
+ - [string]: means that the argument or option "string" is optional when running the command.
+
+None of this stuff actually gets executed in any way until we call "caporal reference in project".parse(process.argv).
+
+--- Ensuring files exist
+When running this program, it's expected that either the user passes in a valid file to be executed, or that the directory the program is being called from contains an app.js file to be executed. To do so, we are going to use the standard library module File System, that enables interacting with the file system.
+
+- fsPromises.access(path[, mode]): Tests a user's permissions for the file or directory specified by path.
+If the accessibility check is successful, the promise is resolved with no value. If any of the accessibility checks fail, the promise is rejected with an <Error> object. 
+
+In our program, the purpose of this function will be essentially just to check and see wheter or not a file exists on the hard drive. It can also be used to see whter or not the user has permission to read or write to that file, but that's not applicable here.
+
+If user tries to run a file that doesn't exist, we want to show an error message.
 
