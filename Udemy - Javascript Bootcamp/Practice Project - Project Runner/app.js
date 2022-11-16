@@ -12,6 +12,9 @@ const program = require('caporal');
 //get access to the File System Module from Node.js inside of this project
 //The node:fs module enables interacting with the file system
 const fs = require('node:fs');
+//get access to the spawn function of the Child Process Module from Node.js inside of this project
+//this method can be used to spawn a new subprocess
+const { spawn } = require('node:child_process');
 
 program
     //program version
@@ -39,8 +42,10 @@ program
         //a function to be executed when chokidar emits an event
         //debounce the function so it doesn't get called too often
         const start = debounce(() => {
-            console.log('STARTING USERS PROGRAM');
-        }, 100);
+            //spawn a subprocess that will run the node command passing in the file name to be executed with node in the args
+            //the stdio set to inherit will allow the logs and errors from this subprocess to be displayed using the main process stdio
+            spawn('node', [name], { stdio: 'inherit' });
+        }, 300);
 
         //use chokidar to watch the current directory
         //instead of chain on an event listener to watch for all event types covered by chokidar

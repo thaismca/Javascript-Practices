@@ -1,11 +1,11 @@
 Practice Project - Project Runner
 https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17007006
 
-Command line tool that watches for changes in the directory that contains a given project file, and reruns that project any time a change is detected. For this project we are going to rely more upon outside libraries, so we are going to do more filling in the blanks in this project, rather than doing everything essentially from scratch.
+Command line tool that watches for changes in the directory that contains a given js file, and reruns that file any time a change is detected. For this project we are going to rely more upon outside libraries, so we are going to do more filling in the blanks in this project, rather than doing everything essentially from scratch.
 
 --- Challenges
 1. Need to detect when a file changes
-We want to restart a program not only when the file that we are executing gets changed, but we want to watch the entire folder and see if anything in it changes (files are editted, added or removed).
+We want to restart a program not only when the js file that we are executing gets changed, but we want to watch the entire folder and see if anything in it changes (files are editted, added or removed).
 
 chokidar -> package that will be used to detect file changes
 Minimal and efficient cross-platform file watching library
@@ -18,7 +18,7 @@ caporal -> package that will be used to build the CLI tool
 A full-featured framework for building command line applications (cli) with node.js, including help generation, colored output, verbosity control, custom logger, coercion and casting, typos suggestions, and auto-complete for bash/zsh/fish.
 https://www.npmjs.com/package/caporal
 
-3. Need to figure out how to execute some JS code from withing a JS program
+3. Need to figure out how to execute some JS code from within a JS program
 child_Process -> standard library module that will be used to execute a program
 The node:child_process module provides the ability to spawn subprocesses
 
@@ -41,7 +41,7 @@ The 'add' callback is not only going to be invoked whenever a new file is create
 
 This is what's going to happen whenever chokidar first starts up inside of our application:
 
- - We are going to have watchit started up and have some directory provided by the user.
+ - We are going to have watchit started up and have some js file name provided by the user.
  - Chokidar is going to see all the files inside that directory and it's going to register each one of them, each time emmiting an 'add' event .
  - Immediately we are going to start to run the user's code, and chokidar is going to emit that 'add' event again. This is going to stop the user's program we just created, and start it up again, since we detected that something has changed (although nothing really changed, it's just that chokidar invoked the 'add' event callback when it first saw the file inside of the project directory.
  - The previous step will be repeated for each file that exists in the project directory. Essentially, for every file inside a project's directory, we are going to stop the user's code if we've already executed it, and then start it back up again, just because we initiated or started up our program.
@@ -78,12 +78,34 @@ NOTE: for both argument and option calls, we can specify the respective argument
 None of this stuff actually gets executed in any way until we call "caporal reference in project".parse(process.argv).
 
 --- Ensuring files exist
-When running this program, it's expected that either the user passes in a valid file to be executed, or that the directory the program is being called from contains an app.js file to be executed. To do so, we are going to use the standard library module File System, that enables interacting with the file system.
+When running this program, it's expected that either the user passes in a valid js file to be executed, or that the directory the program is being called from contains an app.js file to be executed. To do so, we are going to use the standard library module File System, that enables interacting with the file system.
 
 - fsPromises.access(path[, mode]): Tests a user's permissions for the file or directory specified by path.
 If the accessibility check is successful, the promise is resolved with no value. If any of the accessibility checks fail, the promise is rejected with an <Error> object. 
 
 In our program, the purpose of this function will be essentially just to check and see wheter or not a file exists on the hard drive. It can also be used to see whter or not the user has permission to read or write to that file, but that's not applicable here.
 
-If user tries to run a file that doesn't exist, we want to show an error message.
+If user tries to run a js file that doesn't exist, we want to show an error message.
+
+
+--- Executing some JS code from within a JS program
+The idea of this project is to execute with NodeJS some js file that the user passes, or the app.js file inside of the current directory if none is passed by the user, and watch for changes in the file itself and all other files inside of the same project.
+
+But how to get that file name and have it executed?
+The node:child_process standard library module provides the ability to spawn subprocesses.
+
+- child_process.spawn(command[, args][, options])
+This method can be used to spawn a new process using the given command, with command-line arguments in args. If omitted, args defaults to an empty array.
+
+To execute a node program in general, we use the following syntax: node filename.js, being node the command and the filename.js the argument to that command (js file that we want to run). So in order to execute some JS code within our JS program, we can use the child_process.spawn method, passing in node as the command and the name of the js file we want to run in the args array.
+
+The thrid argument of the child_process.spawn method is an option object. It's considered an optional argument for this method, but in our case it will be very important to pass in the stdio property inside of this object. The options.stdio option is used to configure the pipes that are established between the parent and child process.
+
+More on stdio:
+When we start up a program from the terminal, we are using our terminal to create a process. When this process is created, it gets assigned three communication channels: stdin, stdout, stderr.
+ - stdin: can be used to receive information directly from the terminal to the program. If something is typed into the terminal while the program is being executed, that input is sent to stdin. The program may have code to listen to that incoming input and do something with it.
+ - stdout: can be used to emmit logs from the program to the terminal.
+ - stderr: can be used to emmit error messages from the program to the terminal.
+ 
+When we create a child process from our program, that child process might be emmiting some logs/errors. By default, when using the child_process.spawn method to create a new process, we don't see any of that information coming back to us. So we can choose to provide an stdio option when calling spaw and pass it a string of 'inherit'. That essentially means if that child process emits any log statements, this information will be taken and passed back to our program automatically, and shown inside of our program's console logs/errors.
 
