@@ -1,0 +1,47 @@
+Practice Project - E-Commerce App
+https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17007088
+
+>>>>> PROJECT OVERVIEW
+Goal -> learn how to use Javascript to build a web server and show some dinamic HTML pages.
+Features -> the e-commerce application will allow:
+  - users to view items and add them to the cart
+  - administrators to log in and manage the items in the store
+
+When public user visits the website:
+  - show a list of different items (image, name, price) that they can purchase (add to cart button)
+  - when user decides to checkout, display the list of items in the shopping cart
+  - for each item in shoppin cart, show name, quantity, price per unit, total price, and option to remove from cart
+  - display cart total and buy bitton at the bottom of the list
+  - for now, buy button won't do anything -> billing is outside of the current scope
+
+When administrator visits the admin panel:
+  - display sign in page
+  - when user logs in, display the admin panel
+  - the admin panel consists of a list of current items with edit and delete buttons for each item, and the option to create new ones
+  - when admin clicks to edit or create new product, display a form to enter product name, price and upload an image
+  - in order to be able to create new admin users, create a sign up page
+
+>>>>> APP ARCHITECTURE
+Node.js web server: a running program that it's going to be initially host in the local machine. It will be possible to access this server from a browser, and any time that there's an attempt to visit the server inside the browser, a network request will be made to it. In short, the server will be configured to receive network requests. The request is then going to be inspected to determine what resource the user is looking for. Next step will be generating some HTML and send that HTML back over to the user's browser.
+
+The key thing to undesrtand here is that this project is not going to be working with static HTML documents. The server is going to be responsible for taking snippets of HTML, and then these snippets will be assembled altogether every single time a user makes a request.
+
+File-based data store: will alow to store some amount of information related to the app (for instance, all the different items that are being sold, or the items that are currently in a person'r cart, or the users that have signed up as admin). Normally, some off the shelf or open source database would be used for that. But in this case, a custom file-based data store will be built from scratch. Note that this is not a process that is commonly adopted inside of a typical professional project, but in this project this will be the adopted approach, just to create an opportunity to learn a bit more about Javascript in general.
+
+>>>>> PROJECT SETUP
+- Create a new project directory
+- Generate package.json file
+- Install a few dependencies to help with writing the project -> express and nodemon
+- Create a 'start' script to run the project
+
+Dependencies
+  - express: will be use to help with creating a web server
+  - nodemon: development tool that will automatically restart the web server whenever there's a change in one of the project files
+
+Scripts
+In the package.json file, create a script that is going to automatically start up the project.
+  - name of the script -> dev
+  - command that the script executes -> nodemon index.js
+  - how to run the script from the command pront -> npm run dev ('run' is the keyword used to tell npm to execute some script defined in the script section of the package.json file)
+
+
