@@ -3,9 +3,6 @@
 //get access to the chokidar package inside of this project
 //package that will be used to detect when file changes, are added or unliked
 const chokidar = require('chokidar');
-//get access to the lodash.debounce package inside of this project
-//package contains one function, that is intended to solve the issue where a function is called way too often
-const debounce = require('lodash.debounce');
 //get access to the caporal package inside of this project
 //package that will be used to build the CLI tool
 const program = require('caporal');
@@ -26,7 +23,7 @@ program
     //file to execute will be optional
     //if user doesn't pass one, this program will try to find an app.js file inside of the current directory
     //if there's none, then an error message will be displayed
-    .argument('[filename]', 'Name of a file to execute')
+    .argument('[filename]', 'Name of a js file to execute')
     //function to be invoked when user executes the program
     //passing an array containing all arguments that were passed in the execution call
     .action( async ({ filename }) =>{
@@ -44,9 +41,8 @@ program
         
         //variable to track if there's a subprocess currently running
         let proc;
-        //a function to be executed when chokidar emits an event
-        //debounce the function so it doesn't get called too often
-        const start = debounce((e) => {
+        //a function to start the child process
+        const startProcess = () => {
             //check if there's a subprocess currently running -> kill it
             if(proc){
                 proc.kill();
@@ -56,17 +52,47 @@ program
             //spawn a subprocess that will run the node command passing in the file name to be executed with node in the args
             //the stdio set to inherit will allow the logs and errors from this subprocess to be displayed using the main process stdio
             proc = spawn('node', [name], { stdio: 'inherit' });
-        }, 300);
+        };
+
+        //a function to be invoked when chokidar emits a 'ready' event
+        //it notifies user that the initial scan is completed and the starts the child process execution
+        const ready = () => {
+            console.log(chalk.yellow.bold('Initial scan complete.'));
+            startProcess();
+        };
+
+        //a function to be invoked when chokidar emits an 'add' event
+        //it notifies user which file was added and the restarts the child process execution
+        const added = (path) => {
+            console.log(chalk.yellow.bold(`File added: ${path}`));
+            startProcess();
+        };
+
+        //a function to be invoked when chokidar emits a 'change' event
+        //it notifies user which file was changed and the restarts the child process execution
+        const changed = (path) => {
+            console.log(chalk.yellow.bold(`File changed: ${path}`));
+            startProcess();
+        };
+
+        //a function to be invoked when chokidar emits an 'unlinked' event
+        //it notifies user which file was deleted and the restarts the child process execution
+        const unlinked = (path) => {
+            console.log(chalk.yellow.bold(`File deleted: ${path}`));
+            startProcess();
+        };
 
         //use chokidar to watch the current directory
         //instead of chain on an event listener to watch for all event types covered by chokidar
-        //add listeners for when a file is added, changed or unlinked from the directory
+        //add listeners for when the initial scan is completed, and when a file is added, changed or unlinked from the directory
+        //ignoreInitial: true -> add event won't trigger before 'ready' event
         chokidar
-        .watch('.')
-            .on('add', start)
-            .on('change', start)
-            .on('unlink', start);
-            });
+        .watch('.', { ignoreInitial: true })
+            .on('ready', ready)
+            .on('add', added)
+            .on('change', changed)
+            .on('unlink', unlinked);
+    });
 
 //execute program
 program.parse(process.argv);

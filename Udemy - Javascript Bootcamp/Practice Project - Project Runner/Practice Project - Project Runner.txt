@@ -109,3 +109,12 @@ When we start up a program from the terminal, we are using our terminal to creat
  
 When we create a child process from our program, that child process might be emmiting some logs/errors. By default, when using the child_process.spawn method to create a new process, we don't see any of that information coming back to us. So we can choose to provide an stdio option when calling spaw and pass it a string of 'inherit'. That essentially means if that child process emits any log statements, this information will be taken and passed back to our program automatically, and shown inside of our program's console logs/errors.
 
+--------------------------------------------------------------------------------------------------
+ADDED CHALLENGE
+Wanted to display a message in the log to let user know the reason why the child process is being restarted
+
+- renamed start to startProcess
+- startProcess is not being directly called when the event chokidar is watching to is emitted
+- created a different function to be called by each event, and these functions will first show a log to let user know what happened, then execute the child process
+- added the 'ready' process to be watched by chokidar, so the program could have a better log for when the process starts for the first time
+- since now the program listens for 'ready', it was possible to use the ignoreInitial option and no longer need debounce, since 'add' will only be emitted when a file is added after 'ready' event
