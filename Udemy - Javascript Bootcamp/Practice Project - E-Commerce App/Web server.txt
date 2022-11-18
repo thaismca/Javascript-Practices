@@ -1,0 +1,38 @@
+This document contains more details about the web server created for the "Practice Project - E-Commerce App"
+---------------------------------------------------------------------------------------------------------------
+>>>>> EXPRESS
+A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+
+Documentation: https://expressjs.com/
+---------------------------------------------------------------------------------------------------------------
+
+* Getting started
+  - install package: npm install express
+  - get access to the express package inside of the project: const express = require('express');
+  - instantiate an object that describes all the different thing that the web server can do: const app = express();
+
+We are going to customize this object to tell the web server what kind of requests it should expect to receive, and what it should do whenever it does receive a request.
+
+---------------------------------------------------------------------------------------------------------------
+
+* Basic routing
+Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on). Each route can have one or more handler functions, which are executed when the route is matched.
+
+Route definition takes the following structure: app.METHOD(PATH, HANDLER)
+  - app is an instance of express
+  - METHOD is an HTTP request method, in lowercase
+  - PATH is a path on the server
+  - HANDLER is the function executed when the route is matched
+
+The HANDLER is a callback function that's always called with the two same arguments: req and res.
+  - req: object that represents the incoming request from a browser into the web server
+  - res: object that represents the outgoing response from the server back to the browser
+
+---------------------------------------------------------------------------------------------------------------
+
+* Accessing app from a browser
+In order to have the app being accessed from a browser, it's necessary to tell the application to start listening for incoming network traffic on a particular port.
+
+app.listen(path, [callback]): Starts a UNIX socket and listens for connections on the given path.
+
+In our case, path will be the port 3000. Once both a basic routing and this listener are set up, navigate to 'localhost:3000' in the browser to access the app from there.
