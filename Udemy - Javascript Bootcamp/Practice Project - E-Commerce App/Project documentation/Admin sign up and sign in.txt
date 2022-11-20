@@ -1,0 +1,17 @@
+>>>> UNDERSTANDING FORM SUBMISSION
+
+When user clicks on a form a button, or hit enter while having a form input selected, a network request coming from the browser to the server is issued: automatic submission.
+
+In an automatic submission, the browser is going to take a look at that form element. It's going to find all the different input elements inside of it, and the browser is going to attempt to collect all the information from each of those input elements that have a name property assigned to them. It then forms all that information into something called a query string.
+
+And then the browser makes a request with a method of GET to the same URL that is currently looking at, passing that query string. If you check the URL after the automatic submission is made, you'll notice a question mark right after the base URL, and then all the information out of the form is right after that question mark.
+
+NOTE: if the form input elements don't have a name property, this attempt of collecting information won't happen.
+
+By default, when the browser takes this information and makes a request, it is a GET type request, but we can  modify that behavior and make a POST type request. A POST request is a type of HTTP request that is commonly associated with creating a record of some kind. This is done by adding a method attribute to the form, and making it's value of POST. 
+
+Then, we could configure our express server to receive the information from the Admin Sign Up form, and take a look at the email, password and password confirmation properties and then use that information to create an account for this user.
+
+NOTE: when a form submission with a method of GET is made, we see the form information inside the URL being passed as a query string. When the method is changed to POST, this no longer occurs. The information is no longer passed in the URL, it is instead appended onto something called request body.
+
+--------------------------------------------------------------------------------------------------------------------
