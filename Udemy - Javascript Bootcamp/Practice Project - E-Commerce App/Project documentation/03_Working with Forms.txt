@@ -38,3 +38,4 @@ When the callback method is executed by the server, it still doesn't have access
 The request object emits a data event any time that it receives some bit of data. We can add code to listen for this data event, and then get access to the data that is being received. This data object comes in the form of a buffer, taht can be converted to a plain string using data.toString('utf8'). Thay means take all the information in the buffer, turn it into a string that is encoded in the UTF-8 format. We end up getting a string representation of everything that was inside of the body request, that looks like query string that we see inside the URL for GET requests.
 
 Now that we have that string, we can parse it to get the information that we really care about out of it.
+
