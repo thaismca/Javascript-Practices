@@ -8,7 +8,9 @@ const app = express();
 //get access to the body-parser library
 //this object exposes various factories to create body parsing middlewares
 const bodyParser = require('body-parser');
-
+//use the urlencoded method from bodyParser as a middeware function to parse the body of all the requests
+//app.use will set this middleware to be called for all the different route handlers
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //route handlers that tells the web server what it should do when it receives a network request coming from the browser
 //watching for incoming requests for a path of '/' and a method of GET 
@@ -27,8 +29,7 @@ app.get('/', (req, res) => {
 });
 
 //watching for incoming requests for a path of '/' and a method of POST
-//use the urlencoded method from bodyParser as a middeware function to parse the body of the request
-app.post('/', bodyParser.urlencoded({ extended: true }), (req, res) => {
+app.post('/', (req, res) => {
     //display information from the body property of the req object
     console.log(req.body);
 
