@@ -68,4 +68,14 @@ This means that whenever we get a POST request to '/', run the parsinMiddlewareF
 
 The first implementation of this middleware function to parse the data from the body of an incoming POST request will be manually written, just for the sake of understand what's going on behind the scenes. Note that this won't be an appropriated approach for production use, for it doesn't account for a bunch of corner cases. The code will be later refactored to make use of outside libraries. 
 
+--
+--> Refactoring...
+This middleware can be refactored to use an outside library, that would work more effectively and cover corner cases that the first implementation doesn't account for. The body-parser is a Node.js body parsing middleware, that parses incoming request bodies in a middleware before your handlers, available under the req.body property. It already comes with the installation of Express, so no need to install it separatelly. Just need to require it inside of our code to start making use of its methods.
 
+const bodyParser = require('body-parser');
+
+The bodyParser object exposes various factories to create middlewares. All middlewares will populate the req.body property with the parsed body when the Content-Type request header matches the type option, or an empty object ({}) if there was no body to parse, the Content-Type was not matched, or an error occurred.
+
+In this case, we are going to use the method urlencoded, that returns a middleware that only parses urlencoded bodies and only looks at requests where the Content-Type header matches the type option. This is for handling specifically information that is coming out of an HTML form.
+
+The urlencoded function takes an optional options object. We are going to pass it setting the 'extended' key to true. The "extended" syntax allows for rich objects and arrays to be encoded into the URL-encoded format, allowing for a JSON-like experience with URL-encoded.
