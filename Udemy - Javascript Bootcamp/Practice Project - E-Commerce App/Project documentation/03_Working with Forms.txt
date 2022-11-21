@@ -39,3 +39,33 @@ The request object emits a data event any time that it receives some bit of data
 
 Now that we have that string, we can parse it to get the information that we really care about out of it.
 
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> WORKING WITH MIDDLEWARES
+
+As per the last implementation, the implemented logic parses all the information that is included inside of a POST request. Eveything is being done inside of the route handler, but there's a caveat in this implementaton.
+
+Request POST to '/' ----> Route Handler takes care of: 1. Form parsing logic, 2. Account creation
+
+As we start to think about long term of developing this application, it's posible to immediatly identify a problem with this approach. At some point in time, this application will have a feature to create products, that will also involve some kind of form submission.
+
+Request POST to '/products' ----> Route Handler takes care of: 1. Form parsing logic, 2. Product creation
+
+The code would end up having duplicate logic between thse two route handlers. To solve this, we can extract that parsing logic into some separate function, that will run before either of the two route handlers. So it would look something like this:
+
+Request POST to '/' ----------> |                    |--> Route Handler takes care of account creation
+                                | Form parsing logic |
+Request POST to '/products' --> |                    |--> Route Handler takes care of product creation
+
+This means that any time the web server gets a POST request to '/' or '/products', we would want to run the form parsing logic and receive all the information at the body of the request before this information is handed to the final route handler that contains the specific logic to create either an account or a product.
+
+Next step will be refactoring the code to put all this parsing logic into a separate helper function. This separate helper function that is going to process an incoming request is what we refer to inside of Express as middleware function. Check the '02_Web server' document for more details about middlewares in Express.
+
+After putting a middleware function to parse the data from the body of an incoming POST request together, we can use it by putting it right in front of the callback function of the route handler: 
+ - app.post('/', parsingMiddlewareFunction, (req, res) => {...});
+
+This means that whenever we get a POST request to '/', run the parsinMiddlewareFunction. And once the middlewareFunction calls its next callback, take the req and res objects and pass them through to the next function (which is our route handler in this case).
+
+The first implementation of this middleware function to parse the data from the body of an incoming POST request will be manually written, just for the sake of understand what's going on behind the scenes. Note that this won't be an appropriated approach for production use, for it doesn't account for a bunch of corner cases. The code will be later refactored to make use of outside libraries. 
+
+

@@ -36,3 +36,23 @@ In order to have the app being accessed from a browser, it's necessary to tell t
 app.listen(path, [callback]): Starts a UNIX socket and listens for connections on the given path.
 
 In our case, path will be the port 3000. Once both a basic routing and this listener are set up, navigate to 'localhost:3000' in the browser to access the app from there.
+
+---------------------------------------------------------------------------------------------------------------
+
+* Writing and using middleware
+Express is a routing and middleware web framework that has minimal functionality of its own: An Express application is essentially a series of middleware function calls.
+
+Middleware functions are functions that have access to the request object (req), the response object (res), and the next function in the application’s request-response cycle. The next function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware.
+
+Middleware functions can perform the following tasks:
+ - Execute any code.
+ - Make changes to the request and the response objects.
+ - End the request-response cycle.
+ - Call the next middleware in the stack.
+
+The middleware function is always called with three arguments:
+ - req: request object
+ - res: response object
+ - next: callback argument to the middleware function
+
+Inside of the middleware function, we can run some amout of code to inspect and modify the req and res objects. If we do so, those modifications are going to show up inside of our later request handler that receives the same req and res objects when next is executed. After all processing of req and res is done by the middleware function, we need to  call the next function, which is essentially the sign that the middleware is all done processing, and that Express can continue and run whatever function needs to be ran.
