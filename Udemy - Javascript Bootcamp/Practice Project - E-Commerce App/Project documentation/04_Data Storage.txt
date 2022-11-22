@@ -1,0 +1,26 @@
+>>>> DATA STORAGE
+
+When someone creates an administrator account to this application, this means we need to keep some kind of record of this user's email and password, to allow future sign in of that user to the admin panel of the application. In order to store this information, we are going to have to have a persistent data store.
+
+If we were to store a list of accounts that had been created inside of memory, like some sort of Javasript array, we'd be dumping that data every single time our server restarted. We need to make sure that all the different accounts that have been created somehow get persisted into the next startup of our server.
+
+So we are going to have our Express Server interface with a Data Store. This Data Store is going to store a list of users who have created an account with our application, and a list of products as well. The Data Store itself is going to save all its data to our hard drive in the form of JSON files: one products.json file, that will store all the information about our products, and one users.json file, that will store all the different users who have signed up to our application.
+
+The Data Store for this project will be implemented from scratch.
+
+IMPORTANT NOTE: the Data Store that is going to be implemented in this project is not suitable for production use! Here are some reasons why it's not reccomended to use a data store that saves information into the hard drive in production:
+  - will eror if we try to open/write to the same file twice at the same time;
+  - won't work if we have multiple servers running on different machines, because they're all going to have their own version of a products.json and users.json files;
+  - we have to write to the File System every time we want to upadte some data, so the performance of this will be relatively not that great.
+
+Since the purpose of this project is to practice with Javascript coding, we will be taking this approach for it allows us some really good practice. In particualar, we are going to see a really good example of code reuse using classes and inheritance with objec oriented programming.
+
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> DATA MODELLING APPROACH
+
+Our Data Store is going to take the form of a couple of different individual classes, and each one is going to manage its own collection of objects. Lumping all this into the term of Data Store is only from a conceptual standpoint. At the end of the day, we are going to have two separate objects for managing both those different resources (users and products). We are going ot call these different separate objects REPOSITORIES.
+
+In the world of web applications, there are two very popular approaches for managing data. The one we are using inside of this application is the Repository approach, where a single calss (repository) is responsible for data access to one type of resource. Each individual record is stored and used as plain JS object, that doesn't have any methods attached to it. In this scenario, a repository is responsible for all of our interaction with our data. Another approach would be one where every record is an instance of a 'model' class that has methods to interact with this record (save, update, delete).
+
+So it's really a question in these two approaches of where we are locating all of our code. The repository approach ties all of our code to kind of a gatekeeper that governs access to our raw data. The other approach (commonly known as active record approach) keeps all of the code with each individual record and centers all the functionality around each individual record.
