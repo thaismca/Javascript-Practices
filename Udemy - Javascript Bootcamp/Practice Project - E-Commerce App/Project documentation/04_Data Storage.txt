@@ -24,3 +24,49 @@ Our Data Store is going to take the form of a couple of different individual cla
 In the world of web applications, there are two very popular approaches for managing data. The one we are using inside of this application is the Repository approach, where a single calss (repository) is responsible for data access to one type of resource. Each individual record is stored and used as plain JS object, that doesn't have any methods attached to it. In this scenario, a repository is responsible for all of our interaction with our data. Another approach would be one where every record is an instance of a 'model' class that has methods to interact with this record (save, update, delete).
 
 So it's really a question in these two approaches of where we are locating all of our code. The repository approach ties all of our code to kind of a gatekeeper that governs access to our raw data. The other approach (commonly known as active record approach) keeps all of the code with each individual record and centers all the functionality around each individual record.
+
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> USERS REPOSITORY DESIGN
+
+This is going to be a class that has a bunch of different methods attached to it for working with all the different users.
+
+Method: getAll
+Input arguments: -
+Return value: [user]
+Description: gets a list of all users
+
+Method: getOne
+Input arguments: id
+Return value: user
+Description: finds the user with the given id
+
+Method: getOneBy
+Input arguments: -
+Return value: [user]
+Description: finds one user with the given filters
+
+Method: create
+Input arguments: attributes
+Return value: null
+Description: creates an user with the given attributes
+
+Method: update
+Input arguments: id, attributes
+Return value: null
+Description: updates the user with the given id using the giving attributes
+
+Method: delete
+Input arguments: id
+Return value: null
+Description: deletes the user with the given id
+
+Method: randomId
+Input arguments: -
+Return value: id
+Description: generates a random id
+
+Method: writeAll
+Input arguments: -
+Return value: null
+Description: writes all users to a users.json file
