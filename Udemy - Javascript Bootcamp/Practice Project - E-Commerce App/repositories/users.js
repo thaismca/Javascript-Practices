@@ -24,7 +24,23 @@ class UsersRepository {
             fs.writeFileSync(this.filename, '[]');
         }
     }
+
+    //method that gets a list of all users
+    async getAll() {
+        //open the file called this.filename and read its contents
+        const contents = await fs.promises.readFile(this.filename, { encoding: 'utf8' });
+        //parse the contents from JSON string to an object
+        const data = JSON.parse(contents);
+        //return the parsed data
+        return data;
+    }
 }
 
 //testing code
-new UsersRepository('users.json');
+const test = async () => {
+    const repo = new UsersRepository('users.json');
+    const users = await repo.getAll();
+    console.log(users);
+}
+
+test();
