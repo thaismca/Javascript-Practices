@@ -1,6 +1,9 @@
 //get access to the File System Module from Node.js inside of this project
 //The node:fs module enables interacting with the file system
 const fs = require('node:fs');
+//get access to the crypto module from Node.js inside of this project
+//The node:crypto module provides a set of cryptographic functionality
+const crypto = require('node:crypto');
 
 class UsersRepository {
     //constructor to create an instance of the UsersRepository
@@ -36,6 +39,8 @@ class UsersRepository {
     //method to create a new user
     //it receives an object with an user's attributes
     async create(attrs) {
+        //assign an id for this new user
+        attrs.id = this.randomId();
         //load up the array of records inside the current version of this.filename
         const records = await this.getAll();
         //add in the new user to the array
@@ -44,11 +49,18 @@ class UsersRepository {
         await this.writeAll(records);
     }
 
+    //helper method to generate a random ID for an user
+    randomId() {
+        //use crypto.randomBytes to generate cryptographically strong pseudorandom data in the form of a buffer
+        //decode that buffer to a string hex format
+        return crypto.randomBytes(4).toString('hex');
+    }
+
     //helper method that writes all users to a users.json file
     //it receives a list of records that need to be saved
     async writeAll(records) {
         //write updated array of records back to this.filename in JSON string format (utf8 encoding option is the default)
-        await fs.promises.writeFile(this.filename, JSON.stringify(records));
+        await fs.promises.writeFile(this.filename, JSON.stringify(records, null, 2));
     }
 }
 
