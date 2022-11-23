@@ -28,11 +28,9 @@ class UsersRepository {
     //method that gets a list of all users
     async getAll() {
         //open the file called this.filename and read its contents
-        const contents = await fs.promises.readFile(this.filename, { encoding: 'utf8' });
         //parse the contents from JSON string to an object
-        const data = JSON.parse(contents);
         //return the parsed data
-        return data;
+        return JSON.parse(await fs.promises.readFile(this.filename, { encoding: 'utf8' }));
     }
 }
 
