@@ -40,6 +40,13 @@ class UsersRepository {
         const records = await this.getAll();
         //add in the new user to the array
         records.push(attrs);
+        //writeAll updated array of records back to this.filename
+        await this.writeAll(records);
+    }
+
+    //helper method that writes all users to a users.json file
+    //it receives a list of records that need to be saved
+    async writeAll(records) {
         //write updated array of records back to this.filename in JSON string format (utf8 encoding option is the default)
         await fs.promises.writeFile(this.filename, JSON.stringify(records));
     }
