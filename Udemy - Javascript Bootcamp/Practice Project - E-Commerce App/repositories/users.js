@@ -36,6 +36,15 @@ class UsersRepository {
         return JSON.parse(await fs.promises.readFile(this.filename, { encoding: 'utf8' }));
     }
 
+    //method that finds the user with the given id
+    async getOne(id) {
+        //load up the array of records inside the current version of this.filename
+        const records = await this.getAll();
+        //iterate through the array records
+        //return the first record that has an id property that matches the id that was passed in
+        return records.find(record => record.id === id);   
+    }
+
     //method to create a new user
     //it receives an object with an user's attributes
     async create(attrs) {
@@ -67,10 +76,13 @@ class UsersRepository {
 //testing code
 const test = async () => {
     const repo = new UsersRepository('users.json');
-    await repo.create({email: 'test1@test.com', password: 'testing1'});
-    await repo.create({email: 'test2@test.com', password: 'testing2'});
-    const users = await repo.getAll();
-    console.log(users);
+    
+    //await repo.create({email: 'test3@test.com', password: 'testing3'});
+    //await repo.create({email: 'test4@test.com', password: 'testing4'});
+    //const users = await repo.getAll();
+
+    const user = await repo.getOne('a35d2e42');
+    console.log(user);
 }
 
 test();
