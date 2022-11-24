@@ -126,19 +126,5 @@ class UsersRepository {
     }
 }
 
-//testing code
-const test = async () => {
-    const repo = new UsersRepository('users.json');
-    
-    //await repo.create({email: 'test3@test.com', password: 'testing3'});
-    //await repo.create({email: 'test4@test.com', password: 'testing4'});
-    //const user = await repo.getOne('a35d2e42');
-    //await repo.delete('b35198be');
-    //await repo.update('a35d2e42', {email: 'change@test.com'});
-    //const users = await repo.getAll();
-
-    const user = await repo.getOneBy({email: 'test4@test.com'});
-    console.log(user);
-}
-
-test();
+//make an instance of this class available to other files inside of this project
+module.exports = new UsersRepository('users.json');
