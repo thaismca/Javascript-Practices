@@ -58,6 +58,26 @@ class UsersRepository {
         await this.writeAll(records);
     }
 
+    //method to update the user with the given id using the giving attributes
+    async update(id, attrs) {
+        //load up the array of records inside the current version of this.filename
+        const records = await this.getAll();
+        //iterate through the array records
+        //store the first record that has an id property that matches the id that was passed in
+        const record = records.find(record => record.id === id);
+
+        //check if record was found
+        if(!record) {
+            //throw an error is no record with the given id was found
+            throw new Error(`Could not find user with the ID ${id}`);
+        }
+
+        //record was found -> update it by coping attrs over to record
+        Object.assign(record, attrs);
+        //write array of records containing the now updated record back to this.filename
+        await this.writeAll(records);
+    }
+
     //method to delete the user with the given id
     async delete(id) {
         //load up the array of records inside the current version of this.filename
@@ -65,7 +85,7 @@ class UsersRepository {
         //iterate through the array records
         //filter all records that have an id property that doens't match the id that was passed in
         const filteredRecords = records.filter(record => record.id !== id);
-        //save the filtered records back to this.filename
+        //write the filtered records back to this.filename
         await this.writeAll(filteredRecords);
     }
 
@@ -91,8 +111,9 @@ const test = async () => {
     //await repo.create({email: 'test3@test.com', password: 'testing3'});
     //await repo.create({email: 'test4@test.com', password: 'testing4'});
     //const user = await repo.getOne('a35d2e42');
-    
-    await repo.delete('b35198be');
+    //await repo.delete('b35198be');
+
+    await repo.update('a35d2e42', {email: 'change@test.com'});
     const users = await repo.getAll();
     console.log(users);
 }
