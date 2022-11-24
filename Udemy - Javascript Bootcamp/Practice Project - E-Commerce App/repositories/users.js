@@ -36,13 +36,35 @@ class UsersRepository {
         return JSON.parse(await fs.promises.readFile(this.filename, { encoding: 'utf8' }));
     }
 
-    //method that finds the user with the given id
+    //method that finds one user with the given id
     async getOne(id) {
         //load up the array of records inside the current version of this.filename
         const records = await this.getAll();
         //iterate through the array records
         //return the first record that has an id property that matches the id that was passed in
         return records.find(record => record.id === id);   
+    }
+
+    //method that finds one user with the given filters
+    //filters is an object that can contain one or more sets of key/value pair
+    async getOneBy(filters) {
+        //load up the array of records inside the current version of this.filename
+        const records = await this.getAll();
+        //iterate through the array of records
+        for(let record of records){
+            //variable to track if a record matching the given filters was found
+            let found = true;
+            //iterate over the filters object that was passed in the arguments
+            for(let key in filters) {
+                //for every key in filters, compare the value at the same key for the current record
+                //if value for filters[key] doesn't match the value for record[key], flip found to false
+                found = filters[key] !== record[key] ? false : true;
+            }
+            //if found was not flipped to false, it means the record matches the search filters -> return it
+            if(found) {
+                return record;
+            }
+        };
     }
 
     //method to create a new user
@@ -112,10 +134,11 @@ const test = async () => {
     //await repo.create({email: 'test4@test.com', password: 'testing4'});
     //const user = await repo.getOne('a35d2e42');
     //await repo.delete('b35198be');
+    //await repo.update('a35d2e42', {email: 'change@test.com'});
+    //const users = await repo.getAll();
 
-    await repo.update('a35d2e42', {email: 'change@test.com'});
-    const users = await repo.getAll();
-    console.log(users);
+    const user = await repo.getOneBy({email: 'test4@test.com'});
+    console.log(user);
 }
 
 test();
