@@ -58,6 +58,17 @@ class UsersRepository {
         await this.writeAll(records);
     }
 
+    //method to delete the user with the given id
+    async delete(id) {
+        //load up the array of records inside the current version of this.filename
+        const records = await this.getAll();
+        //iterate through the array records
+        //filter all records that have an id property that doens't match the id that was passed in
+        const filteredRecords = records.filter(record => record.id !== id);
+        //save the filtered records back to this.filename
+        await this.writeAll(filteredRecords);
+    }
+
     //helper method to generate a random ID for an user
     randomId() {
         //use crypto.randomBytes to generate cryptographically strong pseudorandom data in the form of a buffer
@@ -79,10 +90,11 @@ const test = async () => {
     
     //await repo.create({email: 'test3@test.com', password: 'testing3'});
     //await repo.create({email: 'test4@test.com', password: 'testing4'});
-    //const users = await repo.getAll();
-
-    const user = await repo.getOne('a35d2e42');
-    console.log(user);
+    //const user = await repo.getOne('a35d2e42');
+    
+    await repo.delete('b35198be');
+    const users = await repo.getAll();
+    console.log(users);
 }
 
 test();
