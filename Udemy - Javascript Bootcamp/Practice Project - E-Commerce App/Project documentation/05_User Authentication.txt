@@ -1,5 +1,13 @@
 >>>> USER SIGNUP
 
+Displaying the sign in form:
+- It will be handled as a GET request to /signup.
+- Display a form where user can submit email, password and psswordConfirmation.
+
+Signing up:
+- It will be handled as a POST request to /signup
+- When a sign up form is submitted -> validate data -> create a new user
+
 Signup validation logic will be implemented as following:
 
 1. If another user already signed up with this email, show an error.
@@ -9,6 +17,66 @@ Only one unique email will be allowed for each user.
 Password confirmation must match the password.
 
 If no errors are encountered, create an account for the user.
+
+----------------------------------------------------------------------------------------------------------------
+
+>>>> COOKIE BASED AUTHENTICATION
+
+The whole idea of signing up and signing into an application revolves around a server being able to identify who is making requests to it. There are technically several ways to handle authentication inside of a web application, but the vast majority of authentication work with cookies.
+
+When the browser makes a request to the server, the server can optionally decide to include a cookie inside of the request. A cookie is a small string of characters that the server wants the browser to store and inlcude with every follow up request that is ever made to any server at the particular domain. When the browser then makes a request to that same domain, the browser is going to automatically include that small string of characters with the request that is being issued. And this cookie is the absolute core of the vast majority of authentication. It is what allows an application to identify users who are coming to it and making a series of requests.
+
+When someone signs into the application, the server is going to compare the email and password that is being provided. If the email and password match an user account that is stored in the database, the server is then going to send a cookie down to the browser that contains in a very encrypted format some identifying token about the user who just signed in. Then, whenever the browser makes a follow up request to the server, it's going to include that cookie that has that little identifying piece of information inside of it. So the server can read that piece of information, see that the request is being made by a given user that holds that as an identifier, and then look up inside their data store and find the user that matches that identifying piece.
+
+In this application, whenever an user is created in the Users Repository, we are going to store the id of that user inside of the user's cookie. Any time we receive a follow up request, we are going to look into the cookie, take the id that is inside of it and use that to identify the person who is making the request.
+
+>> MANAGING THE COOKIE
+
+Managing cookies in notoriously tricky. They are very complicated and easy to get wrong. We can very easily put in a mistake that exposes a lot of information about he users to malicious people. So, rather than takig all that liability on ourselves, we are going to instead use somebody else's library and have it do everything for us.
+
+cookie-session is a simple cookie-based session middleware.
+https://www.npmjs.com/package/cookie-session
+
+method: cookieSession(options)
+Creates a new cookie session middleware with the provided options. This middleware will attach the property session to req, which provides an object representing the loaded session. This session is either a new session if no valid session was provided in the request, or a loaded session from the request. The middleware will automatically add a Set-Cookie header to the response if the contents of req.session were altered.
+
+In our application, we'll use cookieSession to create a new cookie session middleware with the provided keys option, and app.use will set this middleware to be called for all the different route handlers.
+
+The option keys represents the list of keys to use to sign & verify cookie values. We are going to pass in a string of random characters that will be used to encrypt all the information that is stored inside the cookie, so we can protect the content of the cookie from being easily altered.
+
+What cookieSession really does is add in an additional property session to the req object. The req.session is going to be an object to which we can add in as many properties as we wish. If we ever add in any properties to this object, whenever we call res.send the cookie session library is going to automatically look at the object and take a look at that information we added, take that information, code it into a simple string, and then attach it to the outgoing response as the cookie that should be stored on the user's browser. So if we want to store the ID of the user inside of the user's cookie, we are going to just add a new property to the req.session object.
+
+----------------------------------------------------------------------------------------------------------------
+
+>>>> USER SIGN OUT
+
+When a user logs out of the application:
+- It will be handled as a GET request to /signout.
+- Need to take whatever the current session object is and 'forget' it, by setting req.session to null.
+- Display the Sign In form, so the user can access the application by logging back in.
+
+----------------------------------------------------------------------------------------------------------------
+
+>>>> USER SIGN IN
+
+Displaying the sign in form:
+- It will be handled as a GET request to /signin.
+- Display a form where user can submit email and password.
+
+Signing in:
+- It will be handled as a POST request to /signin
+- When a sign in form is submitted -> validate data -> authenticate user
+
+Signin validation logic will be implemented as following:
+
+1. If there's no account associated to the provided email, show an error.
+There must be an existing account for the email before trying to sign in using that email.
+
+2. If password provided in the form does not match the one saved in the user's record, show an error.
+Password provided in form must match the password in the database for the user with the provided email.
+
+If no errors are encountered, authenticate the user.
+
 
 
 

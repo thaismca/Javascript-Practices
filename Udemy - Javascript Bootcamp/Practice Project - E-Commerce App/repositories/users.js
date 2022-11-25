@@ -78,6 +78,9 @@ class UsersRepository {
         records.push(attrs);
         //writeAll updated array of records back to this.filename
         await this.writeAll(records);
+
+        //return an object that contains all the info of the new user, including the id
+        return attrs;
     }
 
     //method to update the user with the given id using the giving attributes
