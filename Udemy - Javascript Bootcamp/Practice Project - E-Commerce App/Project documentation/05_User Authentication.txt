@@ -77,7 +77,41 @@ Password provided in form must match the password in the database for the user w
 
 If no errors are encountered, authenticate the user.
 
+----------------------------------------------------------------------------------------------------------------
 
+>>>> PASWORD SECURITY
 
+Currently, passwords are being stored as a plain text string -> big security issue!
 
+>> Hashing algorithms
 
+There are many hashing algorithms implemented in a variety of differetn computer programming languages. The goal of a hashing algorithm is to take a string and, based upon the characters inside of that string, spit out a random series of characters.
+
+Notes:
+ - if we ever put in the same string to the hashing algorithm twice, we are always going to get the same output back.
+ - making even a tiny change to the original string will result in the hash output being significantly different.
+ - hashing algorithms do not work in reverse, so there's no way to get the original string out of the hash output.
+
+Implementing hashing algorithm to securely store a password would involve the following steps:
+
+1. When user signs up, the password provided in the sign up form will not be stored at all. We are going to store the hashed output of the provided password instead.
+
+2. When user tries to sign in, the password provided in the sign in form will be first ran through the same hashing algorithm, and the hashed output will be compared with the one stored in the database. Since we always get the same hashed output when passing the exact same string to the hashing algorithm, we can be sure, that if the hashes match, it means that the user is trying to sign in submitting a string in the password input that is the exact same string that was stored during the sign up process.
+
+>> WARNING! The hashing process alone still leaves us with a security hole!
+
+There are some passwords that are frequently used by lots of different users.
+
+Rainbow table attack: when a malicious user gets a list of all those very commonly used passwords and the respective hash for each one of these passwords. If this malicious user gets access to the passwords stored inside of our users.json file in a hashed format, then they could run a simple check to see if there is a corresponding hash stored inside of their list.
+
+To prevent our application to be vulnerable to this type of attack, we are going to add an extra layer of security before storing the user's password in our users.json file.
+
+>> Salting passwords
+
+We are going to append a random string of characters to every password before we hash them called a salt. Every time an user signs up to the application, we are going to give every different user a very different salt. We are going to concatenate the password provided with this random string of characters, and then pass the whole thing to the hashing algorithm.
+
+By adding this salt to the password, we won't be able to just use the step 2 of the hashing algorithm implmentation as mentioned above. So this is what we'd need to do to implement both layers of security (salting + hashing) to our password storage and verification:
+
+1. When user signs up, the password provided in the sign up form will be concatenated with a randomly generated string of characters. We are going to store the hashed output of the whole string generated from this concatenation, followed by a separator and the salt string that was generated for that user.
+
+2. When user tries to sign in, we are going to get the salt from the string that was saved in the data store (whatever comes after the separator in the string that was saved in the password for that user) and append it to the string provided by the user in the sign in form. Then we are going to run the whole string generated from this concatenation through the same hashing algorithm, and the hashed output will be compared with the one stored in the database (whatever comes before the separator in the string that was saved in the password for that user). If the hashes match, it means that the user is trying to sign in submitting the correct password.
