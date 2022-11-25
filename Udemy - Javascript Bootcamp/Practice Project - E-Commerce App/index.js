@@ -4,6 +4,8 @@ const express = require('express');
 //create an instance of express
 //this object describes all the different thing that the web server can do
 const app = express();
+//require an instance of the UserRepository class
+const usersRepo = require('./repositories/users.js');
 
 //get access to the body-parser library
 //this object exposes various factories to create body parsing middlewares
@@ -29,10 +31,23 @@ app.get('/', (req, res) => {
 });
 
 //watching for incoming requests for a path of '/' and a method of POST
-app.post('/', (req, res) => {
-    //display information from the body property of the req object
-    console.log(req.body);
+app.post('/', async (req, res) => {
+    //deconstruct properties out of the req.body object
+    const { email, password, passwordConfirmation } = req.body;
 
+    //check if another user already signed up with the email that was submitted in the form
+    const existingUser = await usersRepo.getOneBy({ email });
+    if(existingUser) {
+      //if there an user with that email, show an error message
+      return  res.send('This email is already in use!');
+    }
+
+    //check if password matches passwordConfirmation
+    if(password !== passwordConfirmation) {
+      //if they don't match, show an error message
+      return res.send('Passwords must match!')
+    }
+    
     res.send('account created');
 });
 
