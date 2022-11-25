@@ -1,0 +1,15 @@
+>>>> USER SIGNUP
+
+Signup validation logic will be implemented as following:
+
+1. If another user already signed up with this email, show an error.
+Only one unique email will be allowed for each user.
+
+2. If password and password confirmation are different, show an error.
+Password confirmation must match the password.
+
+If no errors are encountered, create an account for the user.
+
+
+
+
