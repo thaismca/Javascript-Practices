@@ -100,13 +100,14 @@ app.post('/signin', async (req, res) => {
   const existingUser = await usersRepo.getOneBy({ email });
   if(!existingUser) {
     //if there's not an user with that email, show an error message
-    return  res.send(`Account for email ${email} does not exist`);
+    return res.send(`Account for email ${email} does not exist`);
   }
 
   //check if provided password matches password in database for the user
-  if(existingUser.password !== password) {
-    //if they don't match, show an error message
-    return res.send('Invalid password');
+  const validPassword = await usersRepo.comparePasswords(password, existingUser.password);
+  if(!validPassword){
+    //if it's not a match, show an error message
+    return res.send(`Invalid password`);
   }
 
   //authenticate user by storing the id of that new user inside of the user's cookie
