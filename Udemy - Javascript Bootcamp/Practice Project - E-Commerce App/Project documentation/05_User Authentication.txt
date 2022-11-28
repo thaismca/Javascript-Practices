@@ -79,7 +79,7 @@ If no errors are encountered, authenticate the user.
 
 ----------------------------------------------------------------------------------------------------------------
 
->>>> PASWORD SECURITY
+>>>> PASSWORD SECURITY
 
 Currently, passwords are being stored as a plain text string -> big security issue!
 
@@ -115,3 +115,38 @@ By adding this salt to the password, we won't be able to just use the step 2 of 
 1. When user signs up, the password provided in the sign up form will be concatenated with a randomly generated string of characters. We are going to store the hashed output of the whole string generated from this concatenation, followed by a separator and the salt string that was generated for that user.
 
 2. When user tries to sign in, we are going to get the salt from the string that was saved in the data store (whatever comes after the separator in the string that was saved in the password for that user) and append it to the string provided by the user in the sign in form. Then we are going to run the whole string generated from this concatenation through the same hashing algorithm, and the hashed output will be compared with the one stored in the database (whatever comes before the separator in the string that was saved in the password for that user). If the hashes match, it means that the user is trying to sign in submitting the correct password.
+
+>> Implementing Salting + Hashing Passwords
+
+Where to add code to handle these security steps?
+- Best place would be the UsersRepository class. We can add logic to add the salt and run the whole generated string through the hash algorithm when creating a new user. And create a separate method to check to validate the password that the user provides when trying to sign in.
+
+How are we going to generate the salt?
+- Using the crypto.randomBytes method, from the crypto module of the node.js standard library (that same method we used to generate the user id).
+
+How are we going to do the hashing process?
+- Using the crypto.scrypt method, from the crypto module of the node.js standard library. This function is named after a very specific password hashing algorithm scheme. It receives the following arguments:
+  - the plain text password that we are trying to turn into a hash;
+  - the salt;
+  - the key length;
+  - an options object (we are going to use the default values for all of the options);
+  - callback function to be invoked once the function computes the hash.
+
+The callback function is called with two arguments: err and derivedKey. err is an exception object when key derivation fails, otherwise err is null. derivedKey is passed to the callback as a Buffer.
+
+NOTE: Having to be constrained by scrypt with its callback, because we want to store the hash with the rest of the user's data. The rest of the user generation code would need to go inside of this callback, and this is not ideal. To solve this, rather than using the default scrypt function, we can use a promisified version of it. In that way, we can safly use the async/await syntax and have the hash stored into a variable when the promise is resolved.
+
+HOW? Promisify function, from from the utilities module of the node.js standard library.
+
+>> Implementing changes to user authentication
+
+This will be accomplished by creating a helper function to compare passwords in the UserRepository class. It wil receive two arguments: the password provided in the sign in form and the password string that will be stored for the user with the given email in the data store.
+
+How are we going to do the comparison process?
+  - split the password in the data store at the separator and get two substrings, that will represent the hashed 'password + salt' and the plain text salt respectively.
+  - add the salt to the provided password and get a hashed version of the resulting string.
+  - compare the substring that represents the hashed 'password + salt' obtained in step 1 and the resulting hash obtained in step 2.
+  - return the result of this comparison (true if the strings match, false if they don't).
+
+
+
