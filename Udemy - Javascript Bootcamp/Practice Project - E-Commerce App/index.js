@@ -20,14 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //use cookieSession to create a new cookie session middleware with the provided options
 //app.use will set this middleware to be called for all the different route handlers
 app.use(cookieSession({ keys: ['15j4n21#jjpc24m4r90&tmc15s3p87']}));
+//ROUTE HANDLERS that tell the web server what it should do when it receives a network request coming from the browser
 //hook up routes required from other files as middlewares to be called for all the different route handlers
 app.use(authRouter);
-
-
-//ROUTE HANDLERS that tell the web server what it should do when it receives a network request coming from the browser
-
-
-
 
 //start listening fom incoming network traffic on a particular port
 app.listen(3000, () => {

@@ -1,7 +1,11 @@
 //get access to the express package inside of this project
 const express = require('express');
 //require an instance of the UserRepository class
-const usersRepo = require('../../repositories/users.js')
+const usersRepo = require('../../repositories/users.js');
+
+//get access to views from other files in this project
+const singupTemplate = require('../../views/admin/auth/signup');
+const singinTemplate = require('../../views/admin/auth/signin');
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -10,17 +14,7 @@ const router = express.Router();
 //watching for incoming requests for a path of '/signup' and a method of GET
 //display signup form
 router.get('/signup', (req, res) => {
-    //adminstrator sign up form
-    res.send(`
-        <div>
-          <form method="POST">
-            <input name="email" placeholder="email" />
-            <input name="password" placeholder="password" />
-            <input name="passwordConfirmation" placeholder="password confirmation" name />
-            <button>Sign Up</button>
-          </form>
-        </div>
-    `);
+  res.send(singupTemplate());
 });
   
 //watching for incoming requests for a path of '/signup' and a method of POST
@@ -63,16 +57,7 @@ router.get('/signout', (req, res) => {
 //watching for incoming requests for a path of '/signin' and a method of GET
 //display sign in form
 router.get('/signin', (req, res) => {
-  //adminstrator sign up form
-  res.send(`
-      <div>
-        <form method="POST">
-          <input name="email" placeholder="email" />
-          <input name="password" placeholder="password" />
-          <button>Sign In</button>
-        </form>
-      </div>
-  `);
+  res.send(singinTemplate());
 });
   
 //---- USER SIGN IN -------------------------------------------------------------------------------------------------
