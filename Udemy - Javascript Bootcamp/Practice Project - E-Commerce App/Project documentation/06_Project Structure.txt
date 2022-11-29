@@ -1,0 +1,18 @@
+>>>>PROJECT STRUCTURE
+
+Structure of this projects is looking pretty messy right now, which impacts on its readability and scalability. So at this point, we are going to refactor out some of the code that currently sits inside of the index.js file into separate files inside of our project, and then link it all back up inside the index.js file.
+
+This is the structure we are going to aim for:
+
+-> Routes: directory where we are going to place files with code related to route handlers
+   |-> Admin: subfolder that will contain files related to admin acess
+	- auth.js: code that deals with route handlers related to admin authentication
+	- products.js: code that deals with route handlers related to managing products information
+   - products.js: code that deals with route handlers related to products from the perspecive of external users
+   - cart.js: code that deals with route handlers related to cart from the perspecive of external users
+
+-> Repositories: directory where we are going to place the different repositories
+   - users.js: administrators repository
+   - products.js: products repository
+
+-> Views: directory where we are going to place files with code related to generating HTML
