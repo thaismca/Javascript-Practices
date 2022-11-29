@@ -16,3 +16,10 @@ This is the structure we are going to aim for:
    - products.js: products repository
 
 -> Views: directory where we are going to place files with code related to generating HTML
+
+----------------------------------------------------------------------------------------------------------------
+>>>> HTML Templating
+
+One step of the refactoring we are going to do is to extract some of the HTML generation into some different files that are going to be placed inside of the Views directory. The idea is to have a bunch of different files inside of this new directory, each one being responsible for returning one little snippet of HTML.
+
+These snippets will be added to the body of a reusable layout, that will contain all the HTML that can be shared across all pages of the application.
