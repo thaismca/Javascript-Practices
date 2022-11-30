@@ -1,5 +1,7 @@
 //get access to the express package inside of this project
 const express = require('express');
+//require check and validationResult from express-validator library
+const { check, validationResult } = require('express-validator');
 //require an instance of the UserRepository class
 const usersRepo = require('../../repositories/users.js');
 
@@ -19,29 +21,53 @@ router.get('/signup', (req, res) => {
   
 //watching for incoming requests for a path of '/signup' and a method of POST
 //when a sign up form is submitted -> create a new user
-router.post('/signup', async (req, res) => {
-  //deconstruct properties out of the req.body object
-  const { email, password, passwordConfirmation } = req.body;
-
-  //check if another user already signed up with the email that was submitted in the form
-  const existingUser = await usersRepo.getOneBy({ email });
-  if(existingUser) {
-    //if there an user with that email, show an error message
-    return  res.send('This email is already in use!');
-  }
+router.post('/signup', [
+    //inputs sanitization and validation
+    check('email')
+      .trim()
+      .normalizeEmail()
+      .isEmail()
+      .withMessage('This is not a valid email')
+      //custom validator that checks if the email is already in use
+      .custom(async (email) => {
+        const existingUser = await usersRepo.getOneBy({ email });
+        if(existingUser) {
+        //if there an user with that email, show an error message
+        throw new Error('This email is already in use');
+        }
+      }),
+    check('password')
+      .trim()
+      .isLength({ min:6, max:20 })
+      .withMessage('Password must be between 6 and 20 characters'),
+    check('passwordConfirmation')
+      .trim()
+      .isLength({ min:6, max:20 })
+      .withMessage('Password must be between 6 and 20 characters')
+      //custom validator that checks if the passwordConfirmation matches the password
+      .custom(async (passwordConfirmation, { req }) => {
+        if(req.body.password !== passwordConfirmation) {
+          //if they don't match, show an error message
+          throw new Error('Password and Password Confirmation must match');
+        }
+      })
+    ],
+  async (req, res) => {
+    //capture potential validation errors
+    const errors = validationResult(req);
+    if(errors){
+      console.log(errors);
+      return res.send('failed to create account');
+    }
+    //deconstruct meaningful properties out of the req.body object
+    const { email, password } = req.body;
   
-  //check if password matches passwordConfirmation
-  if(password !== passwordConfirmation) {
-    //if they don't match, show an error message
-    return res.send('Passwords must match!');
-  }
-  
-  //create an user inside of the usersRepo 
-  const newUser = await usersRepo.create({ email, password });
-  //store the id of that new user inside of the user's cookie
-  req.session.userId = newUser.id;
+    //create an user inside of the usersRepo 
+    const newUser = await usersRepo.create({ email, password });
+    //store the id of that new user inside of the user's cookie
+    req.session.userId = newUser.id;
 
-  res.send('account created');
+    res.send('account created');
 });
  
 //---- USER SIGN OUT -------------------------------------------------------------------------------------------------
