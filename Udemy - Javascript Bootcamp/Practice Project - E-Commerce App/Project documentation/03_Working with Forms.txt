@@ -79,3 +79,29 @@ The bodyParser object exposes various factories to create middlewares. All middl
 In this case, we are going to use the method urlencoded, that returns a middleware that only parses urlencoded bodies and only looks at requests where the Content-Type header matches the type option. This is for handling specifically information that is coming out of an HTML form.
 
 The urlencoded function takes an optional options object. We are going to pass it setting the 'extended' key to true. The "extended" syntax allows for rich objects and arrays to be encoded into the URL-encoded format, allowing for a JSON-like experience with URL-encoded.
+
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> FORM VALIDATION
+
+Normal behaviour for a form validation would be displaying the error message right away in the same form. Currently, this is not how our application is working. Whenever we fail to enter valid data into a form, the error message is being displayed in a separate HTML document. In order to try and submit the form again, the user would have to click the back button in the browser, and, once they do it, they lose that validation message.
+
+We want to fix this behaviour for both sign in and sign up forms, and also implement it for all forms on the future, which means that we will need to figure out some repeatable solution that can be used multiple times inside of this project to handle validation on all the different forms that are created.
+
+We can use a library to assist with hadling validation inside of this project: express-validator.
+express-validator is a set of express.js middlewares that wraps validator.js validator and sanitizer functions.
+Documentation: https://express-validator.github.io/docs/index.html
+
+The idea behind the express-validator library is that we're going to pass in an array as the second argument of the request handlers inside of this application. Inside this array, we're going to tell express-validator to automatically do some validation on the different inputs that are being provided to that route handler from the browser, using check method.
+
+If there's any validation error with any of the inputs, we can capture it by calling the validationResults method from express-validator inside of the request handler itself. This method finds the validation errors in the request and wraps them in an object with handy functions.
+
+>> VALIDATION VS SANITIZATION
+
+Validation checks if the input meets a set of criteria (such as a string contains no standalone single quotation marks). Sanitization modifies the input to ensure that it is valid (such as doubling single quotes).
+
+>> VALIDATION CHAIN API AND SANITIZATION CHAIN API
+
+All validators and sanitizers listed by validator.js are made available within a Validation Chain and Sanitization Chain, and are called "standard validators" and "standard sanitizers" in express-validator. Here's a list of validators and sanitizers currenlty available: https://github.com/validatorjs/validator.js#validators
+
+You can add as many validators and sanitizers to a chain as you need. When the middleware runs, it will run each validator or sanitizer in the order they were specified; this means if a sanitizer is specified before a validator, the validator will run with the sanitized value.
