@@ -29,13 +29,43 @@ module.exports = {
     //validates password confirmation from user input in sign up form 
     validatePasswordConfirmation: check('passwordConfirmation')
       .trim()
-      .isLength({ min:6, max:20 })
-      .withMessage('Password must be between 6 and 20 characters')
       //custom validator that checks if the passwordConfirmation matches the password
       .custom(async (passwordConfirmation, { req }) => {
         if(req.body.password !== passwordConfirmation) {
           //if they don't match, show an error message
           throw new Error('Password and Password Confirmation must match');
+        }
+      }),
+
+    //validates email from user input in sign in form
+    validateUser: check('email')
+      .trim()
+      .normalizeEmail()
+      .isEmail()
+      .withMessage('This is not a valid email')
+      //custom validator to check if there's an account for the email that was submitted in the form
+      .custom(async (email) => {
+        const existingUser = await usersRepo.getOneBy({ email });
+        if(!existingUser) {
+          //if there's not an user with that email, show an error message
+          throw new Error(`Account for email ${email} does not exist`);
+        }
+      }),
+
+    //validates email from user input in sign in form  
+    validateUserPassword: check('password')
+      .trim()
+      //custom validator to check if provided password matches password in database for the user
+      .custom(async (password, { req }) => {
+        const user = await usersRepo.getOneBy({ email: req.body.email });
+        if(!user){
+          //if the user is not valid, this was already treated in the email check, so we don't need antoher message
+          return '';
+        }
+        const validPassword = await usersRepo.comparePasswords(password, user.password);
+        if(!validPassword){
+          //if it's not a match, show an error message
+          throw new Error(`Invalid password`);
         }
       })
 }

@@ -3,12 +3,15 @@ const express = require('express');
 //require check and validationResult from express-validator library
 const { check, validationResult } = require('express-validator');
 //require an instance of the UserRepository class
-const usersRepo = require('../../repositories/users.js');
+const usersRepo = require('../../repositories/users');
 
 //get access to views from other files in this project
 const singupTemplate = require('../../views/admin/auth/signup');
 const singinTemplate = require('../../views/admin/auth/signin');
-const { validateEmail, validatePassword, validatePasswordConfirmation } = require('./validators.js')
+const { 
+  validateEmail, validatePassword, validatePasswordConfirmation, //sign up form validation
+  validateUser, validateUserPassword //sign in form validation
+} = require('./validators');
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -37,6 +40,7 @@ router.post(
     if(!errors.isEmpty()){
       return res.send(singupTemplate({ req, errors }));
     }
+
     //deconstruct meaningful properties out of the req.body object
     const { email, password } = req.body;
   
@@ -61,34 +65,35 @@ router.get('/signout', (req, res) => {
 //watching for incoming requests for a path of '/signin' and a method of GET
 //display sign in form
 router.get('/signin', (req, res) => {
-  res.send(singinTemplate());
+  res.send(singinTemplate({}));
 });
   
 //---- USER SIGN IN -------------------------------------------------------------------------------------------------
 //watching for incoming requests for a path of '/signin' and a method of POST
 //when a sign in form is submitted -> authenticate user
-router.post('/signin', async (req, res) => {
-  //deconstruct properties out of the req.body object
-  const { email, password } = req.body;
-  
-  //check if there's an account for the email that was submitted in the form
-  const existingUser = await usersRepo.getOneBy({ email });
-  if(!existingUser) {
-    //if there's not an user with that email, show an error message
-    return res.send(`Account for email ${email} does not exist`);
-  }
-  
-  //check if provided password matches password in database for the user
-  const validPassword = await usersRepo.comparePasswords(password, existingUser.password);
-  if(!validPassword){
-    //if it's not a match, show an error message
-    return res.send(`Invalid password`);
-  }
-  
-  //authenticate user by storing the id of that new user inside of the user's cookie
-  req.session.userId = existingUser.id;
-  
-  res.send('You are logged in');
+router.post(
+  '/signin',
+  [
+    //inputs sanitization and validation, exported from validators.js
+    validateUser,
+    validateUserPassword
+  ],
+  async (req, res) => {
+    //capture potential validation errors
+    const errors = validationResult(req);
+    //if error is not empty, display the sign up form again, and the error messages
+    if(!errors.isEmpty()){
+      return res.send(singinTemplate({ errors }));
+    }
+    
+    //deconstruct properties out of the req.body object
+    const { email } = req.body;
+    
+    //get the user to start a session for it
+    const user = await usersRepo.getOneBy({ email });
+    req.session.userId =user.id;
+    
+    res.send('You are logged in');
 });
 
 //---- EXPORT ROUTERS -------------------------------------------------------------------------------------------------
