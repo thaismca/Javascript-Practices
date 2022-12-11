@@ -105,3 +105,25 @@ Validation checks if the input meets a set of criteria (such as a string contain
 All validators and sanitizers listed by validator.js are made available within a Validation Chain and Sanitization Chain, and are called "standard validators" and "standard sanitizers" in express-validator. Here's a list of validators and sanitizers currenlty available: https://github.com/validatorjs/validator.js#validators
 
 You can add as many validators and sanitizers to a chain as you need. When the middleware runs, it will run each validator or sanitizer in the order they were specified; this means if a sanitizer is specified before a validator, the validator will run with the sanitized value.
+
+>> DISPLAYING ERROR MESSAGES
+
+To display error messagens in the form, we are going to work with the errors returned from a request. We can extract the validation errors from a request and make them available in a Result object by using validationResult method from the express-validator library. This Result object holds the current state of validation errors in a request and allows access to it in a variety of ways.
+
+After trying to capture the potential errors in a variable, we can first check if any errors were returned by calling the isEmpty method, that a boolean indicating whether this result object contains no errors at all.
+
+If there are errors in that Result object, we can get the first validation error of each failed field in the form of an object by calling the mapped method, which returns an object where the keys are the field names, and the values are the validation errors.
+
+In our code, we are going to do the following:
+- capture potential validation errors in a variable -> errors = validationResults(req)
+- check if errors contains no errors at all -> errors.isEmpty()
+if not, then we don't need to worry about displaying any messages
+if there are errors, show the message
+
+How to show the proper messages?
+- create a helper function that receives the 'errors' Result object and a given 'property' name to check;
+- use the mapped method to get an object from the 'errors' Result object, where the keys are the field names, and the values are the validation errors;
+- for the key that matches the 'property' argument, check the value for the 'message' and return it.
+
+NOTE: that would be two potential cases of errors in the steps above: either the 'errors' Result object is undefined, or there are no key that matches the 'property' argument in the object returned from errors.mapped. In any of these cases that would be an error message to be displayed.
+

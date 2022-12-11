@@ -17,7 +17,7 @@ const router = express.Router();
 //watching for incoming requests for a path of '/signup' and a method of GET
 //display signup form
 router.get('/signup', (req, res) => {
-  res.send(singupTemplate());
+  res.send(singupTemplate({ req }));
 });
   
 //watching for incoming requests for a path of '/signup' and a method of POST
@@ -33,9 +33,9 @@ router.post(
   async (req, res) => {
     //capture potential validation errors
     const errors = validationResult(req);
-    if(errors){
-      console.log(errors);
-      return res.send('failed to create account');
+    //if error is not empty, display the sign up form again, and the error messages
+    if(!errors.isEmpty()){
+      return res.send(singupTemplate({ req, errors }));
     }
     //deconstruct meaningful properties out of the req.body object
     const { email, password } = req.body;
