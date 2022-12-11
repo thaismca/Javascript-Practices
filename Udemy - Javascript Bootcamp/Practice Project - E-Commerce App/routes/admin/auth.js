@@ -8,6 +8,7 @@ const usersRepo = require('../../repositories/users.js');
 //get access to views from other files in this project
 const singupTemplate = require('../../views/admin/auth/signup');
 const singinTemplate = require('../../views/admin/auth/signin');
+const { validateEmail, validatePassword, validatePasswordConfirmation } = require('./validators.js')
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -21,37 +22,14 @@ router.get('/signup', (req, res) => {
   
 //watching for incoming requests for a path of '/signup' and a method of POST
 //when a sign up form is submitted -> create a new user
-router.post('/signup', [
-    //inputs sanitization and validation
-    check('email')
-      .trim()
-      .normalizeEmail()
-      .isEmail()
-      .withMessage('This is not a valid email')
-      //custom validator that checks if the email is already in use
-      .custom(async (email) => {
-        const existingUser = await usersRepo.getOneBy({ email });
-        if(existingUser) {
-        //if there an user with that email, show an error message
-        throw new Error('This email is already in use');
-        }
-      }),
-    check('password')
-      .trim()
-      .isLength({ min:6, max:20 })
-      .withMessage('Password must be between 6 and 20 characters'),
-    check('passwordConfirmation')
-      .trim()
-      .isLength({ min:6, max:20 })
-      .withMessage('Password must be between 6 and 20 characters')
-      //custom validator that checks if the passwordConfirmation matches the password
-      .custom(async (passwordConfirmation, { req }) => {
-        if(req.body.password !== passwordConfirmation) {
-          //if they don't match, show an error message
-          throw new Error('Password and Password Confirmation must match');
-        }
-      })
-    ],
+router.post(
+  '/signup',
+  [
+    //inputs sanitization and validation, exported from validators.js
+    validateEmail, 
+    validatePassword, 
+    validatePasswordConfirmation
+  ],
   async (req, res) => {
     //capture potential validation errors
     const errors = validationResult(req);
