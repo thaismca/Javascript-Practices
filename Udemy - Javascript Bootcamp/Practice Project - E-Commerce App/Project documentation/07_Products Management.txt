@@ -1,0 +1,44 @@
+This document contains more details about router handlers that deal with products management, for the "Practice Project - E-Commerce App"
+---------------------------------------------------------------------------------------------------------------
+>>>>> PRODUCTS ROUTER
+
+In this project, in a similar way comparing to what we currently have for User Authentication, we are going to have a file that exports a Router with some route handlers associated with it, that can be wired up to the index.js file.
+
+In order to do that:
+- require in Express
+- create a new Router
+- associate route handlers to this Router
+- export the Router
+
+Handlers that we are going to need:
+- list all different products
+- show a form that allows user to create new product
+- submit new product form
+- show a form that allows user to edit an existing product
+- submit edit product form
+- submit product deletion
+
+---------------------------------------------------------------------------------------------------------------
+
+>>>> PRODUCTS LISTING
+
+Displaying the list of products:
+- It will be handled as a GET request to '/admin/products'
+- Display a list of the existing products, each entry containing product's name, edit button and delete button.
+- Display a Create Product button
+
+Clicking the Edit button for a given product will allow user to edit that product.
+Clicking the Delete button for a given product will allow user to edit that product.
+Clicking the Create Product button will allow user to create a new product.
+
+---------------------------------------------------------------------------------------------------------------
+
+>>>> CREATE NEW PRODUCT
+
+Displaying the form to create new product:
+- It will be handled as a GET request to '/admin/products/new'
+- Display a form where user can submit product name, price and upload an image.
+
+Creating the product:
+- It will be handled as a POST request to '/admin/products/new'
+- When a new product form is submitted -> validate data -> create a new product
