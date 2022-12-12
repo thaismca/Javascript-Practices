@@ -1,13 +1,15 @@
 //get access to the express package inside of this project
 const express = require('express');
-//require check and validationResult from express-validator library
-const { check, validationResult } = require('express-validator');
+//require validationResult from express-validator library
+const { validationResult } = require('express-validator');
 //require an instance of the UserRepository class
 const usersRepo = require('../../repositories/users');
 
 //get access to views from other files in this project
 const singupTemplate = require('../../views/admin/auth/signup');
 const singinTemplate = require('../../views/admin/auth/signin');
+
+//get access to the validator mehods that are useful in this file
 const { 
   validateEmail, validatePassword, validatePasswordConfirmation, //sign up form validation
   validateUser, validateUserPassword //sign in form validation
@@ -24,7 +26,7 @@ router.get('/signup', (req, res) => {
 });
   
 //watching for incoming requests for a path of '/signup' and a method of POST
-//when a sign up form is submitted -> create a new user
+//when a sign up form is submitted -> validate data -> create a new user
 router.post(
   '/signup',
   [
@@ -70,7 +72,7 @@ router.get('/signin', (req, res) => {
   
 //---- USER SIGN IN -------------------------------------------------------------------------------------------------
 //watching for incoming requests for a path of '/signin' and a method of POST
-//when a sign in form is submitted -> authenticate user
+//when a sign in form is submitted -> validate data -> authenticate user
 router.post(
   '/signin',
   [

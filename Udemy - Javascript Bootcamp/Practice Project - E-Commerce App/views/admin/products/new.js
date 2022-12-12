@@ -12,7 +12,9 @@ module.exports = ({ errors }) => {
     content: `
       <form method="POST">
         <input placeholder="Product name" name="productName" />
+        ${getError(errors, 'productName')}
         <input placeholder="Price" name="price" />
+        ${getError(errors, 'price')}
         <input type="file" name="image" />
         <button>Create</button
       </form>

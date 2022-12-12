@@ -5,6 +5,7 @@ const usersRepo = require('../../repositories/users.js');
 
 //declaring validators for sign up form to be exported and used in other files
 module.exports = {
+  //---- SIGN UP FORM VALIDATIONS -----------------------------------------------------------------------------
     //validates email from user input in sign up form
     validateEmail: check('email')
       .trim()
@@ -37,6 +38,7 @@ module.exports = {
         }
       }),
 
+  //---- SIGN IN FORM VALIDATIONS -----------------------------------------------------------------------------
     //validates email from user input in sign in form
     validateUser: check('email')
       .trim()
@@ -67,5 +69,19 @@ module.exports = {
           //if it's not a match, show an error message
           throw new Error(`Invalid password`);
         }
-      })
+      }),
+
+  //---- NEW PRODUCT FORM VALIDATIONS -----------------------------------------------------------------------------
+    //validates product name from user input in new product form
+    validateProductName: check('productName')
+      .trim()
+      .isLength({ min:5, max:40 })
+      .withMessage('Product name must be between 5 and 40 characters'),
+      
+    //validates product price from user input in new product form
+    validateProductPrice: check('price')
+      .trim()
+      .toFloat()
+      .isFloat({ min: 0.01 })
+      .withMessage('Invalid price')
 }
