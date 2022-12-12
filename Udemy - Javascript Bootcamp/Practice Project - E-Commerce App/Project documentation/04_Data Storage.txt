@@ -70,3 +70,62 @@ Method: writeAll
 Input arguments: -
 Return value: null
 Description: writes all users to a users.json file
+
+Method: comparePasswords
+Input arguments: string, string
+Return value: boolean
+Description: returns true if passwords match
+
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> PRODUCTS REPOSITORY DESIGN
+
+This is going to be a class that has a bunch of different methods attached to it for working with all the different products.
+
+Method: getAll
+Input arguments: -
+Return value: [product]
+Description: gets a list of all products
+
+Method: getOne
+Input arguments: id
+Return value: product
+Description: finds the product with the given id
+
+Method: getOneBy
+Input arguments: -
+Return value: [product]
+Description: finds one product with the given filters
+
+Method: create
+Input arguments: attributes
+Return value: null
+Description: creates a product with the given attributes
+
+Method: update
+Input arguments: id, attributes
+Return value: null
+Description: updates the product with the given id using the giving attributes
+
+Method: delete
+Input arguments: id
+Return value: null
+Description: deletes the product with the given id
+
+Method: randomId
+Input arguments: -
+Return value: id
+Description: generates a random id
+
+Method: writeAll
+Input arguments: -
+Return value: null
+Description: writes all products to a products.json file
+
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> CODE REUSE WITH CLASSES
+
+If we take a look at both Users and Products repositories design, we'll notice that there are just too many similarities between those two. We can have code reuse by extending classes. So, rather than creating a products repository where we just re-implement all these different methods, we're going to take an object oriented approach. 
+
+We are going to create a parent class called simply Repository, and that class is going to have all the different methods that are going to be commom or identical between both repositories. We are then going to have Users and Products extend that parent class, so they are going to borrow all these different methods from the parent class and customize them as required.

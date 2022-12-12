@@ -1,5 +1,7 @@
-//get access to the express package inside of this project
+//get access to the express package inside of this file
 const express = require('express');
+//require an instance of the ProductsRepository class
+const productsRepo = require('../../repositories/products');
 
 //create an instance an router object from the express library
 const router = express.Router();
