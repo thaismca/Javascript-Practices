@@ -61,3 +61,14 @@ It's possible to set a given middleware to be called for all the different route
  - app.use(middlewareFunction);
 
 This eliminates the need of adding a call for that middleware function in every single request handler.
+
+---------------------------------------------------------------------------------------------------------------
+
+* Serving static files in Express
+In some cases, we'll want our express application to serve up some files, making them available in our application to the browser. To serve static files such as images, CSS files, and JavaScript files, use the express.static built-in middleware function in Express. It receives a root argument, that represents the root directory from which to serve static assets.
+
+This middleware can be wired up to be used in all the different route handlers inside of the projects, as the first one in the list, if there are multiple ones. By doing so, all requests that are currently being made to our application so far are going to be changed. They are all going to be handled first by this middleware. Express is going to take a look at the route of the incoming request, and it's going to see if there is a file inside of the public directory that matches up to the route that the request is looking for. If it finds the file, Express is going to serve up that file to whoever made the request. If the file is not found, Express is just going to continue on and run all the other middleware and route handlers that are wired up inside of the application.
+
+To better organize the files that are going to be exposed to the outside world in our project, we are going to create a public directory and make sure that the browser con freely access all the different files and folders inside there.
+
+NOTE: it's imperative that we never place any files inside there that are secret or really just important to our application. For instance, Javascript code that is intended to be used by the server must never be placed in the public directory. 
