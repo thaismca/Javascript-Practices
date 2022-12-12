@@ -127,3 +127,38 @@ How to show the proper messages?
 
 NOTE: that would be two potential cases of errors in the steps above: either the 'errors' Result object is undefined, or there are no key that matches the 'property' argument in the object returned from errors.mapped. In any of these cases that would be an error message to be displayed.
 
+--------------------------------------------------------------------------------------------------------------------
+
+>>>> WORKING WITH FILE UPLOAD IN FORMS
+
+In the form to create new products, we are going to have one input where we can select a file to inlcude with the form - in this case, an input to upload a product image. We want to have some code that takes the image that was uploaded and save it somewhere.
+
+If we try to access the image in the same way that we currently access other properties contaned inside of a form, which means checking the body of the POST request, all we are going to see is the name of the file, which is not useful at all. Clearly this default behaviour of the form submitted with a method of POST is not doing what we want.
+
+>> ENCTYPE ATTRIBUTE
+
+The enctype is a form attribute that stands for encoding type. Whereas the method attribute describes how to transmit information (GET or POST), enctype describes how to take information out of the form and get it ready to be transmitted. In other words, ot describes how to bundle all the information up to make it safe to transport in some style.
+
+The default value for enctype is the one we've been using so far: "application/x-www-form-urlencoded". This means take all the information out of the inputs in the form, take a look at the name property and the respective value of each input, and put them altogether in a query string kind of format, making it safe for transport inside of an url. The problem of using this default enctype when we have an input that receives an uploaded file is that a file might have some data inside of it that cannot be safely or even efficiently transmitted into a url encoded format, because it cannot be simply turned into a string in any fashion.
+
+So, in order to make it possible to work with an image that the user uploads in the form, we are going to use a different encoding type, one that can safely transmit raw file data.
+
+>> MULTI-PART FORMS
+
+The encoding type we are going to use: "multipart/form-data".
+This means take all the different pieces of information out of the form and, for each separate input, send each little part to the back end server one by one.
+
+NOTE: currently our bodyParser middleware is only parsing the body of POST requests that are urlencoded, and it's not going to work for multipart forms. Since the body-parser library does not handle multipart bodies, we are going to need to use another library for that.
+
+>> MULTER
+
+Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
+Documentation: https://www.npmjs.com/package/multer
+
+First install package -> npm install multer.
+
+At the POST request handler that is going to handle this form submission that contains the actual file upload, call as a middleware the method upload.single(), passing as argument the name attribute of the input that receives the file upload.
+
+Multer adds a body object and a file or files object to the request object. The body object (req.body) contains the values of the text fields of the form, the file or files object (req.file, req.files) contains the files uploaded via the form.
+
+

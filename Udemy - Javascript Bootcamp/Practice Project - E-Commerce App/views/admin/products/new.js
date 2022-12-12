@@ -10,7 +10,7 @@ module.exports = ({ errors }) => {
   //pass the content of the new product page to layout
   return layout({
     content: `
-      <form method="POST">
+      <form method="POST" enctype="multipart/form-data">
         <input placeholder="Product name" name="productName" />
         ${getError(errors, 'productName')}
         <input placeholder="Price" name="price" />

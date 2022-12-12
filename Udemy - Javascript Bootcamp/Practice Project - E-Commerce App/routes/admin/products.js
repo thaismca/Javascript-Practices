@@ -2,6 +2,9 @@
 const express = require('express');
 //require validationResult from express-validator library
 const { validationResult } = require('express-validator');
+//get access to the multer package inside of this file
+const multer = require('multer');
+
 //require an instance of the ProductsRepository class
 const productsRepo = require('../../repositories/products');
 
@@ -15,6 +18,9 @@ const {
 
 //create an instance an router object from the express library
 const router = express.Router();
+//create an instance of multer -> a middleware to work with file upload in forms
+//The memory storage engine stores the files in memory as Buffer objects.
+const upload = multer( { storage: multer.memoryStorage() } );
 
 //---- LISTING PRODUCTS -------------------------------------------------------------------------------------------------
 //watching for incoming requests for a path of '/admin/products' and a method of GET
@@ -39,19 +45,17 @@ router.post(
     validateProductName,
     validateProductPrice
   ],
+  //middleware to handle file upload in multipart form
+  upload.single('image'),
   async (req, res) => {
-    //capture potential validation errors
-    const errors = validationResult(req);
+    //capture potential validation errors in the text inputs
+    const errors = validationResult(req.body);
     //if error is not empty, display the sign up form again, and the error messages
     if(!errors.isEmpty()){
       return res.send(productNewTemplate({ errors }));
     }
 
-    //deconstruct meaningful properties out of the req.body object
-    const { productName, price, image } = req.body;
-  
-    //create a product inside of the productsRepo 
-    await productsRepo.create({ productName, price, image });
+    console.log(req.body, req.file);
 
     res.send('product created');
 });
