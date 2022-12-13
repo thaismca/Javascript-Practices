@@ -41,4 +41,41 @@ Displaying the form to create new product:
 
 Creating the product:
 - It will be handled as a POST request to '/admin/products/new'
+- Form will have an enctype of 'multipart/form-data'
 - When a new product form is submitted -> validate data -> create a new product
+
+Product validation logic for the text inputs will be implemented as following:
+
+1. If product name is too short or too long, show an error.
+Product names must be between 5-40 characters.
+
+2. If price is not a valid number, show an error.
+Price must be a number greater than 0.01.
+
+>> STORING IMAGES
+
+There are several ways to store files. Here's a list of possible methods that can be used:
+
+1. Co-located disk
+This is considered a bad approach to store files. In this approach, the browser makes a request to the server to store a file, and this file is stored in a hard drive that is associated with that server. When browser makes a request to read that file, server reaches out to the hard drive and retrieves it. This works only if the application runs in one dedicated server, and it fails when working with a multi-server architecture, which makes the application non-scalable. This happens because in multi-server applications, the requests are sent to a load balancer that forwards that request to a given server at random, and each server would have a HD associated with it. The load balancer may forward the request to save the image to one server, and then forward a request to retrieve that image to a different one, causing an error.
+
+2. Database
+This is considered a not great approach to store files. Although it makes sense to store the files altogether with the rest of the data associated with them (like storing a image for a given product along with its name and price), and this totaly works with multi-server architectures, the problem with this approach is its high cost.
+
+3. Stream through Datastore
+This is considered an OK approach. We still have the database to store whatever information that is not a file, and we can use an outside datastore and stream incoming files from our server to that outside datastore. We can think of it as a centralized, singular hard drive. Many cloud providers offer services like this, like Amazon S3, Digital Ocean Spaces, Google Cloud Storage, etc. These services are cheaper than storing files directly into the database. The downside is that, in this scenario, we would still have our server handling the stream of the file to the datastore. We'd have to have a number of servers inside of our application to handle all of the increased load of throwing the files to our server, and then have our server process the image and upload it part by part to the outside datastore. This means we'd still have to provision addition servers with a capacity to handle all this file upload traffic, which limits scalability at a lower cost.
+
+4. Presigned URL
+This is considered the best approach, although it has a more complicated setup and just about everything around it doesn't really invlve a lot of Javascript code at all. Instead it's a lot of DevOps kind of stuff involved in the setup. Basically we have the same structure from the previous approach, where the files are stored in a datastore. But instead of involving our server with the file stream, we have the browser making an initial request to the server letting it know that there's a file to be uploaded, and the server sending back to the browser a presigned URL that has some cofiguration stuffed into it. This presigned URL is going to allow the browser to take that file and directly upload it to the outside datastore.
+
+
+NOTE: this application won't deal with the best approach, since it has a cost involved and doesn't deal with Javascript only. It's not an approach reccomended for production use, but it works in the context of this application and the course.
+
+Here's how the images for our products will be stored:
+- take the file that has been uploaded and can be accessed in req.file.buffer 
+- turn it into a string that can be safely stored inside of the products.json file, using base64 encoding
+
+
+
+
+

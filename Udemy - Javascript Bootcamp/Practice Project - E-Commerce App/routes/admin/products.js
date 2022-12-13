@@ -40,22 +40,30 @@ router.get('/admin/products/new', (req, res) => {
 //when a new product form is submitted -> validate data -> create a new product
 router.post(
   '/admin/products/new',
+  //middleware to handle file upload in multipart form
+  upload.single('image'),
   [
     //inputs sanitization and validation, exported from validators.js
     validateProductName,
     validateProductPrice
   ],
-  //middleware to handle file upload in multipart form
-  upload.single('image'),
   async (req, res) => {
     //capture potential validation errors in the text inputs
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
     //if error is not empty, display the sign up form again, and the error messages
     if(!errors.isEmpty()){
       return res.send(productNewTemplate({ errors }));
     }
 
-    console.log(req.body, req.file);
+    //take the file that has been uploaded and can be accessed in req.file.buffer 
+    //turn it into a string that can be safely stored inside of the products.json file, using base64 encoding
+    const image = req.file.buffer.toString('base64');
+
+    //deconstruct meaningful properties out of the req.body object
+    const { productName, price } = req.body;
+  
+    //create a product inside of the productsRepo 
+    await productsRepo.create({ productName, price, image });
 
     res.send('product created');
 });
