@@ -127,6 +127,14 @@ How to show the proper messages?
 
 NOTE: that would be two potential cases of errors in the steps above: either the 'errors' Result object is undefined, or there are no key that matches the 'property' argument in the object returned from errors.mapped. In any of these cases that would be an error message to be displayed.
 
+--
+--> Refactoring...
+This validation is being repeated many times throughout the project (sign in, sign up and create new product forms so far). This means it can be encapsulated and become a reusable function. This will be implemented as a custom reusable middleware function, that's is going to check if any error occured when the validators ran. If any error occured, the appropriate template will be automatically sent back, with all the errors being fed to that template as well.
+
+This middleware function will contain all the code that is currently being repeated in all the different route handlers. This middleware function will be called right after the validators, before the request handler is actually ran. Since the only difference between the code blocks that are being repeated is the template that is used to send back to the user, this middleware function will receive in its arguments a reference to the template function that is supposed to be used to render the proper template each time depending on the request that is being made. 
+
+Remember: when authoring a middleware function, we get it called with our request, response and a refence to a function to say to express that we are done with the computation that is supposed to be done inside of the middleware function and that it can continue to process the request (next).
+
 --------------------------------------------------------------------------------------------------------------------
 
 >>>> WORKING WITH FILE UPLOAD IN FORMS

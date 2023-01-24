@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 //require an instance of the UserRepository class
 const usersRepo = require('../../repositories/users.js');
 
-//declaring validators for sign up form to be exported and used in other files
+//declaring validators to be exported and used in other files
 module.exports = {
   //---- SIGN UP FORM VALIDATIONS -----------------------------------------------------------------------------
     //validates email from user input in sign up form

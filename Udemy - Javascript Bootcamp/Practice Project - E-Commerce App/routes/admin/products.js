@@ -1,7 +1,5 @@
 //get access to the express package inside of this file
 const express = require('express');
-//require validationResult from express-validator library
-const { validationResult } = require('express-validator');
 //get access to the multer package inside of this file
 const multer = require('multer');
 
@@ -11,10 +9,12 @@ const productsRepo = require('../../repositories/products');
 //get access to views from other files in this project
 const productNewTemplate = require('../../views/admin/products/new');
 
-//get access to the validator mehods that are useful in this file
+//get access to the validator methods that are useful in this file
 const { 
    validateProductName, validateProductPrice //new product form validation
 } = require('./validators');
+//get access to the middleware function that handlers potential validation errors in forms
+const { handleErrors } = require('./middlewares');
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -47,14 +47,11 @@ router.post(
     validateProductName,
     validateProductPrice
   ],
+  //custom middleware the handlers potential validation errors in the form
+  //if an error is encountered, display the new product form again with the error messages
+  handleErrors(productNewTemplate),
+  //request handler
   async (req, res) => {
-    //capture potential validation errors in the text inputs
-    const errors = validationResult(req);
-    //if error is not empty, display the sign up form again, and the error messages
-    if(!errors.isEmpty()){
-      return res.send(productNewTemplate({ errors }));
-    }
-
     //take the file that has been uploaded and can be accessed in req.file.buffer 
     //turn it into a string that can be safely stored inside of the products.json file, using base64 encoding
     const image = req.file.buffer.toString('base64');

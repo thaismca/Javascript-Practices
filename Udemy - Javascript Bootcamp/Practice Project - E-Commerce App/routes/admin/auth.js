@@ -1,7 +1,5 @@
 //get access to the express package inside of this project
 const express = require('express');
-//require validationResult from express-validator library
-const { validationResult } = require('express-validator');
 //require an instance of the UserRepository class
 const usersRepo = require('../../repositories/users');
 
@@ -9,11 +7,13 @@ const usersRepo = require('../../repositories/users');
 const singupTemplate = require('../../views/admin/auth/signup');
 const singinTemplate = require('../../views/admin/auth/signin');
 
-//get access to the validator mehods that are useful in this file
+//get access to the validator methods that are useful in this file
 const { 
   validateEmail, validatePassword, validatePasswordConfirmation, //sign up form validation
   validateUser, validateUserPassword //sign in form validation
 } = require('./validators');
+//get access to the middleware function that handlers potential validation errors in forms
+const { handleErrors } = require('./middlewares');
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -35,14 +35,11 @@ router.post(
     validatePassword, 
     validatePasswordConfirmation
   ],
+  //custom middleware the handlers potential validation errors in the form
+  //if an error is encountered, display the sign up form again with the error messages
+  handleErrors(singupTemplate),
+  //request handler
   async (req, res) => {
-    //capture potential validation errors
-    const errors = validationResult(req);
-    //if error is not empty, display the sign up form again, and the error messages
-    if(!errors.isEmpty()){
-      return res.send(singupTemplate({ req, errors }));
-    }
-
     //deconstruct meaningful properties out of the req.body object
     const { email, password } = req.body;
   
@@ -80,14 +77,11 @@ router.post(
     validateUser,
     validateUserPassword
   ],
+  //custom middleware the handlers potential validation errors in the form
+  //if an error is encountered, display the sign in form again with the error messages
+  handleErrors(singinTemplate),
+  //request handler
   async (req, res) => {
-    //capture potential validation errors
-    const errors = validationResult(req);
-    //if error is not empty, display the sign up form again, and the error messages
-    if(!errors.isEmpty()){
-      return res.send(singinTemplate({ errors }));
-    }
-    
     //deconstruct properties out of the req.body object
     const { email } = req.body;
     
