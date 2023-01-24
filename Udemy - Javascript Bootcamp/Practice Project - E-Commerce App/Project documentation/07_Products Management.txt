@@ -27,6 +27,11 @@ Displaying the list of products:
 - Display a list of the existing products, each entry containing product's name, edit button and delete button.
 - Display a Create Product button
 
+To display list of products:
+- use getAll method to get a list of all the products in the products repository
+- create a view that will list out all those different products (index)
+- get this view to be displayed when a GET request is made to '/admin/products'
+
 Clicking the Edit button for a given product will allow user to edit that product.
 Clicking the Delete button for a given product will allow user to edit that product.
 Clicking the Create Product button will allow user to create a new product.

@@ -8,6 +8,7 @@ const productsRepo = require('../../repositories/products');
 
 //get access to views from other files in this project
 const productNewTemplate = require('../../views/admin/products/new');
+const productIndexTemplate = require('../../views/admin/products/index');
 
 //get access to the validator methods that are useful in this file
 const { 
@@ -24,9 +25,11 @@ const upload = multer( { storage: multer.memoryStorage() } );
 
 //---- LISTING PRODUCTS -------------------------------------------------------------------------------------------------
 //watching for incoming requests for a path of '/admin/products' and a method of GET
-//display list of existing product
-router.get('/admin/products', (req, res) => {
-    //code that will display a list with existing products
+router.get('/admin/products', async (req, res) => {
+    //get a list of all records in the products repository
+    const products = await productsRepo.getAll();
+    //display list of existing products
+    res.send(productIndexTemplate({ products }));
 });
 
 //---- CREATING PRODUCTS -------------------------------------------------------------------------------------------------
