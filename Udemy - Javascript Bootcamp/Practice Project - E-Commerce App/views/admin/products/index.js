@@ -10,16 +10,44 @@ module.exports = ({ products }) => {
   const renderedProducts = products.map((product) => {
     //code that will be invoked for every individual element (product) inside of the products array
     return `
-      <div>${product.productName}</div>
-    `;
+    <tr>
+      <td>${product.productName}</td>
+      <td>${product.price}</td>
+      <td>
+        <a href="/admin/products/${product.id}/edit">
+          <button class="button is-link">
+            Edit
+          </button>
+        </a>
+      </td>
+      <td>
+        <button class="button is-danger">Delete</button>
+      </td>
+    </tr>
+  `;
   //join the elements of the array containing HTML snippets into one string
   }).join('');
   
   //pass the content of the list of products page to layout
   return layout({
     content: `
-      <h1 class="title">Products</h1>
-      ${renderedProducts}
-    `
+    <div class="control">
+      <h1 class="subtitle">Products</h1>  
+      <a href="/admin/products/new" class="button is-primary">New Product</a>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${renderedProducts}
+      </tbody>
+    </table>
+  `
   });
 };
