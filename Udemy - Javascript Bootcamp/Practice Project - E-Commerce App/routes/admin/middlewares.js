@@ -17,5 +17,17 @@ module.exports = {
         //if no validation errors are encountered, continue to process the request
         next();
       }   
+    },
+
+    //middleware function to check if there's an user currently authenticated
+    requireAuth(req, res, next) {
+      //if there's no userId defined in req.session, it means no user is currently authenticated
+      if(!req.session.userId) {
+        //redirect to sign in page
+        return res.redirect('/signin');
+      }
+
+      //if there's an user authenticated, continue to process the request
+      next();
     }
 }

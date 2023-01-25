@@ -18,6 +18,8 @@ Password confirmation must match the password.
 
 If no errors are encountered, create an account for the user.
 
+3. After the account is created, redirect to the login page.
+
 ----------------------------------------------------------------------------------------------------------------
 
 >>>> COOKIE BASED AUTHENTICATION
@@ -76,6 +78,8 @@ There must be an existing account for the email before trying to sign in using t
 Password provided in form must match the password in the database for the user with the provided email.
 
 If no errors are encountered, authenticate the user.
+
+3. When the user is finally authenticated, it must be redirected to the products index page, which is the central page of the admin panel.
 
 ----------------------------------------------------------------------------------------------------------------
 

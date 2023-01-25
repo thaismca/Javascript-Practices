@@ -14,8 +14,8 @@ const productIndexTemplate = require('../../views/admin/products/index');
 const { 
    validateProductName, validateProductPrice //new product form validation
 } = require('./validators');
-//get access to the middleware function that handlers potential validation errors in forms
-const { handleErrors } = require('./middlewares');
+//get access to the custom middleware functions that will be needed in this file
+const { handleErrors, requireAuth } = require('./middlewares');
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -25,7 +25,12 @@ const upload = multer( { storage: multer.memoryStorage() } );
 
 //---- LISTING PRODUCTS -------------------------------------------------------------------------------------------------
 //watching for incoming requests for a path of '/admin/products' and a method of GET
-router.get('/admin/products', async (req, res) => {
+router.get(
+  '/admin/products',
+  //middleware to verify if there's an authenticated user
+  requireAuth,
+  //route handler
+  async (req, res) => {
     //get a list of all records in the products repository
     const products = await productsRepo.getAll();
     //display list of existing products
@@ -35,7 +40,12 @@ router.get('/admin/products', async (req, res) => {
 //---- CREATING PRODUCTS -------------------------------------------------------------------------------------------------
 //watching for incoming requests for a path of '/admin/products/new' and a method of GET
 //display a form to create a new product
-router.get('/admin/products/new', (req, res) => {
+router.get(
+  '/admin/products/new',
+  //middleware to verify if there's an authenticated user
+  requireAuth,
+  //request handler
+  (req, res) => {
     res.send(productNewTemplate({ }));
 });
 
@@ -43,6 +53,8 @@ router.get('/admin/products/new', (req, res) => {
 //when a new product form is submitted -> validate data -> create a new product
 router.post(
   '/admin/products/new',
+  //middleware to verify if there's an authenticated user
+  requireAuth,
   //middleware to handle file upload in multipart form
   upload.single('image'),
   [
@@ -65,7 +77,7 @@ router.post(
     //create a product inside of the productsRepo 
     await productsRepo.create({ productName, price, image });
 
-    res.send('product created');
+    res.redirect('/admin/products');
 });
 
 //---- EXPORT ROUTERS -------------------------------------------------------------------------------------------------

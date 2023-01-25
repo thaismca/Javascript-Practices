@@ -12,7 +12,7 @@ const {
   validateEmail, validatePassword, validatePasswordConfirmation, //sign up form validation
   validateUser, validateUserPassword //sign in form validation
 } = require('./validators');
-//get access to the middleware function that handlers potential validation errors in forms
+//get access to the custom middleware functions that will be needed in this file
 const { handleErrors } = require('./middlewares');
 
 //create an instance an router object from the express library
@@ -45,10 +45,8 @@ router.post(
   
     //create an user inside of the usersRepo 
     const newUser = await usersRepo.create({ email, password });
-    //store the id of that new user inside of the user's cookie
-    req.session.userId = newUser.id;
 
-    res.send('account created');
+    res.redirect('/signin');
 });
  
 //---- USER SIGN OUT -------------------------------------------------------------------------------------------------
@@ -87,9 +85,8 @@ router.post(
     
     //get the user to start a session for it
     const user = await usersRepo.getOneBy({ email });
-    req.session.userId =user.id;
-    
-    res.send('You are logged in');
+    req.session.userId = user.id;
+    res.redirect('/admin/products');
 });
 
 //---- EXPORT ROUTERS -------------------------------------------------------------------------------------------------

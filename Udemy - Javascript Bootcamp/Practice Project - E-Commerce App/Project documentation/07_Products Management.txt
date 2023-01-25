@@ -18,12 +18,19 @@ Handlers that we are going to need:
 - submit edit product form
 - submit product deletion
 
+IMPORTANT: the access to all the functionalities related to products management must only be available to authenticated users!
+
+When a user is authenticated, the id of the user is stored in the user.session object. If no user is authenticated, that user id property in the user.session object will be undefined. So basically, in order to check if an user is authenticated and the access to the products management tools should be made available, we need to check if the user.session.userId property is currently defined. This needs to be done for each one of the request handlers, to each of the routes related to product management features. If userId is not defined, redirect to /signin, so the user can entry the username and password. If there's an user authenticated, handle the request accordingly.
+
+NOTE: since this will be reused throughout some different route handlers, the code can be written as a reusable middleware function.
+
 ---------------------------------------------------------------------------------------------------------------
 
 >>>> PRODUCTS LISTING
 
 Displaying the list of products:
 - It will be handled as a GET request to '/admin/products'
+- It will be the central page of the admin panel (products index)
 - Display a list of the existing products, each entry containing product's name, edit button and delete button.
 - Display a Create Product button
 
@@ -48,6 +55,7 @@ Creating the product:
 - It will be handled as a POST request to '/admin/products/new'
 - Form will have an enctype of 'multipart/form-data'
 - When a new product form is submitted -> validate data -> create a new product
+- After the new product is successfuly created, redirect user back to the products index page, which is the central page of the admin panel.
 
 Product validation logic for the text inputs will be implemented as following:
 
