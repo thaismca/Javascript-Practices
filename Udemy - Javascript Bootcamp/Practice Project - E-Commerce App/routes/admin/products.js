@@ -104,6 +104,8 @@ router.get(
     res.send(productEditTemplate({ product }));
 });
 
+//watching for incoming requests for a path of '/admin/products/:id/edit' and a method of POST
+//when the product form is submitted with the changes -> validate data -> update product in the repository
 router.post(
   '/admin/products/:id/edit',
   //middleware to verify if there's an authenticated user
@@ -151,6 +153,23 @@ router.post(
     //after product is successfuly updated, redirect to products index
     res.redirect('/admin/products');
 });
+
+//---- DELETING PRODUCTS -------------------------------------------------------------------------------------------------
+//watching for incoming requests for a path of '/admin/products/:id/delete' and a method of POST
+//delete the data for the product which id corresponds to the id parameter in the url that the request was made for
+router.post(
+  '/admin/products/:id/delete',
+  //middleware to verify if there's an authenticated user
+  requireAuth,
+  //request handler
+  async (req, res) =>{
+    //delete the product with the id that corresponds to the id parameter in the url
+    await productsRepo.delete(req.params.id);
+    
+    //after product is successfuly deleted, redirect to updated products index
+    res.redirect('/admin/products');
+});
+
 
 //---- EXPORT ROUTERS -------------------------------------------------------------------------------------------------
 module.exports = router;

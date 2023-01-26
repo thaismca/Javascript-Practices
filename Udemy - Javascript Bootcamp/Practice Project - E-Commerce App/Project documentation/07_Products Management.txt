@@ -106,4 +106,16 @@ Saving changes to the product:
 
 Product validation logic will follow the same rules as when creating the product (reuse validation middleware).
 
+---------------------------------------------------------------------------------------------------------------
+
+>>>> DELETE PRODUCT
+
+Deleting a product:
+- It will be handled as a POST request to '/admin/products/:id/delete'
+
+The action of the form related to the delete button for each entry in the products index must be created having a reference to the product's id, so we can make a POST request passing the id of that corresponding product to delete it from the repository.
+
+- After the product is successfuly deleted, redirect user back to the products index page, which will have an updated list of products.
+
+
 

@@ -12,7 +12,7 @@ module.exports = ({ product, errors }) => {
     content: `
       <div class="columns is-centered">
         <div class="column is-half">
-          <h1 class="subtitle">Create a Product</h1>
+          <h1 class="subtitle">Edit Product</h1>
 
           <form method="POST" enctype="multipart/form-data">
             <div class="field">
