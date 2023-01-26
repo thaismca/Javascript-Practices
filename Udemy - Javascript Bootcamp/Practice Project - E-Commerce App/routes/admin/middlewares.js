@@ -5,13 +5,25 @@ const { validationResult } = require('express-validator');
 module.exports = {
     //middleware function to handle validation errors in forms
     //it receives a template function that will be called when rendering out the errors inside a given form
-    handleErrors(templateFunc) {
-      return(req, res, next) => {
+    //second argument is optional -> function that returns object with data to be forward onto the template
+    handleErrors(templateFunc, dataCallback) {
+      return async (req, res, next) => {
         //capture potential validation errors in the text inputs
         const errors = validationResult(req);
-        //if error is not empty, display the form again, and the error messages
+
+        //if error is not empty
         if(!errors.isEmpty()){
-          return res.send(templateFunc({ errors }));
+
+          //object to hold any potential data that can be forwarded to the template
+          let data = {};
+
+          //check if a dataCallback function was passed, execute it and store the returned value in the data object
+          if(dataCallback) {
+            data = await dataCallback(req);
+          }
+
+          //display the form again with the error messages and whatever data that exists in the data object
+          return res.send(templateFunc({ errors, ...data }));
         }
 
         //if no validation errors are encountered, continue to process the request

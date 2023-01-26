@@ -88,7 +88,22 @@ Here's how the images for our products will be stored:
 - take the file that has been uploaded and can be accessed in req.file.buffer 
 - turn it into a string that can be safely stored inside of the products.json file, using base64 encoding
 
+---------------------------------------------------------------------------------------------------------------
 
+>>>> EDIT PRODUCT
 
+Displaying the form to edit a product:
+- It will be handled as a GET request to '/admin/products/:id/edit'
+- Display a form where the values in the inputs correspond to the current product name and price, and the option to upload a new image to replace the existing one
+
+In order to allow that, the edit button for each entry in the products index must be created as a link to that corresponding product. The id of the product can be added as a parameter in the url that is attached to the edit button for that product. This id can then be extracted from the url when the GET request is made, and used to get the corresponding product in the repository.
+
+Saving changes to the product:
+- It will be handled as a POST request to '/admin/products/:id/edit'
+- Form will have an enctype of 'multipart/form-data'
+- When a new product form is submitted -> validate data -> update product (id of the product extracted from the id parameter of the request - stored in the url).
+- After the new product is successfuly updated, redirect user back to the products index page, which is the central page of the admin panel.
+
+Product validation logic will follow the same rules as when creating the product (reuse validation middleware).
 
 

@@ -135,6 +135,14 @@ This middleware function will contain all the code that is currently being repea
 
 Remember: when authoring a middleware function, we get it called with our request, response and a refence to a function to say to express that we are done with the computation that is supposed to be done inside of the middleware function and that it can continue to process the request (next).
 
+--
+--> Refactoring...
+So far, the handleErrors middleware expects a name of some template in the arguments, so it knows in which template the errors should be rendered if they occur. Inside of the handleErrors callback, when we actually call the template function, the only thing that's being passed in as an argument is the object that contains the errors that occured during the validation process. The problem now is that the products edit template expects to be called not only with the errors object, but also with some object that has a product property. This means the handleErrors middleware needs to be refactored to also contemplate the case when a product objects is passed to a template, alongside with the errors object.
+
+The signature of the handleErrors middleware function will be changed to also receive a second optional argument, which will be a function that is going to be executed only if something goes wrong with the validation step. Inside of this function, we are going to return an object that has some data that is going to be forward automatically onto our template.
+
+Inside of the function that is returned by handleErrors, we are going to add some steps inside of the block of code that runs if errors are encountered. We are going to need an object (data) to hold information of whatever can be returned from the callback that might have been passed as a second argument to handle errors. It will first be declared as an empty object, so we don't get a scenario where we try to spread data from an undefined variable in the next steps. We also need to check if this function was passed in as a second argument and execute it, storing the returned object in this data variable. Last change will be applied to the templateFunc call, which will also receive whatever pairs of key and values contained inside of the data object (it will be empty if no callback function is passed as a second argument).
+
 --------------------------------------------------------------------------------------------------------------------
 
 >>>> WORKING WITH FILE UPLOAD IN FORMS
