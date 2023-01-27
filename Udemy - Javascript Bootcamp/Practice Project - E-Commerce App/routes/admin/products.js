@@ -7,9 +7,9 @@ const multer = require('multer');
 const productsRepo = require('../../repositories/products');
 
 //get access to views from other files in this project
-const productNewTemplate = require('../../views/admin/products/new');
-const productIndexTemplate = require('../../views/admin/products/index');
-const productEditTemplate = require('../../views/admin/products/edit');
+const productsNewTemplate = require('../../views/admin/products/new');
+const productsIndexTemplate = require('../../views/admin/products/index');
+const productsEditTemplate = require('../../views/admin/products/edit');
 
 //get access to the validator methods that are useful in this file
 const { 
@@ -36,7 +36,7 @@ router.get(
     //get a list of all records in the products repository
     const products = await productsRepo.getAll();
     //display list of existing products
-    res.send(productIndexTemplate({ products }));
+    res.send(productsIndexTemplate({ products }));
 });
 
 //---- CREATING PRODUCTS -------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ router.get(
   requireAuth,
   //request handler
   (req, res) => {
-    res.send(productNewTemplate({ }));
+    res.send(productsNewTemplate({ }));
 });
 
 //watching for incoming requests for a path of '/admin/products/new' and a method of POST
@@ -66,7 +66,7 @@ router.post(
   ],
   //custom middleware the handlers potential validation errors in the form
   //if an error is encountered, display the new product form again with the error messages
-  handleErrors(productNewTemplate),
+  handleErrors(productsNewTemplate),
   //request handler
   async (req, res) => {
     //take the file that has been uploaded and can be accessed in req.file.buffer 
@@ -101,7 +101,7 @@ router.get(
     }
 
     //display form to edit the corresponding product
-    res.send(productEditTemplate({ product }));
+    res.send(productsEditTemplate({ product }));
 });
 
 //watching for incoming requests for a path of '/admin/products/:id/edit' and a method of POST
@@ -121,7 +121,7 @@ router.post(
   //if an error is encountered, display the edit product form again, with the product data and the error messages
   handleErrors(
     //template where errors will be rendered
-    productEditTemplate, 
+    productsEditTemplate, 
     //function to run if form fails validation, that returns a object containing product data to be forward onto the template
     async (req) => {
       //get the product that is being edited (which the id corresponds to the id parameter in the url)
