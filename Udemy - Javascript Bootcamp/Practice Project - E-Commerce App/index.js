@@ -9,7 +9,8 @@ const cookieSession = require('cookie-session');
 
 //get access to routers from other files in this project
 const authRouter = require('./routes/admin/auth');
-const productsRouter = require('./routes/admin/products');
+const adminProductsRouter = require('./routes/admin/products');
+const productsRouter = require('./routes/products');
 
 //create an instance of express
 //this object describes all the different thing that the web server can do
@@ -25,6 +26,7 @@ app.use(cookieSession({ keys: ['15j4n21#jjpc24m4r90&tmc15s3p87']}));
 //ROUTE HANDLERS that tell the web server what it should do when it receives a network request coming from the browser
 //hook up routes required from other files as middlewares to be called for all the different route handlers
 app.use(authRouter);
+app.use(adminProductsRouter);
 app.use(productsRouter);
 
 //start listening fom incoming network traffic on a particular port

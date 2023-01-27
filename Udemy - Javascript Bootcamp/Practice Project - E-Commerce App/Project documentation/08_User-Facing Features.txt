@@ -1,0 +1,33 @@
+This document contains more details about user-facing features of the "Practice Project - E-Commerce App"
+---------------------------------------------------------------------------------------------------------------
+>>>>> USER-FACING FEATURES
+
+In this project, the user should have the ability to perform the following actions:
+- see a list of products
+- click to add a product to the cart
+- click to see a summary of all the products that are currently in the shopping cart
+- remove a product from the shopping cart
+- click to buy the products
+
+NOTE: the buy action in this project will only show a success message and clear the cart
+
+Handlers that we are going to need:
+- list all different products
+- 
+
+---------------------------------------------------------------------------------------------------------------
+
+>>>> PRODUCTS LISTING
+
+Displaying the list of products:
+- It will be handled as a GET request to '/'
+- It will be the central page of the project (landing page)
+- Display a list of the existing products, each entry containing product's name, price, image and a "add to cart" button.
+- Display a Cart button 
+
+To display list of products:
+- use getAll method to get a list of all the products in the products repository
+- create a view that will list out all those different products (index)
+- get this view to be displayed when a GET request is made to '/'
+
+Clicking the Add to Cart button for a given product will add that product to the cart. Each product can be added multiple times, and that's accounted for in the cart total. Clicking the Cart will allow user to the the cart summary. 
