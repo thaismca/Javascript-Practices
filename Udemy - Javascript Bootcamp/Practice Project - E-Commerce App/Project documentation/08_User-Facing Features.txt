@@ -17,6 +17,17 @@ Handlers that we are going to need:
 
 ---------------------------------------------------------------------------------------------------------------
 
+>>>> REUSABLE LAYOUT
+
+Same as we currently have for the admin related features, the HTML generation will be placed into some different files that are going to be placed inside of the Views directory. The idea is to have a bunch of different files inside of this new directory, each one being responsible for returning one little snippet of HTML.
+
+These snippets will be added to the body of a reusable layout, that will contain all the HTML that can be shared across all user-facing pages of the application.
+
+Note that this layout will have some content that is not really useful, such as the header with the phone number and social media icons, and the promo banner. They are only being added to give to whoever sees this project a sense of visiting an e-commerce page.
+
+
+---------------------------------------------------------------------------------------------------------------
+
 >>>> PRODUCTS LISTING
 
 Displaying the list of products:
