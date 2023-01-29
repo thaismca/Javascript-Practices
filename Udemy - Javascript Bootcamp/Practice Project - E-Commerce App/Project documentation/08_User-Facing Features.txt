@@ -69,17 +69,23 @@ We are going to create a Carts Repository. Whenever an user attempts to add a pr
 
 >> ROUTE HANDLERS
 
-ADD TO CART
+1. ADD TO CART
 - clicking the 'add to cart' button will trigger a form submission
 - handled as a POST request to the back-end server
 - will take whatever item the user just clicked on and add it to a shopping cart
 
-DISPLAY CART
+NOTE: each product card has a form in its footer, containing a hidden input with the product in the value property, and a 'add to cart' button that submits this form with a method of POST to "/cart/products". We can have access to the product id in the body of the POST request, so we know which product is being added to the shopping cart.
+
+Scenarios to account for:
+- check if user already has a cart -> if no, create one / if yes, retrieve the cart information from repository
+- check if an isntance of the item already exists in the cart -> if no, add one / if yes, increment quantity
+
+2. DISPLAY CART
 - clicking the 'cart' button will redirect user to a list of products in the cart
 - handled as a GET request to the back-end server
 - each product will have and option to 'remove from cart'
 
-REMOVE FROM CART
+3. REMOVE FROM CART
 - clicking the 'remove from cart' button for a given product will trigger a form submission
 - handled as a POST request to the back-end server
 - will take whatever item the user just clicked on and remove it from the shopping cart
