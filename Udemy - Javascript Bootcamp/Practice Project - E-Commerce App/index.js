@@ -11,6 +11,7 @@ const cookieSession = require('cookie-session');
 const authRouter = require('./routes/admin/auth');
 const adminProductsRouter = require('./routes/admin/products');
 const productsRouter = require('./routes/products');
+const cartsRouter = require('./routes/carts');
 
 //create an instance of express
 //this object describes all the different thing that the web server can do
@@ -28,6 +29,7 @@ app.use(cookieSession({ keys: ['15j4n21#jjpc24m4r90&tmc15s3p87']}));
 app.use(authRouter);
 app.use(adminProductsRouter);
 app.use(productsRouter);
+app.use(cartsRouter);
 
 //start listening fom incoming network traffic on a particular port
 app.listen(3000, () => {

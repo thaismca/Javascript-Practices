@@ -13,7 +13,7 @@ NOTE: the buy action in this project will only show a success message and clear 
 
 Handlers that we are going to need:
 - list all different products
-- 
+- add item to cart
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -41,4 +41,46 @@ To display list of products:
 - create a view that will list out all those different products (index)
 - get this view to be displayed when a GET request is made to '/'
 
-Clicking the Add to Cart button for a given product will add that product to the cart. Each product can be added multiple times, and that's accounted for in the cart total. Clicking the Cart will allow user to the the cart summary. 
+Clicking the Add to Cart button for a given product will add that product to the cart. Each product can be added multiple times, and that's accounted for in the cart total. Clicking the Cart will allow user to the the cart summary.
+
+---------------------------------------------------------------------------------------------------------------
+
+>>>> SHOPPING CART
+
+In this aplication, an user should be able to add a product to the cart by clicking the "add to cart" button related to that given product. One thing about this application is that the user doesn't need to be autheticated in order to visit the products list and andd some of them to a cart (authentication covers only the admin panel side of this application). That being said, we need to figure out:
+
+- How do we tie a cart to a person who will never be logged in?
+
+This is going to use a similar logic to the one that was implemented for user authentication. When a person clicks to add a product to the cart, a POST request will be made to our server. This request will contain the id of the item that the user wants to add. To take that product and associate with the user making the request, we're going generate some kind of representation of a shopping cart, assign it a random id, set that cart id inside the session cookie, and send the response to the person who made the request. Because we're string this cart id inside the cookie, every single thime this person with this browser makes a follow-up request to our application, we're always going to know exactly what cart is tied to that person - we are going to look in the cookie and see the cart id there.
+
+- Even if we can identify who's trying to add an item to a cart, how do we tie the product to a cart?
+
+We are going to create a Carts Repository. Whenever an user attempts to add a product to a cart, if they don't have a cart already, we are going to generate one for them, which means we're going to essentially create a new record in the Carts Repository that's going to have a randomly assinged id and a products array. In this products array, we're going to store the id of the product as a reference that will point over to the products repository.
+
+-----
+
+>> SHOPPING CART BOILERPLATE
+
+- Create a Carts Repository that will extend from the Repository Class
+- Create a file that will export an instance of a router object containing all the route handlers associated with the shopping cart
+- Make sure to require in this router and associate it with our express app, in the root index.js file
+
+-----
+
+>> ROUTE HANDLERS
+
+ADD TO CART
+- clicking the 'add to cart' button will trigger a form submission
+- handled as a POST request to the back-end server
+- will take whatever item the user just clicked on and add it to a shopping cart
+
+DISPLAY CART
+- clicking the 'cart' button will redirect user to a list of products in the cart
+- handled as a GET request to the back-end server
+- each product will have and option to 'remove from cart'
+
+REMOVE FROM CART
+- clicking the 'remove from cart' button for a given product will trigger a form submission
+- handled as a POST request to the back-end server
+- will take whatever item the user just clicked on and remove it from the shopping cart
+
