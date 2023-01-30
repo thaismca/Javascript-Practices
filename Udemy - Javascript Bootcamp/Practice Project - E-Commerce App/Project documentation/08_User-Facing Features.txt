@@ -14,6 +14,9 @@ NOTE: the buy action in this project will only show a success message and clear 
 Handlers that we are going to need:
 - list all different products
 - add item to cart
+- display shopping cart
+- remove product from cart
+- buy items in the cart
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -71,7 +74,7 @@ We are going to create a Carts Repository. Whenever an user attempts to add a pr
 
 1. ADD TO CART
 - clicking the 'add to cart' button will trigger a form submission
-- handled as a POST request to the back-end server
+- handled as a POST request to '/cart/products'
 - will take whatever item the user just clicked on and add it to a shopping cart
 
 NOTE: each product card has a form in its footer, containing a hidden input with the product in the value property, and a 'add to cart' button that submits this form with a method of POST to "/cart/products". We can have access to the product id in the body of the POST request, so we know which product is being added to the shopping cart.
@@ -82,8 +85,9 @@ Scenarios to account for:
 
 2. DISPLAY CART
 - clicking the 'cart' button will redirect user to a list of products in the cart
-- handled as a GET request to the back-end server
+- handled as a GET request to '/cart'
 - each product will have and option to 'remove from cart'
+- at the bottom of the list of products, display cart total price
 
 NOTE: in the course scope, the solution implemented when the user didn't have a cart was to redirect to the root index page when the user clicks the cart button. Since this was not a behaviour I was happy with, I decided to make it display an empty cart (we would need that eventually, if user gets to the point of removing all items from the cart. In order to do that, we'd need to repeat the check that was made for the 'add product' logic: check if user already has a cart -> if no, create one / if yes, retrieve the cart information from repository. It would be a duplicated block of code, so I created a function in the carts repository to encapsulate that behaviour.
 
@@ -93,6 +97,7 @@ Scenarios to account for:
 
 3. REMOVE FROM CART
 - clicking the 'remove from cart' button for a given product will trigger a form submission
-- handled as a POST request to the back-end server
+- handled as a POST request to to '/cart/products/remove'
 - will take whatever item the user just clicked on and remove it from the shopping cart
+- after the product deletion, redirect back to display an updated cart
 

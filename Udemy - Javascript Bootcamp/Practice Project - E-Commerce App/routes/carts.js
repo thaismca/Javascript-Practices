@@ -62,14 +62,22 @@ router.get('/cart',
 
 });
 
-//---- DELETE FROM CART -------------------------------------------------------------------------------------------------
-//watching for incoming requests for a path of '/' and a method of POST
-//delete the product, which id can be retrieved from the body of the request, from the shopping cart
-router.post('/',
+//---- REMOVE FROM CART -------------------------------------------------------------------------------------------------
+//watching for incoming requests for a path of '/cart/products/remove' and a method of POST
+//remove the product, which id can be retrieved from the body of the request, from the shopping cart
+router.post('/cart/products/remove',
   //route handler
   async (req, res) => {
+    //retrieve user's cart
+    const cart = await cartsRepo.getOne(req.session.cartId);
+
+    //filter out the item in the user's cart which id matches the id that came in the req.body object
+    const items = cart.items.filter(item => item.id !== req.body.itemId); 
+    //update the cart with the filtered list of items
+    await cartsRepo.update(req.session.cartId, { items });
     
-    
+    //after the list of items in the user's cart is successfully updated, redirect to display an updated cart
+    res.redirect('/cart');
 });
 
 

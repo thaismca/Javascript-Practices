@@ -4,6 +4,7 @@ const layout = require('../layout');
 
 //template function that is called with a list of all the exisiting items in the shopping cart
 module.exports = ({ items }) => {
+    //generating the HTML for the list of items in the cart
     let renderedItems;
     //check if items array is empty
     if(items.length < 1) {
@@ -32,7 +33,8 @@ module.exports = ({ items }) => {
                 $${item.product.price * item.quantity}
               </div>
               <div class="remove">
-                <form method="POST">
+                <form method="POST" action="/cart/products/remove">
+                  <input hidden value="${item.id}" name="itemId" />
                   <button class="button is-danger">                  
                     <span class="icon is-small">
                       <i class="fas fa-times"></i>
@@ -46,7 +48,13 @@ module.exports = ({ items }) => {
       //join the elements of the array containing HTML snippets into one string
       }).join('');
     }
+
+    //calculating cart total
+    const totalPrice = items.reduce((acc, item) => {
+        return acc + item.quantity * item.product.price;
+    }, 0);
     
+    //pass the content of the show cart page to layout
     return layout({
         content: `
         <div id="cart" class="container">
@@ -61,7 +69,7 @@ module.exports = ({ items }) => {
               <div class="message-header">
                 Total
               </div>
-              <h1 class="title">$</h1>
+              <h1 class="title">$${totalPrice}</h1>
               <button class="button is-primary">Buy</button>
             </div>
           </div>
