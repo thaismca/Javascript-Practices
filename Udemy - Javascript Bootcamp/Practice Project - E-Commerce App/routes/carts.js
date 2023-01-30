@@ -8,6 +8,7 @@ const productsRepo = require('../repositories/products');
 
 //get access to views from other files in this project
 const cartShowTemplate = require('../views/cart/show');
+const purchaseSuccessTemplate = require('../views/cart/purchaseSuccess')
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -18,6 +19,7 @@ const router = express.Router();
 router.post('/cart/products',
   //route handler
   async (req, res) => {
+    
     //retrieve user's cart or create one if there's none
     const cart = await cartsRepo.userCart(req);
 
@@ -36,8 +38,8 @@ router.post('/cart/products',
     //update the items array in the cart
     await cartsRepo.update(cart.id, { items: cart.items }); 
     
-    //send response
-    res.send('product added to cart'); 
+    //redirect to cart
+    res.redirect('/cart'); 
 });
 
 //---- DISPLAY SHOPPING CART -------------------------------------------------------------------------------------------------
@@ -46,17 +48,8 @@ router.post('/cart/products',
 router.get('/cart',
   //route handler
   async (req, res) => {
-    //retrieve user's cart or create one if there's none
-    const cart = await cartsRepo.userCart(req);
-
-    //iterate through the items in the cart
-    for(let item of cart.items) {
-      //retrieve information about the product with the item id in the Products Repository
-      const product = await productsRepo.getOne(item.id);
-      //associate the product to the item
-      item.product = product;
-    }
-    
+    //retrieve user's cart
+    const cart = await cartsRepo.getProductsFromCart(req, productsRepo);
     //display shopping cart
     res.send(cartShowTemplate({ items: cart.items }));
 
@@ -76,8 +69,31 @@ router.post('/cart/products/remove',
     //update the cart with the filtered list of items
     await cartsRepo.update(req.session.cartId, { items });
     
-    //after the list of items in the user's cart is successfully updated, redirect to display an updated cart
+    //after the list of items in the user's is successfully updated, redirect to display an updated cart
     res.redirect('/cart');
+    
+});
+
+//---- BUY ITEMS FROM CART -------------------------------------------------------------------------------------------------
+//watching for incoming requests for a path of '/cart/products/buy' and a method of POST
+//clear shopping cart and display a sucess message
+router.post('/cart/products/buy',
+  //route handler
+  async (req, res) => {
+    //retrieve user's cart
+    const cart = await cartsRepo.getProductsFromCart(req, productsRepo);
+
+    if(cart.items.length < 1) {
+        //if no items in the cart, stay in the same cart page
+        res.redirect('/cart');
+    }
+
+    //get a reference to purchased items before clearing the cart
+    const purchasedItems = cart.items;
+    //clear user's cart
+    await cartsRepo.update(req.session.cartId, { items: [] });
+    //after the list of items in the user's is successfully updated, redirect to display an updated cart
+    res.send(purchaseSuccessTemplate({ items: purchasedItems }));
 });
 
 

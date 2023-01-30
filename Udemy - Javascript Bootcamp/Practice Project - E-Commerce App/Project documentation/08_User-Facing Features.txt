@@ -101,3 +101,14 @@ Scenarios to account for:
 - will take whatever item the user just clicked on and remove it from the shopping cart
 - after the product deletion, redirect back to display an updated cart
 
+4. BUY ITEMS
+NOTE: this functionality was not implemented in the course, I decided to add it myself
+- clicking the 'buy' button in the cart will trigger a form submission
+- handled as a POST request to to '/cart/products/buy'
+- will display a message coonfirming the purchase, a summary of the purchase and clear the user's cart
+
+Scenarios to account for:
+- if card is empty, continue to display the same page
+
+Since logic to associate products from the Products Repository with the items ids in the user's cart would be repeated here, decided to refactor the code and add the method to the CartsRepository class.
+
