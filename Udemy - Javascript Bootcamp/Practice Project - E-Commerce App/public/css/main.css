@@ -144,3 +144,8 @@ body {
   display: flex;
   align-items: center;
 }
+
+#purchase-summary {
+  margin-top: 30px;
+   
+}

@@ -28,6 +28,21 @@ class CartsRepository extends Repository {
     return cart; 
   }
 
+  //function that associates a product from a Products Repository to all items in the user's cart
+  async getProductsFromCart(req, productsRepo){
+    //retrieve user's cart
+    const cart = await this.userCart(req);
+
+    //iterate through the items in the cart
+    for(let item of cart.items) {
+      //retrieve information about the product with the item id in the Products Repository
+      const product = await productsRepo.getOne(item.id);
+      //associate the product to the item
+      item.product = product;
+  }
+  return cart;
+}
+
 }
 
 //make an instance of this class available to other files inside of this project

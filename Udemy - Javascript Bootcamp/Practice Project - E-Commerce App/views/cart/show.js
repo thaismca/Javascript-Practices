@@ -58,24 +58,26 @@ module.exports = ({ items }) => {
     return layout({
         content: `
         <div id="cart" class="container">
-        <div class="columns">
-          <div class="column"></div>
-          <div class="column is-four-fifths">
-            <h3 class="subtitle"><b>Shopping Cart</b></h3>
-            <div>
-              ${renderedItems}
-            </div>
-            <div class="total message is-info">
-              <div class="message-header">
-                Total
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column is-four-fifths">
+              <h3 class="subtitle"><b>Shopping Cart</b></h3>
+              <div>
+                ${renderedItems}
               </div>
-              <h1 class="title">$${totalPrice}</h1>
-              <button class="button is-primary">Buy</button>
+              <div class="total message is-info">
+                <div class="message-header">
+                  Total
+                </div>
+                <h1 class="title">$${totalPrice}</h1>
+                <form method="POST" action="/cart/products/buy">
+                  <button class="button is-primary">Buy</button>
+                </form>
+              </div>
             </div>
+            <div class="column"></div>
           </div>
-          <div class="column"></div>
         </div>
-      </div>
         `
       });
 }
