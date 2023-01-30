@@ -3,9 +3,11 @@ const express = require('express');
 
 //require an instance of the CartsRepository class
 const cartsRepo = require('../repositories/carts');
+//require an instance of the ProdutsRepository class
+const productsRepo = require('../repositories/products');
 
 //get access to views from other files in this project
-//const productsIndexTemplate = require('../views/products/index');
+const cartShowTemplate = require('../views/cart/show');
 
 //create an instance an router object from the express library
 const router = express.Router();
@@ -16,20 +18,8 @@ const router = express.Router();
 router.post('/cart/products',
   //route handler
   async (req, res) => {
-    //variable to hold a reference to the user's cart
-    let cart;
-    //check if there's is an existing cart for the user
-    if(!req.session.cartId) {
-      //no existing cart -> create one
-      cart = await cartsRepo.create({ items: [] });
-      //get the id that was created for the cart and assign it to the req.session.cartId property
-      req.session.cartId = cart.id;
-    }
-    //user already has a cart
-    else {
-      //retrieve cart information from the repository
-      cart = await cartsRepo.getOne(req.session.cartId);
-    }
+    //retrieve user's cart or create one if there's none
+    const cart = await cartsRepo.userCart(req);
 
     //check if there's an instance of the item in this user's cart
     const existingItem = cart.items.find(item => item.id === req.body.productId);
@@ -51,8 +41,36 @@ router.post('/cart/products',
 });
 
 //---- DISPLAY SHOPPING CART -------------------------------------------------------------------------------------------------
+//watching for incoming requests for a path of '/cart' and a method of GET
+//display a list with all the products that are currently in the shopping cart, with the option remove each one of them
+router.get('/cart',
+  //route handler
+  async (req, res) => {
+    //retrieve user's cart or create one if there's none
+    const cart = await cartsRepo.userCart(req);
+
+    //iterate through the items in the cart
+    for(let item of cart.items) {
+      //retrieve information about the product with the item id in the Products Repository
+      const product = await productsRepo.getOne(item.id);
+      //associate the product to the item
+      item.product = product;
+    }
+    
+    //display shopping cart
+    res.send(cartShowTemplate({ items: cart.items }));
+
+});
 
 //---- DELETE FROM CART -------------------------------------------------------------------------------------------------
+//watching for incoming requests for a path of '/' and a method of POST
+//delete the product, which id can be retrieved from the body of the request, from the shopping cart
+router.post('/',
+  //route handler
+  async (req, res) => {
+    
+    
+});
 
 
 //---- EXPORT ROUTERS -------------------------------------------------------------------------------------------------
