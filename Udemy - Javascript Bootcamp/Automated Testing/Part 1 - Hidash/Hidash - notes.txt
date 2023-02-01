@@ -1,0 +1,47 @@
+This document contains notes about the Part 1 of the Automated Testing section of the Javascript Bootcamp course
+----------------------------------------------------------------------------------------------------
+
+>> OVERVIEW
+
+In this Part 1 of the Automated Testing Section, we are going to:
+- write a tiny node project -> Hidash
+- figure out how to test it without any outside testing library
+- test it using a testing library
+
+----------------------------------------------------------------------------------------------------
+
+>> HIDASH
+
+Context: there's an extremely popular Javascript library called Lodash, which provides a huge set of helper fuctions to do a lot of different operations that we commonly have to do by hand inside of Javascript. Documentation: https://lodash.com/docs/4.17.15
+
+What we are going to do in this small node project Hidash is to reimplement a couple of functions from the Lodash library and then figure out how to test them.
+
+-----
+> Functions to be reimplemented:
+
+1 - forEach
+Lodash documentation: https://lodash.com/docs/4.17.15#forEach
+This function behaves identically to the forEach function that is included with Javascript arrays. For many years Javascript did not have a built-in forEach method, so Lodash came along many years ago and gave developers a version of forEach.
+
+The Lodash version of the forEach receives two arguments: the collection to iterate over and the function invoked per iteration. It iterates over elements of the collection and invokes a callback function for each element. The callback is invoked with three arguments: (value, index|key, collection). The callback functions may exit iteration early by explicitly returning false. First reimplementation of this method will be done using a regular for loop. Then in order to attest that our testing code continues to properly test the function after we change it, we are going to change it to use a for in loop. 
+
+--
+2 - map
+Lodash documentation: https://lodash.com/docs/4.17.15#map
+
+This function also behaves identically to the map function that is included with Javascript arrays. It receives two arguments: the collection to iterate over and the function invoked per iteration. It creates an array of values by running each element in collection thru the callback function, which is invoked with three arguments (value, index|key, collection).
+
+-----
+> Testing the code
+
+The idea behind test automation is to run a code in an automated fashion and in several different styles to make sure that it works for every different case that we call the function that is being tested, instead of trying to run the code and then manually look at the output.
+
+In order to test the functions that were implemented, we are ging to take two different approaches. In the first one, we'll be writting a test script without using an outside testing library. Then, we are going to test the same functions using a test library.
+
+-----
+> First approach:  no outside testing library
+The testing script will be placed in a separated file -> index.test.js
+
+The reason for this is that when we start to think about automated testing, we're really talking about running our entire application in two different contexts. The first context would be like if we wanted to run our program as usual and actually make use of the code inside of our very normal, very usual type of program. As soon as we start to want to test this code, however, we would not want to put some code inside of the program file that's going to actually test it.If we keep writting and leaving testing code inside of the program file and then ran our project, every single time we ran our project, we would see the logs of the test outputs. That would start to muddy up our program really quickly because we would get some console logs and whatnot completely unrelated to the actual purpose of our program.
+
+Then, inside of the test script file, in order to write a test for the functions that we implemented without any outside library, we're going to do it in the most simple, basic, straightforward way possible: we're just going to require in our functions, we're going to call them, we're going to get some results out, and we're just going to make sure that the result that we got is what we expect.
