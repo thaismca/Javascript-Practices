@@ -68,4 +68,11 @@ Then we are going to wrap all the current testing logic into a little callback f
 
 Now, to solve problem number 2, in the helper function that we put together, we are going wrap the callback function call using a try/catch statement. We are going to call the function inside the try block, then catch any potential errors and console.log the messages from those errors, if they happen. By doing this, if something throws an error that's not going to end the execution of the entire program.
 
+--
+--> REFACTORING CODE TO USE THE ASSERT MODULE
+
+The assert module from the node standard library provides a set of assertion functions for verifying invariants. If will help us to clean up the code on this refactor and get rid of all repetitive if statements. We are going to use its strictEqual method, which receives two arguments (actual and expected) and tests strict equality between the two. It can also receive a third option, which is a message to be displays if the values are not strictly equal. If the message parameter is undefined, a default error message is assigned. If the message parameter is an instance of an Error then it will be thrown instead of the AssertionError.
+
+There's also a second method that can be used in out test script, to test the map function: deepStrictEqual. Tests for deep equality between the actual and expected parameters. "Deep" equality means that the enumerable "own" properties of child objects are recursively evaluated also by the following rules. In other words, I can compare the entire squares array to the expected array at once, not the value at one index at a time.
+
 

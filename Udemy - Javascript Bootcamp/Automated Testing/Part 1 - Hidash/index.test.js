@@ -1,3 +1,5 @@
+//get access to the assert module from the node standard library
+const assert = require('node:assert');
 //get access to the functions in the index.js file
 const { forEach, map } = require('./index.js');
 
@@ -20,9 +22,7 @@ test('Testing the forEach function', () => {
     forEach([1, 2, 3], value => {
         sum += value;
     });
-    if(sum !== 6) {
-        throw new Error('Expected summing array to equal 6');
-    }
+    assert.strictEqual(sum, 6, 'Expected forEach to sum the array');
 });
 
 //------------------------------------------------------------------------------------------------------------------
@@ -33,13 +33,8 @@ test('Testing the map function', () => {
     const squares = map([2, 3, 4], value => {
         return value * value;
     });
-    if(squares[0] !== 4) {
-        throw new Error(`This result should be 4, but found ${squares[0]}`);
-    }
-    if(squares[1] !== 9) {
-        throw new Error(`This result should be 9, but found ${squares[1]}`);
-    }
-    if(squares[2] !== 16) {
-        throw new Error(`This result should be 16, but found ${squares[2]}`);
-    }
+    //assert.strictEqual(squares[0], 4);
+    //assert.strictEqual(squares[0], 9);
+    //assert.strictEqual(squares[0], 16);
+    assert.deepStrictEqual(squares, [4, 9, 16]);
 });
