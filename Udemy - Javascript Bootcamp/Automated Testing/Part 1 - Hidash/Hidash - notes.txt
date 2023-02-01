@@ -45,3 +45,27 @@ The testing script will be placed in a separated file -> index.test.js
 The reason for this is that when we start to think about automated testing, we're really talking about running our entire application in two different contexts. The first context would be like if we wanted to run our program as usual and actually make use of the code inside of our very normal, very usual type of program. As soon as we start to want to test this code, however, we would not want to put some code inside of the program file that's going to actually test it.If we keep writting and leaving testing code inside of the program file and then ran our project, every single time we ran our project, we would see the logs of the test outputs. That would start to muddy up our program really quickly because we would get some console logs and whatnot completely unrelated to the actual purpose of our program.
 
 Then, inside of the test script file, in order to write a test for the functions that we implemented without any outside library, we're going to do it in the most simple, basic, straightforward way possible: we're just going to require in our functions, we're going to call them, we're going to get some results out, and we're just going to make sure that the result that we got is what we expect.
+
+--
+--> ISSUES IDENTIFIED WITH THE CURRENT SETUP
+1 - All variables inside of index.test.js are defined in the global scope of the file
+This is a problem because if we want to reassign something to another result variable, if it was created as a constant, then it won't be possible to make the reassignment. Plus, ig get messy and confusing.
+
+2 - If any of the tests in the file throws an error, then none of the following tests will be executed
+This is a problem because if we want some sort of report on everything that is passing or failing in our application, not only just the first thing that goes wrong. 
+
+3 - It's really hard to figure out where the error is if something goes wrong
+The current implementation requires us to check the error message and then search through the entire scriptto figure out where it came from. Thisis already tiresome for a small file, and it can become a real nightmare if you have a longer script, or multiple messages that look alike.
+
+--
+Solving the issues
+
+To start solving these issues, we are going to create a helper function at the top of the testing file. It will receive two arguments: a description and a function to be invoked.
+
+The description is to give us a better idea of what is actually being tested, especially in case we have multiple functions to be tested in one file (just like we currently have). We are going to console.log this description when this helper function is called, before executing the next steps. This helps us solving problem number 3 in the list.
+
+Then we are going to wrap all the current testing logic into a little callback function that gets provided to this helper function. By doing this, the variables will no longer be declared in the global scope, which solves problem number 1.
+
+Now, to solve problem number 2, in the helper function that we put together, we are going wrap the callback function call using a try/catch statement. We are going to call the function inside the try block, then catch any potential errors and console.log the messages from those errors, if they happen. By doing this, if something throws an error that's not going to end the execution of the entire program.
+
+
