@@ -75,4 +75,21 @@ The assert module from the node standard library provides a set of assertion fun
 
 There's also a second method that can be used in out test script, to test the map function: deepStrictEqual. Tests for deep equality between the actual and expected parameters. "Deep" equality means that the enumerable "own" properties of child objects are recursively evaluated also by the following rules. In other words, I can compare the entire squares array to the expected array at once, not the value at one index at a time.
 
+-----
+> Second approach:  using the testing library mocha
+The testing script will be placed in a separated file -> index.test-mocha.js
+
+Mocha documentation can be found at: https://mochajs.org/
+
+In order to use mocha, the fisrt step is to install it globally in the local machine by running the command 'npm install -g mocha'. After that, to get the same test script that was put togheter in the fisrt approach to run with mocha, we just need to change a few things:
+
+- the helper function can be dedleted, since there's no need for it when using mocha
+- so instead of calling the helper function to run the scripts, we will wrap then in the it() function
+
+In Mocha, the it() function is used to execute individual tests. It accepts a string to describe the test and a callback function to execute assertions. So basically, we don't need to change a thing in the implementation of the callbacks we have from the first implementation. We only need to change the wrapping function that will eventually run then.
+
+Note: instead of making the changes in the index.test.js file itself, I decided to create a second file, so we could have both for comparison and study purposes. It's still possible to run the first approach using the 'node index.test.js' command, and we can run the second approach with the 'mocha index.test-mocha.js' command.
+
+
+
 
