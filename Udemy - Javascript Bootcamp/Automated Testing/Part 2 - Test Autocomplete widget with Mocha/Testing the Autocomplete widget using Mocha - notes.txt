@@ -8,3 +8,19 @@ This document contains notes about the automated test of the Autocomplete widget
 
 NOTE: in this Part 2 of the Automated Testing section of the Javascript Bootcamp course, we are getting an idea on how setting up a testing framework can be quite time consuming, especially when it comes to test applications that run in the browser. Since the Autocomplete widget uses lots of properties that are related to the DOM, this means that everything about this autocomplete is set up to function inside the browser. So if we want to test this widget effectively, we have to get Mocha to work in the browser, and that set up can take even longer that actually writting the test scripts themselves.
 
+----------------------------------------------------------------------------------------------------
+
+>> MOCHA SETUP
+
+- Access the mocha documentation -> web support: https://mochajs.org/#running-mocha-in-the-browser.
+- Set up an HTML document that is dedicated specifically to testing different things inside of our application, using the template available in the MOCHA documetnation.
+- Add in some additional script tags to require in JavaScript files from our project.
+- Write some code to test that stuff that we require in as well.
+
+> Testing script -> autocomplete.test.js
+In our script we want to have the ability to test if a widget is being displayed on the screen. It should verify that it starts up closed, and it should verify if it display a proper list of results when we start typing in the input.
+
+Our function to createAutoComplete expects the following arguments:
+- root: where we are going to render the widget (a #target div). This target div must be added to the HTML document with the testing template from Mocha.
+- fetchData: a function to make a HTTP request that returns a list of options to be displayed, according to the search term. In this testing context, we need to decide whether this process of making an API request must be tested or not. If not, we can just have some sort of dummy data to show inside of this fake autocomplete - and this is the approach we are going to use in this project.
+- renderOption(data): a function that receives an array of objects data and renders that data in the dropdown below the autocomplete widget.

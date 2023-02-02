@@ -1,0 +1,33 @@
+<!--mocha set up to run test scripts in the browser //template copied from mocha documentation -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <!-- div where we are going to attempt to render an autocomplete widget during the tests-->
+    <div id="target"></div>
+
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup("bdd");
+      mocha.checkLeaks();
+    </script>
+    <!-- get acess to the files used to render an autocomplete -->
+    <script src="../utils.js"></script>
+    <script src="../autocomplete.js"></script>
+    <!-- get access to the filed with the testing scripts-->
+    <script src="autocomplete.test.js"></script>
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
+</html>
