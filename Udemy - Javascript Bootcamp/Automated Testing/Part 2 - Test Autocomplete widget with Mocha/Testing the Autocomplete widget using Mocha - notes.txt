@@ -1,0 +1,10 @@
+This document contains notes about the automated test of the Autocomplete widget, implemented as Part 2 of the Automated Testing section of the Javascript Bootcamp course: https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17167092
+----------------------------------------------------------------------------------------------------
+
+>> OVERVIEW
+
+- Goal: implement an automated test script using the Mocha testing library to test the Autocomplete widget from the Movie Fight project.
+- Functionality that is going to be tested: We are going to write some number of tests to make sure that the widget starts out closed and then, after we type something in, it should open up and show a list of results to the user.
+
+NOTE: in this Part 2 of the Automated Testing section of the Javascript Bootcamp course, we are getting an idea on how setting up a testing framework can be quite time consuming, especially when it comes to test applications that run in the browser. Since the Autocomplete widget uses lots of properties that are related to the DOM, this means that everything about this autocomplete is set up to function inside the browser. So if we want to test this widget effectively, we have to get Mocha to work in the browser, and that set up can take even longer that actually writting the test scripts themselves.
+
