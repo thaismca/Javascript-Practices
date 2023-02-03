@@ -1,5 +1,7 @@
-//test the ability to display an autocomplete widget in the page
-it('Autocomplete dropdown state at start', () => {
+//set up the environment before each test
+beforeEach(() => {
+    //make sure that any possible existing autocomplete widget from previous tests is deleted
+    document.querySelector('#target').innerHTML='';
     //create an instance of a autocomplete widget to be tested
     createAutoComplete({
         root: document.querySelector('#target'),
@@ -15,8 +17,10 @@ it('Autocomplete dropdown state at start', () => {
             return movie.Title;
         }
     });
+});
 
-    //test dropdown state - it should be hidden when widget is first displayed
+//test dropdown state - it should be hidden when widget is first displayed
+it('Autocomplete dropdown in closed state at start', () => {
     //get a reference to the dropdown element
     const dropdown = document.querySelector('.dropdown');
     //check if className includes 'is-active'

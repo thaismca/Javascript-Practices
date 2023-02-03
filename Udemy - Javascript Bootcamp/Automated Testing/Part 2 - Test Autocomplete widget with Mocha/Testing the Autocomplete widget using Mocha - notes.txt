@@ -46,8 +46,8 @@ In this project, we'll be using the expect syntax to check some different values
 - chain on some series of chainable getters
 - pass something to compare the value against
 
+> Resetting the environment for next test
 
+Between every different test that we put together, we need to reset our environment. This means that we are going to create and render a new dropdown for each one of the tests that we write. In order to do that, Mocha has a little hook function: beforeEach. Inside of this function, we can write out some amount of code that is going to attempt to set up our testing environment for every single test. 
 
-
-
-
+In this project, the beforeEach function will contain code to delete any possible existing autocomplete widget from prevous tests, then create a new one from scratch.
