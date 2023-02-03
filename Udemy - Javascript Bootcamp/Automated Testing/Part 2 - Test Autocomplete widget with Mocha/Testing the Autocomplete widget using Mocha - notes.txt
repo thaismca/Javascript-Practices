@@ -30,9 +30,19 @@ Our function to createAutoComplete expects the following arguments:
 
 >> TESTING THE AUTOCOMPLETE
 
-1. Dropdown state
+1. Dropdown state at start
 
 We want to check that the dropdown doesn't show when we first display the autocomplete. What decides whether or not the dropdown element of the autocomplete widget is displayed is the presence of a class is-active. So if we want to make sure that this dropdown starts off as being closed, we can write a test to make sure that when we first show our widget to the user the div of the class dropdown should not also have a class of is-active, because as soon as it has the is-active class, that means the dropdown is open.
+
+2. Dropdown state after search
+
+We want to check if dropdown is displayed after something is typed in the text input of the autocomplete widget. It's known that the class is-active determines whether the dropdown is displayed or not. The new challenge in this test will be to get test automatically added to that input, and then see if the addition of a query string in that inputs adds the proper is-active class to the dropdown element.
+
+In order to trigger a fake search having some text automatically typed in that input, we are going to use some traditional DOM manipulation methods. The autocomplete works by watching for an input event. If we want to trigger a search, we have to fake that event using dispatchEvent.
+
+NOTE: if we don't hold up assertions, this test will fail. This happens because it takes some amount of time after the page has refreshed to actually see the list of search results appearing in the autocomplete widget, causing the test being actually failed by the time the output appears.
+
+--
 
 > Writting assertions
 
@@ -51,3 +61,9 @@ In this project, we'll be using the expect syntax to check some different values
 Between every different test that we put together, we need to reset our environment. This means that we are going to create and render a new dropdown for each one of the tests that we write. In order to do that, Mocha has a little hook function: beforeEach. Inside of this function, we can write out some amount of code that is going to attempt to set up our testing environment for every single test. 
 
 In this project, the beforeEach function will contain code to delete any possible existing autocomplete widget from prevous tests, then create a new one from scratch.
+
+> Holding up assertions
+
+Some tests will require the asserts to be holden up, since some actions can take some time to happen and the expect function may run before everything is ready for the check. In the case of the autocomplete widget, there's a debounce statement wapping the input event, which causes it to wait a few miliseconds to actually add the class is-active to the dropdown element. That means we need to delay the execution of the assertion.
+
+In order to do that, we are going to implement a helper function waitFor, that will be called passing the selector for an element that we want to wait until it shows up in the screen before moving on to the next step. It will contain code that fails the test altogether if that element fails to show up in the screen. waitFor is going to return a promise. It will either be resolved if the element shows up within a certain amount of time, or rejected if the element fails to be displayed. If it gets rejected, it will thrown an error that will cause the overall test to fail.
