@@ -29,3 +29,20 @@ Implementing requirement: must be a node-based CLI framework
 - set index.js to be executed from anywhere on our machine, by adding a command that runs the index.js file to a new bin section, in the package.json file
 - run 'npm link' while in the project root directory
 
+----------------------------------------------------------------------------------------------------
+
+>> IMPLEMENTATION STEPS
+
+1. File Collection
+CLI must automatically find and run all files in our project that have a name of '.test.js. So, whenever we run our command line tool, we have to take a look at the project directory that the command line tool is being executed from and find all the different test files inside of this project directory.
+
+2. Test Environment Setup
+Once we have then collected all those different files, we have to do some environment setup before we run any tests. We need to make sure that we can somehow execute those files, and make sure that they have the ability to have some browser-based JavaScript code inside them.
+
+3. Test File Execution
+Once we do that environment set up, then actually execute each test file, running each little 'it' statement, one by one at a time, and watch for any errors that might occur.
+
+4. Report Results
+Once we've collected all the results from all these different tests, we need to tabulate all that data and print out the results to the terminal so that the developer who is using the tool understands what test failed and what test actually passed.
+
+
