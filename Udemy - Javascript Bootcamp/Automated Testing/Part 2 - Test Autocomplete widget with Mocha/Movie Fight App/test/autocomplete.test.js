@@ -67,4 +67,22 @@ it('Dropdown in active state after search', async () => {
     //check if className includes 'is-active'
     expect(dropdown.className).to.include('is-active');
 
-})
+});
+
+//test number of displayed results - it should be match the number of items returned from fetchData
+it('Number of results displayed matches data fetched', async () => {
+    //get a reference to the autocomplete text input element
+    const input = document.querySelector('input');
+    //set a value to the autocomplete text input
+    input.value = 'testing';
+    //get a fake input event to be triggered in the autocomplete text input
+    input.dispatchEvent(new Event('input'));
+
+    //delay assertion until there's a dropdown-item to be found in the document, or timeout
+    await waitFor('.dropdown-item');
+
+    //get a reference to all dropdown-item elements
+    const items = document.querySelectorAll('.dropdown-item');
+    //check if number of elements in dropdownItems match number of elements returned from fetchData (3)
+    expect(items.length).to.equal(3);
+});

@@ -42,6 +42,10 @@ In order to trigger a fake search having some text automatically typed in that i
 
 NOTE: if we don't hold up assertions, this test will fail. This happens because it takes some amount of time after the page has refreshed to actually see the list of search results appearing in the autocomplete widget, causing the test being actually failed by the time the output appears.
 
+3. Number of records displayed in dropdown
+
+We want to check if the number of printed out movies in the dropdown equals to however many that were returned from fetchData function. We'll need to follow the same first steps of the previous test (get somenthing in the text input and trigger an input event on that element), so we can get the results to be rendered. After that, we just need to check if the number of .dropdown-item element matches the number of elements returned from fetchData (we already know that our dummy data returns 3 movies).
+
 --
 
 > Writting assertions
