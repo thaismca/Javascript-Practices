@@ -24,3 +24,30 @@ Our function to createAutoComplete expects the following arguments:
 - root: where we are going to render the widget (a #target div). This target div must be added to the HTML document with the testing template from Mocha.
 - fetchData: a function to make a HTTP request that returns a list of options to be displayed, according to the search term. In this testing context, we need to decide whether this process of making an API request must be tested or not. If not, we can just have some sort of dummy data to show inside of this fake autocomplete - and this is the approach we are going to use in this project.
 - renderOption(data): a function that receives an array of objects data and renders that data in the dropdown below the autocomplete widget.
+
+
+----------------------------------------------------------------------------------------------------
+
+>> TESTING THE AUTOCOMPLETE
+
+1. Dropdown state
+
+We want to check that the dropdown doesn't show when we first display the autocomplete. What decides whether or not the dropdown element of the autocomplete widget is displayed is the presence of a class is-active. So if we want to make sure that this dropdown starts off as being closed, we can write a test to make sure that when we first show our widget to the user the div of the class dropdown should not also have a class of is-active, because as soon as it has the is-active class, that means the dropdown is open.
+
+> Writting assertions
+
+When running Mocha inside the browser, the official recommendation when it comes to writting assertions is to use another library called Chai, which is an expectation or assertion library (allows us to write assert statements). In the template provided by the Mocha library that was used during the set up, there's already a script tag to reference that library. Documentation for the Chai Assertion Library can be accessed here: https://www.chaijs.com/
+
+This library gives us three different ways of doing the exact same thing. Assertions can be written using one of the three available syntaxes: the should syntax, the expected syntax and the assert syntax. These all do the exact same thing. The only reason they offer these three different styles is just for developer preference.
+
+In this project, we'll be using the expect syntax to check some different values and if it's not quite what we expect, the expected function is going to throw an error and that's going to show up as a failure on our test. We're going to:
+- get access to the expect function
+- call expect passing in some value that we want to test
+- chain on some series of chainable getters
+- pass something to compare the value against
+
+
+
+
+
+

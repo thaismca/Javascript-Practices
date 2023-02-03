@@ -20,6 +20,8 @@
     <script class="mocha-init">
       mocha.setup("bdd");
       mocha.checkLeaks();
+      //get acess to expect function, from Chai Assertion Library
+      const expect = chai.expect;
     </script>
     <!-- get acess to the files used to render an autocomplete -->
     <script src="../utils.js"></script>
