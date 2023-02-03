@@ -1,0 +1,15 @@
+This document contains notes about the Part 3 of the Automated Testing section of the Javascript Bootcamp course
+----------------------------------------------------------------------------------------------------
+
+>> OVERVIEW
+
+In this Part 3 of the Automated Testing Section, we are going to build a testing framework from scratch: TestMe.
+
+TestMe requirements:
+- must be a node-based CLI framework
+- must be able to test browser-based JS apps
+- must require very little setup
+- must be able to test a whole application, not just one little widget
+- CLI must have a 'watch mode', so we don't have to keep restarting it over and over
+- CLI must automatically find and run all files in our project that have a name of '.test.js
+
