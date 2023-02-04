@@ -45,4 +45,24 @@ Once we do that environment set up, then actually execute each test file, runnin
 4. Report Results
 Once we've collected all the results from all these different tests, we need to tabulate all that data and print out the results to the terminal so that the developer who is using the tool understands what test failed and what test actually passed.
 
+----------------------------------------------------------------------------------------------------
 
+>> RUNNER.JS
+
+This file is going to contain a bunch of code related to the entire process of:
+
+- Find all files ending in '*.test.js' recursively through a folder
+- Store a reference to each file we find
+- After getting a full list of the test files, execute them one by one
+
+Note: the actual test environment setup will be inside of a different file.
+
+In order to organize our code, we are going to use a class to group together all this functionality, and then export that class so it can be available to other files inside of this project.
+
+> constructor: will contain an instance variable that's going to store a reference to every file that we discover.
+
+> collectFiles: method that implements a modified breadth first search to iterate recursively through a folder, find all files ending in '*.test.js', and store a reference to each file that is found. It taked an argumetn of targetPath, which going to be the entire absolute path to some folder that we want to investigate on our local machine.
+
+Modified breadth search: normally, a breadth search would take all children from an element in a tree and add them to an array. Then start to iterate through the array, take a look at each individual item, and for each item find all of its children and add them all to the array. This process would continue until all elements of the tree were finally added to that array.
+
+In this application, we're going to add these children into this array to iterate over only if they are folders. Files with .test.js extension are going to be added to the array that keeps track of all of the different test files (this.testFiles). And if it's not a test file or a folder, then we're basically just going to ignore it.
