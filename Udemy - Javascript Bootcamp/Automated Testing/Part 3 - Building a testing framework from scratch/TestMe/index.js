@@ -7,8 +7,10 @@ const runner = require('./runner');
 console.log("Running TestMe......")
 
 const run = async () => {
+    //find all files ending in '*.test.js' recursively through a folder
     await runner.collectFiles(process.cwd());
-    console.log(runner.testFiles);
+    //execute test files
+    runner.runTests();
 }
 
 run();

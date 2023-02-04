@@ -39,6 +39,13 @@ class Runner {
             }
         }
     }
+
+    //method that iterates through the testFiles and execute them
+    async runTests() {
+        for (let testFile of this.testFiles) {
+            require(testFile.path);
+        }
+    }
 }
 
 //make the class available to other files in this project

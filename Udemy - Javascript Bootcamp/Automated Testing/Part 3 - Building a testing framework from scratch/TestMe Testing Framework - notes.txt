@@ -66,3 +66,5 @@ In order to organize our code, we are going to use a class to group together all
 Modified breadth search: normally, a breadth search would take all children from an element in a tree and add them to an array. Then start to iterate through the array, take a look at each individual item, and for each item find all of its children and add them all to the array. This process would continue until all elements of the tree were finally added to that array.
 
 In this application, we're going to add these children into this array to iterate over only if they are folders. Files with .test.js extension are going to be added to the array that keeps track of all of the different test files (this.testFiles). And if it's not a test file or a folder, then we're basically just going to ignore it.
+
+> runTests: method that iterates through the testFiles and execute them. It doesn't create a new and separate process from the current program that we are running. It actually executes all the code inside of the test files in the same context as our runner, which makes it a lot earsier to shaer information between the test file and the test runner.
