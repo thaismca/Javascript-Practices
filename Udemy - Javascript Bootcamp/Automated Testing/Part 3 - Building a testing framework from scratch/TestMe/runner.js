@@ -11,6 +11,8 @@ class Runner {
     constructor() {
         //store references to every test file that is discovered
         this.testFiles = [];
+        //store directories that must be excluded from test file search
+        this.ignoredDirs = ['node_modules'];
     }
     
     //method that find all files ending in '*.test.js' recursively through a folder
@@ -18,6 +20,7 @@ class Runner {
     async collectFiles(targetPath) {
         //read the contents of the targetPath directory
         const contents = await fs.promises.readdir(targetPath);
+        console.log(...this.ignoredDirs)
 
         //iterate through the array of files found in the directory
         for(let content of contents) {
@@ -31,8 +34,8 @@ class Runner {
                 //add that file path to the array that keeps track of all test files
                 this.testFiles.push({ path: contentPath, relPath: content });
             }
-            //check if that content is a folder
-            else if (stat.isDirectory()){
+            //check if that content is a folder that is not added to the list of folders to be ignored
+            else if (stat.isDirectory() && !this.ignoredDirs.some(dir => content.includes(dir))) {
                 //get a reference to all the content inside of that folder
                 const childContents = await fs.promises.readdir(contentPath);
                 //add the elements from childContents to the array that we are currently iterating thru
@@ -60,6 +63,7 @@ class Runner {
                 //environment setup
                 //for each beforeEach callbacks that we have a reference to, execute that fucntion
                 beforeEaches.forEach(fn => fn());
+
 
                 //test execution
                 //execute the callback function that was passed to the it() method
