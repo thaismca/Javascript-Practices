@@ -79,4 +79,20 @@ Implementation:
 
 > it(desc, func) : where desc is a string with a description for the test that is being executed, and func is the callback function that execute assertions.
 > beforeEach(func) : where func is the callback function to be executed when it() is invoked, before actually running the callback that is passed to it().
+----------------------------------------------------------------------------------------------------
 
+>> RUNNING BRWOSER-BASED JS
+
+One of the requirements of this TestMe application is to be able to test browser-based JS apps, even though we are running some code based on Node.js. The whole issue here is that with Node.js we do not have access to the browser, and that browser based app is going to try to access the DOM use methods that are built into the browser and so on. In order to solve this, we're going to run a little library inside of this testing tool that is going to simulate a browser inside of Node.js.
+
+> JSDOM
+Documentation: https://www.npmjs.com/package/jsdom
+
+JSDOM is a pure-JavaScript implementation of many web standards, notably the WHATWG DOM and HTML Standards, for use with Node.js. In general, the goal of the project is to emulate enough of a subset of a web browser to be useful for testing and scraping real-world web applications.
+
+There is no actual window that pops up and shows web pages or anything like that. Instead, it is a reimplementation of a lot of the code that runs in the browser. And so when we make use of JSDOM, we can pretend as though we have access to a browser, even though there is not actually a browser present.
+
+fromFile() -> The fromFile function included with JSDOM is going to be called with a reference or the name of some HTML document that we want to load up when we call this function. Then JSDOM is going to look for a file on our hard drive that has that name, read the contents of that HTML file and try to load it up into this kind of virtual 
+browser environment. Once JSDOM loads out that HTML document, it is also going to load up any associated JavaScript files as well. In other words, JSDOM is going to take in these two files and it's going to assemble a virtual representation of our application. That's going to give us back an object that we can use to kind of poke and prod at to make sure that our application is working the way we expect.
+
+How this funtion will be used in our TestMe application? For every single test statement that is put together, we're going to call fromfile(). So for every test, we're going to load up a fresh version of our entire application that's going to give us back this object that represents the entire DOM. And we can call different methods on that thing to manipulate all the different elements inside there.
