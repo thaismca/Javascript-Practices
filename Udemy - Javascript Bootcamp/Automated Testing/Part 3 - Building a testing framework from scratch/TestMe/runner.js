@@ -4,6 +4,8 @@ const fs = require('node:fs');
 //get access to the Path Module from Node.js inside of this project
 //The node:path module provides utilities for working with file and directory paths
 const path = require('node:path');
+//get access to the chalk package, to add colors to the console logs
+const chalk = require('chalk');
 
 class Runner {
     constructor() {
@@ -27,7 +29,7 @@ class Runner {
             //check if that content is a file AND it's name includes '.test.js' 
             if(stat.isFile() && content.includes('.test.js')) {
                 //add that file path to the array that keeps track of all test files
-                this.testFiles.push({ path: contentPath });
+                this.testFiles.push({ path: contentPath, relPath: content });
             }
             //check if that content is a folder
             else if (stat.isDirectory()){
@@ -43,6 +45,9 @@ class Runner {
     //method that iterates through the testFiles and execute them
     async runTests() {
         for (let testFile of this.testFiles) {
+            //indicate what file is about to be executed
+            console.log(chalk.bgGray(`\n------- ${testFile.relPath}\n`));
+
             //define a global beforeEach method
             const beforeEaches = [];
             global.beforeEach = (func) => {
@@ -61,13 +66,14 @@ class Runner {
                 try {
                     func();
                     //display message for 'passed' test
-                    console.log(`PASSED - ${desc}`);
+                    console.log(chalk.bgGreen('\tPASSED'), chalk.green(desc), '\n');
                 } catch(err) {
-                    //display messaged for 'failed' test
-                    console.log(`FAILED - ${desc}`);
-                    console.log(err.message);
+                    //preprocess error message for better formatting
+                    const message = err.message.replace(/\n/g, '\n\t\t');
+                    //display message for 'failed' test
+                    console.log(chalk.bgRed('\tFAILED'), chalk.red(desc));
+                    console.log('\t', message, '\n');
                 }
-                
             }
 
             //execute code inside of testFile
@@ -75,13 +81,12 @@ class Runner {
                 require(testFile.path);
             } catch(err) {
                 //display error message if an error occurred regarding the test file execution
-                console.log(`FAILED - Error loading file ${testFile.path}`);
-                console.log(err.message);
-            }
-            
+                console.log(chalk.bgRed('\tFAILED'), chalk.red('Error loading file', testFile.relPath), '\n');
+                console.log(err);
+            }   
         }
     }
 }
 
-//make the class available to other files in this project
+//make instance of the class available to other files in this project
 module.exports = new Runner;

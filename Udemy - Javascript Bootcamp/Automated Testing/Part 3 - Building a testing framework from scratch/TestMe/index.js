@@ -4,9 +4,9 @@
 //require runner.js module
 const runner = require('./runner');
 
-console.log("Running TestMe......")
-
 const run = async () => {
+    console.log("Running TestMe......");
+
     //find all files ending in '*.test.js' recursively through a folder
     await runner.collectFiles(process.cwd());
     //execute test files
