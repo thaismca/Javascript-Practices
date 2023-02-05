@@ -43,6 +43,27 @@ class Runner {
     //method that iterates through the testFiles and execute them
     async runTests() {
         for (let testFile of this.testFiles) {
+            //define a global beforeEach method
+            const beforeEaches = [];
+            global.beforeEach = (func) => {
+                //hold references to all the callbacks passed to all beforeEach calls in the test script
+                beforeEaches.push(func);
+            }
+
+            //define a global it method
+            global.it = (desc, func) => {
+                //environment setup
+                //for each beforeEach callbacks that we have a reference to, execute that fucntion
+                beforeEaches.forEach(fn => fn());
+
+                //test execution
+                //display the description of the test that was passed to the it() method
+                console.log(desc);
+                //execute the callback function that was passed to the it() method
+                func();
+            }
+
+            //execute code inside of testFile
             require(testFile.path);
         }
     }

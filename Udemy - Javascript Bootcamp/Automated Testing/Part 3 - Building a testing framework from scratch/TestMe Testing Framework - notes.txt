@@ -68,3 +68,15 @@ Modified breadth search: normally, a breadth search would take all children from
 In this application, we're going to add these children into this array to iterate over only if they are folders. Files with .test.js extension are going to be added to the array that keeps track of all of the different test files (this.testFiles). And if it's not a test file or a folder, then we're basically just going to ignore it.
 
 > runTests: method that iterates through the testFiles and execute them. It doesn't create a new and separate process from the current program that we are running. It actually executes all the code inside of the test files in the same context as our runner, which makes it a lot earsier to shaer information between the test file and the test runner.
+
+--
+>> Implementing 'beforeEach' and 'it'
+In order to be able to actually run the '*.test.js' scripts, we still need to globally define the 'beforeEach' and 'it' methods. Similar to the Mocha framework, the it() function will be used to execute individual tests, and beforeEach() will be used to reset the environment before each call of the callback passed to the it() method. Both methods will be globally defined, which means that they will be available inside of every file and shared between every file as well.
+
+Note: in Mocha, beforeEach() covers some corner cases that our implementation won't cover. In our case, beforeEach will be simply about getting all invokes for beforeEach() in a test script and run them all before executing the callback function that was passed to it().
+
+Implementation:
+
+> it(desc, func) : where desc is a string with a description for the test that is being executed, and func is the callback function that execute assertions.
+> beforeEach(func) : where func is the callback function to be executed when it() is invoked, before actually running the callback that is passed to it().
+
