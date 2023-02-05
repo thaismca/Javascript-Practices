@@ -57,14 +57,28 @@ class Runner {
                 beforeEaches.forEach(fn => fn());
 
                 //test execution
-                //display the description of the test that was passed to the it() method
-                console.log(desc);
                 //execute the callback function that was passed to the it() method
-                func();
+                try {
+                    func();
+                    //display message for 'passed' test
+                    console.log(`PASSED - ${desc}`);
+                } catch(err) {
+                    //display messaged for 'failed' test
+                    console.log(`FAILED - ${desc}`);
+                    console.log(err.message);
+                }
+                
             }
 
             //execute code inside of testFile
-            require(testFile.path);
+            try {
+                require(testFile.path);
+            } catch(err) {
+                //display error message if an error occurred regarding the test file execution
+                console.log(`FAILED - Error loading file ${testFile.path}`);
+                console.log(err.message);
+            }
+            
         }
     }
 }
