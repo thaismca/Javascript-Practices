@@ -81,7 +81,7 @@ Implementation:
 > beforeEach(func) : where func is the callback function to be executed when it() is invoked, before actually running the callback that is passed to it().
 ----------------------------------------------------------------------------------------------------
 
->> RUNNING BRWOSER-BASED JS
+>> RUNNING BROWSER-BASED JS
 
 One of the requirements of this TestMe application is to be able to test browser-based JS apps, even though we are running some code based on Node.js. The whole issue here is that with Node.js we do not have access to the browser, and that browser based app is going to try to access the DOM use methods that are built into the browser and so on. In order to solve this, we're going to run a little library inside of this testing tool that is going to simulate a browser inside of Node.js.
 
@@ -96,3 +96,29 @@ fromFile() -> The fromFile function included with JSDOM is going to be called wi
 browser environment. Once JSDOM loads out that HTML document, it is also going to load up any associated JavaScript files as well. In other words, JSDOM is going to take in these two files and it's going to assemble a virtual representation of our application. That's going to give us back an object that we can use to kind of poke and prod at to make sure that our application is working the way we expect.
 
 How this funtion will be used in our TestMe application? For every single test statement that is put together, we're going to call fromfile(). So for every test, we're going to load up a fresh version of our entire application that's going to give us back this object that represents the entire DOM. And we can call different methods on that thing to manipulate all the different elements inside there.
+
+When making use of the fromFile() function in our TestMe application, as a second argument, we are also going to pass an options object, setting two different properties:
+ - runScripts: "dangerously" -> to enable executing scripts inside the page
+ - resources: "usable" -> to enable executing external scripts, included via <script src="">
+IMPORTANT NOTE: it's advised to only use this when feeding jsdom code you know is safe. If you use it on arbitrary user-supplied code, or code from the Internet, you are effectively running untrusted Node.js code, and your machine could be compromised.
+
+If the given file can be opened, the returned promise will fulfill with a JSDOM instance, an object that represents all the HTML that's inside there and then we can start to inspect it and write our tests.
+
+--
+> render() 
+
+This method will receive the name of the HTML file that is supposed to be passed to the JSDOM fromFile() method, which will be eventually called inside of the render function.
+
+The whole idea here is to have devs who are using this test framework to be able to call, render and get access to some like live HTML document inside of their test code. So this render function will be made globally available inside of the runner, so the developers writting scripts to test their web-based applications can make use of it.
+
+IMPORTANT NOTE: inside of the course, render() was implemented in a separated file and exported to only be made available globally in the runner. But there's was a limitation with the implemetation regarding the ability to run the testme command from the root directory of a project, access test files placed in folders inside of it and have the HTML correctly rendered. The implementation was done considering that the testme command would always be ran from the same directory where the test file was placed in, and it wasn't covering cases where that wasn't the case. In this implementation, render() is being declared inside the runner, and made available the same way as beforeEach() and it(), since a reference to the test file path was needed in order to resolve the path for the filename passed to render. This makes it possible to ruccessfully run all '.test.js' files placed in nested folders inside of the directory where the test command is ran from, as long as the call for render is made passing a correct relative path for the HTML file to be loaded, considering the test file location.
+
+
+> Delaying script execution
+As soon as the promise returned from fromFile() is fullfiled, if the JSDOM instance is returned right away, our code is going to continue execution and the tests will start to run. The problem is that just loading up the HTML file and parsing the HTML doesn't actually complete the entire loading process of the application. So we need to make sure to not return the JSDOM instance from the render function until after all the associated scripts and resources have been loaded up inside of that object.
+
+In order to do that, we are going to:
+1. Set up an event listener that's going to watch for all the different things that we're referencing inside of our DOM to be loaded -> DOMContentLoaded.
+2. Wrap it inside of a promise that won't be resolved until after this event gets triggered.
+3. This promise will be resolved with the JSDOM instance.
+4. This promise is what's going to be returned from the render function, making the JSDOM instance available only after the DOMContentLoaded is triggered.
