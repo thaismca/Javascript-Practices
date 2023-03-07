@@ -1,4 +1,4 @@
-# JavasScript Practices
+# JavaScript Practices
 
 This repository contains code written for practices using JavaScript and NodeJS. Projects in this repository include:
 
