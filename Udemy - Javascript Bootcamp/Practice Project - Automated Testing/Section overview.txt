@@ -1,0 +1,25 @@
+This document contains notes about the Automated Testing section of the Javascript Bootcamp course
+https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17167066
+----------------------------------------------------------------------------------------------------
+
+>> SECTION OVERVIEW
+
+Goals of automated testing:
+- automate the process of ensuring that our app works as we expect
+- keep us from having to manually click around the app to find bugs
+- make sure the app still works as expected even after we change something
+
+In this section we are going to:
+Part 1
+- write a tiny node project -> HiDash
+- figure out how to test it without any outside testing library
+- test it using a testing library
+Part 2
+- take a look at a previous project that was built in this bootcamp
+- test it using a testing library
+Part 3
+- write a custom testing framework that will work in about 80% of all projects
+
+----------------------------------------------------------------------------------------------------
+
+

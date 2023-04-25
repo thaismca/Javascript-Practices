@@ -1,0 +1,73 @@
+This document contains notes about the automated test of the Autocomplete widget, implemented as Part 2 of the Automated Testing section of the Javascript Bootcamp course: https://www.udemy.com/course/javascript-beginners-complete-tutorial/learn/lecture/17167092
+----------------------------------------------------------------------------------------------------
+
+>> OVERVIEW
+
+- Goal: implement an automated test script using the Mocha testing library to test the Autocomplete widget from the Movie Fight project.
+- Functionality that is going to be tested: We are going to write some number of tests to make sure that the widget starts out closed and then, after we type something in, it should open up and show a list of results to the user.
+
+NOTE: in this Part 2 of the Automated Testing section of the Javascript Bootcamp course, we are getting an idea on how setting up a testing framework can be quite time consuming, especially when it comes to test applications that run in the browser. Since the Autocomplete widget uses lots of properties that are related to the DOM, this means that everything about this autocomplete is set up to function inside the browser. So if we want to test this widget effectively, we have to get Mocha to work in the browser, and that set up can take even longer that actually writting the test scripts themselves.
+
+----------------------------------------------------------------------------------------------------
+
+>> MOCHA SETUP
+
+- Access the mocha documentation -> web support: https://mochajs.org/#running-mocha-in-the-browser.
+- Set up an HTML document that is dedicated specifically to testing different things inside of our application, using the template available in the MOCHA documetnation.
+- Add in some additional script tags to require in JavaScript files from our project.
+- Write some code to test that stuff that we require in as well.
+
+> Testing script -> autocomplete.test.js
+In our script we want to have the ability to test if a widget is being displayed on the screen. It should verify that it starts up closed, and it should verify if it display a proper list of results when we start typing in the input.
+
+Our function to createAutoComplete expects the following arguments:
+- root: where we are going to render the widget (a #target div). This target div must be added to the HTML document with the testing template from Mocha.
+- fetchData: a function to make a HTTP request that returns a list of options to be displayed, according to the search term. In this testing context, we need to decide whether this process of making an API request must be tested or not. If not, we can just have some sort of dummy data to show inside of this fake autocomplete - and this is the approach we are going to use in this project.
+- renderOption(data): a function that receives an array of objects data and renders that data in the dropdown below the autocomplete widget.
+
+
+----------------------------------------------------------------------------------------------------
+
+>> TESTING THE AUTOCOMPLETE
+
+1. Dropdown state at start
+
+We want to check that the dropdown doesn't show when we first display the autocomplete. What decides whether or not the dropdown element of the autocomplete widget is displayed is the presence of a class is-active. So if we want to make sure that this dropdown starts off as being closed, we can write a test to make sure that when we first show our widget to the user the div of the class dropdown should not also have a class of is-active, because as soon as it has the is-active class, that means the dropdown is open.
+
+2. Dropdown state after search
+
+We want to check if dropdown is displayed after something is typed in the text input of the autocomplete widget. It's known that the class is-active determines whether the dropdown is displayed or not. The new challenge in this test will be to get test automatically added to that input, and then see if the addition of a query string in that inputs adds the proper is-active class to the dropdown element.
+
+In order to trigger a fake search having some text automatically typed in that input, we are going to use some traditional DOM manipulation methods. The autocomplete works by watching for an input event. If we want to trigger a search, we have to fake that event using dispatchEvent.
+
+NOTE: if we don't hold up assertions, this test will fail. This happens because it takes some amount of time after the page has refreshed to actually see the list of search results appearing in the autocomplete widget, causing the test being actually failed by the time the output appears.
+
+3. Number of records displayed in dropdown
+
+We want to check if the number of printed out movies in the dropdown equals to however many that were returned from fetchData function. We'll need to follow the same first steps of the previous test (get somenthing in the text input and trigger an input event on that element), so we can get the results to be rendered. After that, we just need to check if the number of .dropdown-item element matches the number of elements returned from fetchData (we already know that our dummy data returns 3 movies).
+
+--
+
+> Writting assertions
+
+When running Mocha inside the browser, the official recommendation when it comes to writting assertions is to use another library called Chai, which is an expectation or assertion library (allows us to write assert statements). In the template provided by the Mocha library that was used during the set up, there's already a script tag to reference that library. Documentation for the Chai Assertion Library can be accessed here: https://www.chaijs.com/
+
+This library gives us three different ways of doing the exact same thing. Assertions can be written using one of the three available syntaxes: the should syntax, the expected syntax and the assert syntax. These all do the exact same thing. The only reason they offer these three different styles is just for developer preference.
+
+In this project, we'll be using the expect syntax to check some different values and if it's not quite what we expect, the expected function is going to throw an error and that's going to show up as a failure on our test. We're going to:
+- get access to the expect function
+- call expect passing in some value that we want to test
+- chain on some series of chainable getters
+- pass something to compare the value against
+
+> Resetting the environment for next test
+
+Between every different test that we put together, we need to reset our environment. This means that we are going to create and render a new dropdown for each one of the tests that we write. In order to do that, Mocha has a little hook function: beforeEach. Inside of this function, we can write out some amount of code that is going to attempt to set up our testing environment for every single test. 
+
+In this project, the beforeEach function will contain code to delete any possible existing autocomplete widget from prevous tests, then create a new one from scratch.
+
+> Holding up assertions
+
+Some tests will require the asserts to be holden up, since some actions can take some time to happen and the expect function may run before everything is ready for the check. In the case of the autocomplete widget, there's a debounce statement wapping the input event, which causes it to wait a few miliseconds to actually add the class is-active to the dropdown element. That means we need to delay the execution of the assertion.
+
+In order to do that, we are going to implement a helper function waitFor, that will be called passing the selector for an element that we want to wait until it shows up in the screen before moving on to the next step. It will contain code that fails the test altogether if that element fails to show up in the screen. waitFor is going to return a promise. It will either be resolved if the element shows up within a certain amount of time, or rejected if the element fails to be displayed. If it gets rejected, it will thrown an error that will cause the overall test to fail.
