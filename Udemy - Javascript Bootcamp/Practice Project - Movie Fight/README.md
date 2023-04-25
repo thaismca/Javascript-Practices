@@ -1,5 +1,5 @@
 
-# Practice Project - E-Commerce App
+# Practice Project - Movie Fight
 
 This projects implements a web aplication where a user can type the name of a movie in one of the search bars to see the movie stats pulled from omdbapi.com, and then search for a second movie in the other search bar, to have the stats compared.
 
