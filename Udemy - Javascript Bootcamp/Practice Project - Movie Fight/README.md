@@ -3,6 +3,8 @@
 
 This projects implements a web aplication where a user can type the name of a movie in one of the search bars to see the movie stats pulled from omdbapi.com, and then search for a second movie in the other search bar, to have the stats compared.
 
+![movie fight with comparison results - screenshot](https://github.com/thaismca/Javascript-Practices/blob/5870cdd2684dcffba0298b9f760c9ed13cfd4ba0/Udemy%20-%20Javascript%20Bootcamp/Practice%20Project%20-%20Movie%20Fight/screenshots/movie-fight-result.PNG?raw=true)
+
 ### Challenges:
 **1 - Fetch data about movies**
 
