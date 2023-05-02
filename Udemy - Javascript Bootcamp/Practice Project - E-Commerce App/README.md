@@ -20,12 +20,21 @@ When public user visits the website:
   - display cart total and buy bitton at the bottom of the list
   - for now, buy button won't do anything -> billing is outside of the current scope
 
+![home page user facing](https://github.com/thaismca/Javascript-Practices/blob/bc974fb4366dbd3496848393d12a7e95fca225f4/Udemy%20-%20Javascript%20Bootcamp/Practice%20Project%20-%20E-Commerce%20App/screenshots/index-user.PNG?raw=true)
+
+![cart user facing](https://github.com/thaismca/Javascript-Practices/blob/bc974fb4366dbd3496848393d12a7e95fca225f4/Udemy%20-%20Javascript%20Bootcamp/Practice%20Project%20-%20E-Commerce%20App/screenshots/cart-user.PNG?raw=true)
+
 When administrator visits the admin panel:
   - display sign in page
   - when user logs in, display the admin panel
   - the admin panel consists of a list of current items with edit and delete buttons for each item, and the option to create new ones
   - when admin clicks to edit or create new product, display a form to enter product name, price and upload an image
   - in order to be able to create new admin users, create a sign up page
+
+![admin sign in page](https://github.com/thaismca/Javascript-Practices/blob/bc974fb4366dbd3496848393d12a7e95fca225f4/Udemy%20-%20Javascript%20Bootcamp/Practice%20Project%20-%20E-Commerce%20App/screenshots/admin-signin.PNG?raw=true)
+
+![admin home page products lsiting](https://github.com/thaismca/Javascript-Practices/blob/bc974fb4366dbd3496848393d12a7e95fca225f4/Udemy%20-%20Javascript%20Bootcamp/Practice%20Project%20-%20E-Commerce%20App/screenshots/admin-products.PNG?raw=true)
+
 ## App Architecture
 
 ### Node.js web server
